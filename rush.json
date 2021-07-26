@@ -905,6 +905,51 @@
       "packageName": "@azure/arm-authorization",
       "projectFolder": "sdk/authorization/arm-authorization",
       "versionPolicyName": "management"
+    },
+    {
+      "packageName": "@azure/maps-creator", 
+      "projectFolder": "sdk/maps/maps-creator",
+      "versionPolicyName": "client"
+    },
+    {
+      "packageName": "@azure/maps-elevation", 
+      "projectFolder": "sdk/maps/maps-elevation",
+      "versionPolicyName": "client"
+    },
+    {
+      "packageName": "@azure/maps-geolocation", 
+      "projectFolder": "sdk/maps/maps-geolocation",
+      "versionPolicyName": "client"
+    },
+    {
+      "packageName": "@azure/maps-render", 
+      "projectFolder": "sdk/maps/maps-render",
+      "versionPolicyName": "client"
+    },
+    {
+      "packageName": "@azure/maps-route", 
+      "projectFolder": "sdk/maps/maps-route",
+      "versionPolicyName": "client"
+    },
+    {
+      "packageName": "@azure/maps-search", 
+      "projectFolder": "sdk/maps/maps-search",
+      "versionPolicyName": "client"
+    },
+    {
+      "packageName": "@azure/maps-timezone", 
+      "projectFolder": "sdk/maps/maps-timezone",
+      "versionPolicyName": "client"
+    },
+    {
+      "packageName": "@azure/maps-traffic", 
+      "projectFolder": "sdk/maps/maps-traffic",
+      "versionPolicyName": "client"
+    },
+    {
+      "packageName": "@azure/maps-weather", 
+      "projectFolder": "sdk/maps/maps-weather",
+      "versionPolicyName": "client"
     }
-  ]
+  ]  
 }
