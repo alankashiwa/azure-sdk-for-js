@@ -12,8 +12,10 @@
     "directory": "sdk/maps/maps-geolocation"
   },
   "keywords": [
-    "Azure",
-    "cloud"
+    "azure",
+    "cloud",
+    "javascript",
+    "samples"
   ],
   "author": "Microsoft Corporation",
   "license": "MIT",
