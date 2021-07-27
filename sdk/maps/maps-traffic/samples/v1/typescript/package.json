@@ -16,8 +16,10 @@
     "directory": "sdk/maps/maps-traffic"
   },
   "keywords": [
-    "Azure",
-    "cloud"
+    "azure",
+    "cloud",
+    "typescript",
+    "samples"
   ],
   "author": "Microsoft Corporation",
   "license": "MIT",

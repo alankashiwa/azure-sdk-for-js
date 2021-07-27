@@ -53,7 +53,9 @@
   "keywords": [
     "azure",
     "cloud",
-    "typescript"
+    "typescript",
+    "maps",
+    "render"
   ],
   "author": "Microsoft Corporation",
   "license": "MIT",
