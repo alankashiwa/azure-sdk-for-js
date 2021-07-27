@@ -53,7 +53,9 @@
   "keywords": [
     "azure",
     "cloud",
-    "typescript"
+    "typescript",
+    "maps",
+    "weather"
   ],
   "author": "Microsoft Corporation",
   "license": "MIT",
