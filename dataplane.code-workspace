@@ -153,6 +153,42 @@
       "path": "sdk/core/logger"
     },
     {
+      "name": "maps-creator",
+      "path": "sdk/maps/maps-creator"
+    },
+    {
+      "name": "maps-elevation",
+      "path": "sdk/maps/maps-elevation"
+    },
+    {
+      "name": "maps-geolocation",
+      "path": "sdk/maps/maps-geolocation"
+    },
+    {
+      "name": "maps-render",
+      "path": "sdk/maps/maps-render"
+    },
+    {
+      "name": "maps-route",
+      "path": "sdk/maps/maps-route"
+    },
+    {
+      "name": "maps-search",
+      "path": "sdk/maps/maps-search"
+    },
+    {
+      "name": "maps-timezone",
+      "path": "sdk/maps/maps-timezone"
+    },
+    {
+      "name": "maps-traffic",
+      "path": "sdk/maps/maps-traffic"
+    },
+    {
+      "name": "maps-weather",
+      "path": "sdk/maps/maps-weather"
+    },
+    {
       "name": "metrics-advisor",
       "path": "sdk/metricsadvisor/ai-metrics-advisor"
     },
