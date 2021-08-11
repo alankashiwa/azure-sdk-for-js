@@ -1,13 +1,15 @@
-# Azure Search client library for JavaScript
+# Azure Maps Search client library for JavaScript/TypeScript
 
-This package contains an isomorphic SDK (runs both in Node.js and in browsers) for Azure Search client.
+The Azure Maps Search Service is a set of RESTful APIs designed to help developers search addresses, places, and business listings by name, category, and other geographic information. In addition to supporting traditional geocoding, services can also reverse geocode addresses and cross streets based on latitudes and longitudes. Latitude and longitude values returned by the search can be used as parameters in other Azure Maps services, such as [Route](https://docs.microsoft.com/en-us/rest/api/maps/route) and [Weather](https://docs.microsoft.com/en-us/rest/api/maps/weather) services.
 
-Azure Maps Search REST APIs
+This package contains an isomorphic SDK (runs both in Node.js and in browsers) for Azure Maps Search client.
 
-[Source code](https://github.com/Azure/azure-sdk-for-js/tree/master/sdk/maps/maps-search) |
+
+[Source code](https://github.com/Azure/azure-sdk-for-js/tree/main/sdk/maps/maps-search) |
 [Package (NPM)](https://www.npmjs.com/package/@azure/maps-search) |
 [API reference documentation](https://docs.microsoft.com/javascript/api/@azure/maps-search) |
-[Samples](https://github.com/Azure/azure-sdk-for-js/tree/master/sdk/maps/maps-search/samples)
+[Samples](https://github.com/Azure/azure-sdk-for-js/tree/main/sdk/maps/maps-search/samples) |
+[Product Information](https://docs.microsoft.com/en-us/azure/azure-maps/how-to-search-for-address)
 
 ## Getting started
 
@@ -19,10 +21,17 @@ Azure Maps Search REST APIs
 ### Prerequisites
 
 - An [Azure subscription][azure_sub].
+- An [Azure Maps account](https://docs.microsoft.com/en-us/azure/azure-maps/how-to-manage-account-keys). You can create the resource via [Azure Portal][azure_portal] or [Azure CLI][azure_cli].
+
+If you use Azure CLI, replace `<resource-group-name>` and `<account-name>` of your choice, and select a proper [pricing tier](https://docs.microsoft.com/en-us/azure/azure-maps/choose-pricing-tier) based on your needs via the `<sku-name>` parameter. Please refer to [this page](https://docs.microsoft.com/en-us/cli/azure/maps/account?view=azure-cli-latest#az_maps_account_create) for more details.
+
+```bash
+az maps account create --resource-group <resource-group-name> --account-name <account-name> --sku <sku-name>
+```
 
 ### Install the `@azure/maps-search` package
 
-Install the Azure Search client library for JavaScript with `npm`:
+Install the Azure Maps Search client library with `npm`:
 
 ```bash
 npm install @azure/maps-search
@@ -30,8 +39,7 @@ npm install @azure/maps-search
 
 ### Create and authenticate a `SearchClient`
 
-To create a client object to access the Azure Search API, you will need the `endpoint` of your Azure Search resource and a `credential`. The Azure Search client can use Azure Active Directory credentials to authenticate.
-You can find the endpoint for your Azure Search resource in the [Azure Portal][azure_portal].
+To create a client object to access the Azure Maps Search API, you will need a `credential` object. The Azure Maps Search client can use an Azure Active Directory credential to authenticate.
 
 #### Using an Azure Active Directory Credential
 
@@ -41,20 +49,282 @@ You can authenticate with Azure Active Directory using the [Azure Identity libra
 npm install @azure/identity
 ```
 
-You will also need to register a new AAD application and grant access to Azure Search by assigning the suitable role to your service principal (note: roles such as `"Owner"` will not grant the necessary permissions).
+You will also need to register a new AAD application and grant access to Azure Maps Search by assigning the suitable role to your service principal. Please refer to the [Manage authentication](https://docs.microsoft.com/en-us/azure/azure-maps/how-to-manage-authentication) page.
+
 Set the values of the client ID, tenant ID, and client secret of the AAD application as environment variables: `AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, `AZURE_CLIENT_SECRET`.
 
 ```javascript
 const { SearchClient } = require("@azure/maps-search");
 const { DefaultAzureCredential } = require("@azure/identity");
-const client = new SearchClient("<endpoint>", new DefaultAzureCredential());
+const client = new SearchClient(new DefaultAzureCredential());
 ```
 
 ## Key concepts
 
 ### SearchClient
 
-`SearchClient` is the primary interface for developers using the Azure Search client library. Explore the methods on this client object to understand the different features of the Azure Search service that you can access.
+`SearchClient` is the primary interface for developers using the Azure Maps Search client library. Explore the methods on this client object to understand the different features of the Azure Search service that you can access.
+
+## Examples
+
+The following sections provide several code snippets covering some of the most common Azure Maps Search tasks, including:
+
+- [Request latitude and longitude coordinates for an address](#request-latitude-and-longitude-coordinates-for-an-address)
+- [Search for an address or Point of Interest](#search-for-an-address-or-point-of-interest)
+- [Make a Reverse Address Search to translate coordinate location to street address](#make-a-reverse-address-search-to-translate-coordinate-location-to-street-address)
+- [Translate coordinate location into a human understandable cross street](#translate-coordinate-location-into-a-human-understandable-cross-street)
+
+### Request latitude and longitude coordinates for an address
+
+You can use an authenticated client to convert an address into latitude and longitude coordinates. This process is also called geocoding. In addition to returning the coordinates, the response will also return detailed address properties such as street, postal code, municipality, and country/region information.
+
+```javascript
+  const credential = new EmptyTokenCredential();
+  const operationOptions = {
+    requestOptions: {
+      customHeaders: { "subscription-key": process.env.MAPS_SUBSCRIPTION_KEY }
+    }
+  };
+  
+  const client = new SearchClient(credential).search;
+  const response = await client.getSearchAddress(
+    "json",
+    "400 Broad, Seattle",
+    operationOptions
+  );
+
+  console.log(response);
+```
+
+Response
+```yaml
+{
+  "summary": {
+    "query": "400 broad seattle",
+    "queryType": "NON_NEAR",
+    "queryTime": 33,
+    "numResults": 3,
+    "offset": 0,
+    "totalResults": 3,
+    "fuzzyLevel": 1
+  },
+  "results": [
+    {
+      "type": "Point Address",
+      "id": "US/PAD/p0/27038164",
+      "score": 5.8015999794,
+      "address": {
+        "streetNumber": "400",
+        "streetName": "Broad Street",
+        "municipality": "Seattle",
+        "municipalitySubdivision": "Queen Anne",
+        "countrySecondarySubdivision": "King",
+        "countrySubdivision": "WA",
+        "postalCode": "98109",
+        "extendedPostalCode": "98109-4607",
+        "countryCode": "US",
+        "country": "United States",
+        "countryCodeISO3": "USA",
+        "freeformAddress": "400 Broad Street, Seattle, WA 98109",
+        "countrySubdivisionName": "Washington",
+        "localName": "Seattle"
+      },
+      "position": { "lat": 47.62039, "lon": -122.34928 },
+      "viewport": {
+        "topLeftPoint": { "lat": 47.62129, "lon": -122.35061 },
+        "btmRightPoint": { "lat": 47.61949, "lon": -122.34795 }
+      },
+      "entryPoints": [{ "type": "main", "position": { "lat": 47.61982, "lon": -122.34886 } }]
+    },
+    ...
+  ]
+}
+```
+
+### Search for an address or Point of Interest
+
+You can use Fuzzy Search to search an address or a point of interest (POI). The following examples demostrate how to search for `pizza` over the scope of a specific country (`Brazil`, in this example).
+
+```javascript
+  const credential = new EmptyTokenCredential();
+  const operationOptions = {
+    requestOptions: {
+      customHeaders: { "subscription-key": process.env.MAPS_SUBSCRIPTION_KEY }
+    }
+  };
+  
+  const client = new SearchClient(credential).search;
+  const response = await client.getSearchFuzzy("json", "pizza", {
+    ...operationOptions,
+    countrySet: ["Brazil"]
+  });
+
+  console.log(response);
+
+```
+
+Response
+```yaml
+{
+  "summary": {
+    "query": "pizza",
+    "queryType": "NON_NEAR",
+    "queryTime": 6,
+    "numResults": 10,
+    "offset": 0,
+    "totalResults": 371450,
+    "fuzzyLevel": 1
+  },
+  "results": [
+    {
+      "type": "POI",
+      "id": "g6JpZK8wMjAwMDkwMDAwOTQyNTGhY6NBTkShdqdVbmlmaWVk",
+      "score": 2.1454398632,
+      "info": "search:ta:020009000094251-AD",
+      "poi": {
+        "name": "Pizzeria Xavier",
+        "categorySet": [{ "id": 7315036 }],
+        "categories": ["pizza", "restaurant"],
+        "classifications": [
+          {
+            "code": "RESTAURANT",
+            "names": [
+              { "nameLocale": "en-US", "name": "pizza" },
+              { "nameLocale": "en-US", "name": "restaurant" }
+            ]
+          }
+        ]
+      },
+      "address": {
+        "streetNumber": "3",
+        "streetName": "Carrer Joan Maragall",
+        "municipality": "Andorra La Vella",
+        "postalCode": "AD500",
+        "countryCode": "AD",
+        "country": "Andorra",
+        "countryCodeISO3": "AND",
+        "freeformAddress": "Carrer Joan Maragall 3, Andorra La Vella, AD500",
+        "localName": "Andorra La Vella"
+      },
+      "position": { "lat": 42.50818, "lon": 1.52935 },
+      "viewport": {
+        "topLeftPoint": { "lat": 42.50908, "lon": 1.52813 },
+        "btmRightPoint": { "lat": 42.50728, "lon": 1.53057 }
+      },
+      "entryPoints": [{ "type": "main", "position": { "lat": 42.50819, "lon": 1.52936 } }],
+      "dataSources": { ... }
+    },
+    ...
+  ]
+}
+
+```
+
+### Make a Reverse Address Search to translate coordinate location to street address
+
+You can translate coordinates into human readable street addresses. This process is also called reverse geocoding.
+This is often used for applications that consume GPS feeds and want to discover addresses at specific coordinate points.
+
+```javascript
+  const credential = new EmptyTokenCredential();
+  const operationOptions = {
+    requestOptions: {
+      customHeaders: { "subscription-key": process.env.MAPS_SUBSCRIPTION_KEY }
+    }
+  };
+  
+  const client = new SearchClient(credential).search;
+  const response = await client.getSearchAddressReverse(
+    "json",
+    "47.591180,-122.332700",
+    operationOptions
+  );
+
+  console.log(response);
+```
+
+Response
+```yaml
+{
+  "summary": { "queryTime": 6, "numResults": 1 },
+  "addresses": [
+    {
+      "address": {
+        "buildingNumber": "1505",
+        "street": "Edgar Martinez Drive South",
+        "streetNumber": "1505",
+        "routeNumbers": [],
+        "streetName": "Edgar Martinez Drive South",
+        "streetNameAndNumber": "1505 Edgar Martinez Drive South",
+        "municipality": "Seattle",
+        "municipalitySubdivision": "Downtown Seattle",
+        "countrySecondarySubdivision": "King",
+        "countrySubdivision": "WA",
+        "postalCode": "98134",
+        "countryCode": "US",
+        "country": "United States",
+        "countryCodeISO3": "USA",
+        "freeformAddress": "1505 Edgar Martinez Drive South, Seattle, WA 98134",
+        "countrySubdivisionName": "Washington",
+        "localName": "Seattle",
+        "boundingBox": {
+          "northEast": "47.590293,-122.332326",
+          "southWest": "47.590286,-122.333248",
+          "entity": "position"
+        }
+      },
+      "position": "47.590290,-122.332726"
+    }
+  ]
+}
+```
+
+### Translate coordinate location into a human understandable cross street
+Translate coordinate location into a human understandable cross street by using Search Address Reverse Cross Street API. Most often, this is needed in tracking applications that receive a GPS feed from a device or asset, and wish to know where the coordinate is located.
+
+```javascript
+  credential = new EmptyTokenCredential();
+  operationOptions.requestOptions = {
+    customHeaders: { "subscription-key": process.env.MAPS_SUBSCRIPTION_KEY }
+  };
+  
+  const client = new SearchClient(credential).search;
+  const response = await client.getSearchAddressReverseCrossStreet(
+    "json",
+    "47.591180,-122.332700",
+    operationOptions
+  );
+
+  console.log(response);
+```
+
+Response
+```yaml
+{
+  "summary": { "queryTime": 121, "numResults": 1 },
+  "addresses": [
+    {
+      "address": {
+        "street": "Edgar Martinez Drive South",
+        "crossStreet": "Occidental Avenue South",
+        "streetName": "Occidental Avenue South & Edgar Martinez Drive South",
+        "municipality": "Seattle",
+        "municipalitySubdivision": "South Downtown",
+        "countrySecondarySubdivision": "King",
+        "countrySubdivision": "WA",
+        "postalCode": "98134",
+        "countryCode": "US",
+        "country": "United States",
+        "countryCodeISO3": "USA",
+        "freeformAddress": "Occidental Avenue South & Edgar Martinez Drive South, Seattle, WA 98134",
+        "countrySubdivisionName": "Washington",
+        "localName": "Seattle"
+      },
+      "position": "47.59029,-122.33325"
+    }
+  ]
+}
+```
 
 ## Troubleshooting
 
@@ -71,11 +341,11 @@ For more detailed instructions on how to enable logs, you can look at the [@azur
 
 ## Next steps
 
-Please take a look at the [samples](https://github.com/Azure/azure-sdk-for-js/tree/master/sdk/maps/maps-search/samples) directory for detailed examples on how to use this library.
+Please take a look at the [samples](https://github.com/Azure/azure-sdk-for-js/tree/main/sdk/maps/maps-search/samples) directory for detailed examples on how to use this library.
 
 ## Contributing
 
-If you'd like to contribute to this library, please read the [contributing guide](https://github.com/Azure/azure-sdk-for-js/blob/master/CONTRIBUTING.md) to learn more about how to build and test the code.
+If you'd like to contribute to this library, please read the [contributing guide](https://github.com/Azure/azure-sdk-for-js/tree/main/CONTRIBUTING.md) to learn more about how to build and test the code.
 
 ## Related projects
 
@@ -85,7 +355,6 @@ If you'd like to contribute to this library, please read the [contributing guide
 
 [azure_cli]: https://docs.microsoft.com/cli/azure
 [azure_sub]: https://azure.microsoft.com/free/
-[azure_sub]: https://azure.microsoft.com/free/
 [azure_portal]: https://portal.azure.com
-[azure_identity]: https://github.com/Azure/azure-sdk-for-js/tree/master/sdk/identity/identity
-[defaultazurecredential]: https://github.com/Azure/azure-sdk-for-js/tree/master/sdk/identity/identity#defaultazurecredential
+[azure_identity]: https://github.com/Azure/azure-sdk-for-js/tree/main/sdk/identity/identity
+[defaultazurecredential]: https://github.com/Azure/azure-sdk-for-js/tree/main/sdk/identity/identity#defaultazurecredential
