@@ -46,6 +46,11 @@ async function main() {
   } else {
     // Use Azure AD authentication
     credential = new DefaultAzureCredential();
+    if (process.env.MAPS_CLIENT_ID) {
+      operationOptions.requestOptions = {
+        customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
+      };
+    }
   }
 
   const route = new RouteClient(credential).route;
