@@ -16,13 +16,12 @@ dotenv.config();
  * Azure Maps supports two ways to authenticate requests:
  * - Shared Key authentication (subscription-key)
  * - Azure Active Directory (Azure AD) authentication
- * 
+ *
  * In this sample you can put MAPS_SUBSCRIPTION_KEY into .env file to use the first approach or populate
  * the three AZURE_CLIENT_ID, AZURE_CLIENT_SECRET & AZURE_TENANT_ID variables for trying out AAD auth.
- * 
+ *
  * More info is available at https://docs.microsoft.com/en-us/azure/azure-maps/azure-maps-authentication.
  */
-
 
 /**
  * Empty token class definition. To be used with AzureKey credentials.
@@ -39,7 +38,6 @@ class EmptyTokenCredential implements coreAuth.TokenCredential {
   }
 }
 
-
 async function main() {
   let credential: coreAuth.TokenCredential;
   let operationOptions: coreClient.OperationOptions = {};
@@ -47,9 +45,10 @@ async function main() {
   if (process.env.MAPS_SUBSCRIPTION_KEY) {
     // Use subscription key authentication
     credential = new EmptyTokenCredential();
-    operationOptions.requestOptions = { customHeaders: { "subscription-key": process.env.MAPS_SUBSCRIPTION_KEY } };
-  }
-  else {
+    operationOptions.requestOptions = {
+      customHeaders: { "subscription-key": process.env.MAPS_SUBSCRIPTION_KEY }
+    };
+  } else {
     // Use Azure AD authentication
     credential = getDefaultAzureCredential();
   }
@@ -63,7 +62,7 @@ async function main() {
 
   // TO USE need to have some data uploaded already - please use env CREATOR_DWG_ZIP_UDID or CREATOR_GEOJSON_UDID
   const udid = process.env.CREATOR_DWG_ZIP_UDID;
-  if ((typeof udid === "string") && (udid.length == 36)) {
+  if (typeof udid === "string" && udid.length == 36) {
     console.log(" --- Assign the aliasId to some Creator's udid:");
     console.log(await alias.assign(aliasId!, udid!, operationOptions));
   }
@@ -79,7 +78,6 @@ async function main() {
   for await (const aliasItem of alias.list(operationOptions)) {
     console.log(aliasItem);
   }
-
 }
 
 main();
