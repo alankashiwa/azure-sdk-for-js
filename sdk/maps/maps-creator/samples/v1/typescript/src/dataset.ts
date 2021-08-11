@@ -87,6 +87,11 @@ async function main() {
   } else {
     // Use Azure AD authentication
     credential = getDefaultAzureCredential();
+    if (process.env.MAPS_CLIENT_ID) {
+      operationOptions.requestOptions = {
+        customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
+      };
+    }
   }
 
   const dataset = new CreatorClient(credential).dataset;
