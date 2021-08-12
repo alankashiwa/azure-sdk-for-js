@@ -1,13 +1,16 @@
-# Azure Render client library for JavaScript
+# Azure Maps Render client library for JavaScript
+
+The Azure Maps Render Service is a set of RESTful APIs designed to help developers retrieve maps rendering data such as map tiles, copyright attribution, and metadata for a tileset.
 
 This package contains an isomorphic SDK (runs both in Node.js and in browsers) for Azure Render client.
 
 Azure Maps Render REST APIs
 
-[Source code](https://github.com/Azure/azure-sdk-for-js/tree/master/sdk/maps/maps-render) |
+[Source code](https://github.com/Azure/azure-sdk-for-js/tree/main/sdk/maps/maps-render) |
 [Package (NPM)](https://www.npmjs.com/package/@azure/maps-render) |
 [API reference documentation](https://docs.microsoft.com/javascript/api/@azure/maps-render) |
-[Samples](https://github.com/Azure/azure-sdk-for-js/tree/master/sdk/maps/maps-render/samples)
+[Samples](https://github.com/Azure/azure-sdk-for-js/tree/main/sdk/maps/maps-render/samples) |
+[Product Information](https://docs.microsoft.com/en-us/rest/api/maps/render-v2)
 
 ## Getting started
 
@@ -19,10 +22,17 @@ Azure Maps Render REST APIs
 ### Prerequisites
 
 - An [Azure subscription][azure_sub].
+- An [Azure Maps account](https://docs.microsoft.com/en-us/azure/azure-maps/how-to-manage-account-keys). You can create the resource via [Azure Portal][azure_portal] or [Azure CLI][azure_cli].
+
+If you use Azure CLI, replace `<resource-group-name>` and `<account-name>` of your choice, and select a proper [pricing tier](https://docs.microsoft.com/en-us/azure/azure-maps/choose-pricing-tier) based on your needs via the `<sku-name>` parameter. Please refer to [this page](https://docs.microsoft.com/en-us/cli/azure/maps/account?view=azure-cli-latest#az_maps_account_create) for more details.
+
+```bash
+az maps account create --resource-group <resource-group-name> --account-name <account-name> --sku <sku-name>
+```
 
 ### Install the `@azure/maps-render` package
 
-Install the Azure Render client library for JavaScript with `npm`:
+Install the Azure Maps Render client library with `npm`:
 
 ```bash
 npm install @azure/maps-render
@@ -30,8 +40,7 @@ npm install @azure/maps-render
 
 ### Create and authenticate a `RenderClient`
 
-To create a client object to access the Azure Render API, you will need the `endpoint` of your Azure Render resource and a `credential`. The Azure Render client can use Azure Active Directory credentials to authenticate.
-You can find the endpoint for your Azure Render resource in the [Azure Portal][azure_portal].
+To create a client object to access the Azure Maps Render API, you will need a `credential` object. The Azure Maps Render client can use an Azure Active Directory credential to authenticate.
 
 #### Using an Azure Active Directory Credential
 
@@ -41,20 +50,54 @@ You can authenticate with Azure Active Directory using the [Azure Identity libra
 npm install @azure/identity
 ```
 
-You will also need to register a new AAD application and grant access to Azure Render by assigning the suitable role to your service principal (note: roles such as `"Owner"` will not grant the necessary permissions).
+You will also need to register a new AAD application and grant access to Azure Maps Search by assigning the suitable role to your service principal. Please refer to the [Manage authentication](https://docs.microsoft.com/en-us/azure/azure-maps/how-to-manage-authentication) page.
+
 Set the values of the client ID, tenant ID, and client secret of the AAD application as environment variables: `AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, `AZURE_CLIENT_SECRET`.
 
 ```javascript
 const { RenderClient } = require("@azure/maps-render");
 const { DefaultAzureCredential } = require("@azure/identity");
-const client = new RenderClient("<endpoint>", new DefaultAzureCredential());
+const client = new RenderClient(new DefaultAzureCredential());
 ```
 
 ## Key concepts
 
 ### RenderClient
 
-`RenderClient` is the primary interface for developers using the Azure Render client library. Explore the methods on this client object to understand the different features of the Azure Render service that you can access.
+`RenderClient` is the primary interface for developers using the Azure Maps Render client library. Explore the methods on this client object to understand the different features of the Azure Maps Render service that you can access.
+
+## Examples
+
+The following sections provide several code snippets covering some of the most common Azure Maps Render tasks, including:
+
+- [Request map tiles in vector or raster formats](#request-map-tiles-in-vector-or-raster-formats)
+- [Request map copyright attribution information](#request-map-copyright-attribution-information)
+- [Request metadata for a tileset](#request-metadata-for-a-tileset)
+
+### Request map tiles in vector or raster formats
+
+
+```javascript
+  const credential = new EmptyTokenCredential();
+  const operationOptions = {
+    requestOptions: {
+      customHeaders: { "subscription-key": process.env.MAPS_SUBSCRIPTION_KEY }
+    }
+  };
+  const client = new RenderClient(credential).renderV2;
+  const response = await client.getMapTilePreview("microsoft.base", 6, 10, 22, operationOptions);
+  console.log(response);
+```
+
+### Request map copyright attribution information
+
+```javascript
+```
+
+### Request metadata for a tileset
+
+```javascript
+```
 
 ## Troubleshooting
 
@@ -71,11 +114,11 @@ For more detailed instructions on how to enable logs, you can look at the [@azur
 
 ## Next steps
 
-Please take a look at the [samples](https://github.com/Azure/azure-sdk-for-js/tree/master/sdk/maps/maps-render/samples) directory for detailed examples on how to use this library.
+Please take a look at the [samples](https://github.com/Azure/azure-sdk-for-js/tree/main/sdk/maps/maps-render/samples) directory for detailed examples on how to use this library.
 
 ## Contributing
 
-If you'd like to contribute to this library, please read the [contributing guide](https://github.com/Azure/azure-sdk-for-js/blob/master/CONTRIBUTING.md) to learn more about how to build and test the code.
+If you'd like to contribute to this library, please read the [contributing guide](https://github.com/Azure/azure-sdk-for-js/tree/main/CONTRIBUTING.md) to learn more about how to build and test the code.
 
 ## Related projects
 
@@ -85,7 +128,6 @@ If you'd like to contribute to this library, please read the [contributing guide
 
 [azure_cli]: https://docs.microsoft.com/cli/azure
 [azure_sub]: https://azure.microsoft.com/free/
-[azure_sub]: https://azure.microsoft.com/free/
 [azure_portal]: https://portal.azure.com
-[azure_identity]: https://github.com/Azure/azure-sdk-for-js/tree/master/sdk/identity/identity
-[defaultazurecredential]: https://github.com/Azure/azure-sdk-for-js/tree/master/sdk/identity/identity#defaultazurecredential
+[azure_identity]: https://github.com/Azure/azure-sdk-for-js/tree/main/sdk/identity/identity
+[defaultazurecredential]: https://github.com/Azure/azure-sdk-for-js/tree/main/sdk/identity/identity#defaultazurecredential
