@@ -22,7 +22,7 @@
   "bugs": {
     "url": "https://github.com/Azure/azure-sdk-for-js/issues"
   },
-  "homepage": "https://github.com/Azure/azure-sdk-for-js/tree/master/sdk/maps/maps-creator",
+  "homepage": "https://github.com/Azure/azure-sdk-for-js/tree/main/sdk/maps/maps-creator",
   "dependencies": {
     "@azure/maps-creator": "next",
     "dotenv": "latest",
