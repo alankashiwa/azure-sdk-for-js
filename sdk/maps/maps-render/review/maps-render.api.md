@@ -149,6 +149,7 @@ export enum KnownTilesetID {
     MicrosoftBaseLabelsRoad = "microsoft.base.labels.road",
     MicrosoftBaseRoad = "microsoft.base.road",
     MicrosoftDem = "microsoft.dem",
+    MicrosoftDemContours = "microsoft.dem.contours",
     MicrosoftImagery = "microsoft.imagery",
     MicrosoftTerraMain = "microsoft.terra.main",
     MicrosoftWeatherInfraredMain = "microsoft.weather.infrared.main",
@@ -162,6 +163,11 @@ export enum KnownTileSize {
 }
 
 // @public
+export interface MapAttributionResultV2 {
+    copyrights?: string[];
+}
+
+// @public
 export type MapImageryStyle = string;
 
 // @public
@@ -169,6 +175,25 @@ export type MapImageStyle = string;
 
 // @public
 export type MapTileLayer = string;
+
+// @public
+export interface MapTilesetResultV2 {
+    attribution?: string;
+    bounds?: number[];
+    center?: number[];
+    data?: string[];
+    description?: string;
+    grids?: string[];
+    legend?: string;
+    maxzoom?: number;
+    minzoom?: number;
+    name?: string;
+    scheme?: string;
+    template?: string;
+    tilejson?: string;
+    tiles?: string[];
+    version?: string;
+}
 
 // @public
 export type MapTileSize = string;
@@ -214,6 +239,8 @@ export class RenderClient extends RenderClientContext {
 
 // @public (undocumented)
 export class RenderClientContext extends coreClient.ServiceClient {
+    // (undocumented)
+    $host: string;
     constructor(credentials: coreAuth.TokenCredential, options?: RenderClientOptionalParams);
     // (undocumented)
     geography: Geography;
@@ -223,6 +250,7 @@ export class RenderClientContext extends coreClient.ServiceClient {
 
 // @public
 export interface RenderClientOptionalParams extends coreClient.ServiceClientOptions {
+    $host?: string;
     endpoint?: string;
     geography?: Geography;
     xMsClientId?: string;
@@ -335,8 +363,17 @@ export type RenderGetMapTileResponse = RenderGetMapTileHeaders & {
 
 // @public
 export interface RenderV2 {
+    getMapAttribution(tilesetId: TilesetID, zoom: number, bounds: string[], options?: RenderV2GetMapAttributionOptionalParams): Promise<RenderV2GetMapAttributionResponse>;
     getMapTilePreview(tilesetId: TilesetID, zoom: number, xTileIndex: number, yTileIndex: number, options?: RenderV2GetMapTilePreviewOptionalParams): Promise<RenderV2GetMapTilePreviewResponse>;
+    getMapTileset(tilesetId: TilesetID, options?: RenderV2GetMapTilesetOptionalParams): Promise<RenderV2GetMapTilesetResponse>;
 }
+
+// @public
+export interface RenderV2GetMapAttributionOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type RenderV2GetMapAttributionResponse = MapAttributionResultV2;
 
 // @public
 export interface RenderV2GetMapTilePreviewHeaders {
@@ -347,7 +384,7 @@ export interface RenderV2GetMapTilePreviewHeaders {
 export interface RenderV2GetMapTilePreviewOptionalParams extends coreClient.OperationOptions {
     language?: string;
     tileSize?: TileSize;
-    timeStamp?: string;
+    timeStamp?: Date;
     view?: string;
 }
 
@@ -356,6 +393,13 @@ export type RenderV2GetMapTilePreviewResponse = RenderV2GetMapTilePreviewHeaders
     blobBody?: Promise<Blob>;
     readableStreamBody?: NodeJS.ReadableStream;
 };
+
+// @public
+export interface RenderV2GetMapTilesetOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type RenderV2GetMapTilesetResponse = MapTilesetResultV2;
 
 // @public
 export type StaticMapLayer = string;
