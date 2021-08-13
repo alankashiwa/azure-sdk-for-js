@@ -20,10 +20,10 @@ export interface AirAndPollen {
 export interface AlertArea {
     alertDetails?: string;
     alertDetailsLanguageCode?: string;
-    endTime?: string;
+    endTime?: Date;
     latestStatus?: LatestStatus;
     name?: string;
-    startTime?: string;
+    startTime?: Date;
     summary?: string;
 }
 
@@ -40,7 +40,7 @@ export interface CurrentConditions {
     apparentTemperature?: WeatherUnit;
     ceiling?: WeatherUnit;
     cloudCover?: number;
-    dateTime?: string;
+    dateTime?: Date;
     dewPoint?: WeatherUnit;
     hasPrecipitation?: boolean;
     iconCode?: number;
@@ -73,7 +73,7 @@ export interface CurrentConditionsResponse {
 // @public (undocumented)
 export interface DailyForecast {
     airAndPollen?: AirAndPollen[];
-    date?: string;
+    date?: Date;
     day?: DayOrNight;
     degreeDaySummary?: DegreeDaySummary;
     hoursOfSun?: number;
@@ -93,10 +93,10 @@ export interface DailyForecastResponse {
 // @public
 export interface DailyForecastSummary {
     category?: string;
-    endDate?: string;
+    endDate?: Date;
     phrase?: string;
     severity?: number;
-    startDate?: string;
+    startDate?: Date;
 }
 
 // @public
@@ -104,7 +104,7 @@ export interface DailyIndex {
     ascending?: boolean;
     category?: string;
     categoryValue?: number;
-    dateTime?: string;
+    dateTime?: Date;
     description?: string;
     indexId?: number;
     indexName?: string;
@@ -183,7 +183,7 @@ export interface ForecastInterval {
     precipitationType?: string;
     shortPhrase?: string;
     simplifiedColor?: ColorValue;
-    startTime?: string;
+    startTime?: Date;
     threshold?: string;
 }
 
@@ -204,7 +204,7 @@ export interface HazardDetail {
 export interface HourlyForecast {
     ceiling?: WeatherUnit;
     cloudCover?: number;
-    date?: string;
+    date?: Date;
     dewPoint?: WeatherUnit;
     hasPrecipitation?: boolean;
     ice?: WeatherUnit;
@@ -344,7 +344,7 @@ export interface QuarterDayForecast {
     cloudCover?: number;
     date?: string;
     dewPoint?: WeatherUnit;
-    effectiveDate?: string;
+    effectiveDate?: Date;
     hasPrecipitation?: boolean;
     ice?: WeatherUnit;
     iconCode?: number;

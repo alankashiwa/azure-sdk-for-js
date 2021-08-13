@@ -47,9 +47,9 @@ export interface AliasDeleteOptionalParams extends coreClient.OperationOptions {
 // @public
 export interface AliasesCreateResponse {
     readonly aliasId?: string;
-    readonly createdTimestamp?: string;
+    readonly createdTimestamp?: Date;
     readonly creatorDataItemId?: string;
-    readonly lastUpdatedTimestamp?: string;
+    readonly lastUpdatedTimestamp?: Date;
 }
 
 // @public
@@ -64,7 +64,7 @@ export interface AliasListItem {
     readonly aliasId?: string;
     readonly createdTimestamp?: string;
     readonly creatorDataItemId?: string | null;
-    readonly lastUpdatedTimestamp?: string;
+    readonly lastUpdatedTimestamp?: Date;
 }
 
 // @public
@@ -826,7 +826,7 @@ export interface LandingPageResponse {
 
 // @public
 export interface LongRunningOperationResult {
-    readonly created?: string;
+    readonly created?: Date;
     error?: ErrorDetail;
     operationId?: string;
     readonly status?: LroStatus;
