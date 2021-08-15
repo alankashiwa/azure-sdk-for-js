@@ -92,8 +92,6 @@ You can use an authenticated client to convert an address into latitude and long
     "400 Broad, Seattle",
     operationOptions
   );
-
-  console.log(response);
 ```
 
 Response
@@ -158,9 +156,6 @@ You can use Fuzzy Search to search an address or a point of interest (POI). The 
     ...operationOptions,
     countrySet: ["Brazil"]
   });
-
-  console.log(response);
-
 ```
 
 Response
@@ -239,8 +234,6 @@ This is often used for applications that consume GPS feeds and want to discover 
     "47.591180,-122.332700",
     operationOptions
   );
-
-  console.log(response);
 ```
 
 Response
@@ -294,8 +287,6 @@ Translate coordinate location into a human understandable cross street by using 
     "47.591180,-122.332700",
     operationOptions
   );
-
-  console.log(response);
 ```
 
 Response
