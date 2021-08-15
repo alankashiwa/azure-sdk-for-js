@@ -86,17 +86,66 @@ The following sections provide several code snippets covering some of the most c
   };
   const client = new RenderClient(credential).renderV2;
   const response = await client.getMapTilePreview("microsoft.base", 6, 10, 22, operationOptions);
-  console.log(response);
 ```
+
+The response will contain the tile object based on the request parameters.
 
 ### Request map copyright attribution information
 
 ```javascript
+  const credential = new EmptyTokenCredential();
+  const operationOptions = {
+    requestOptions: {
+      customHeaders: { "subscription-key": process.env.MAPS_SUBSCRIPTION_KEY }
+    }
+  };
+  const client = new RenderClient(credential).renderV2;
+  const attribution = await client.getMapAttribution(
+    "microsoft.base",
+    6,
+    ["-122.414162", "47.579490", "-122.247157", "47.668372"],
+    operationOptions
+  );
+```
+
+Response
+```yaml
+{
+  copyrights: [
+    '<a data-azure-maps-attribution-tileset="microsoft.base">&copy;2021 TomTom</a>'
+  ]
+}
 ```
 
 ### Request metadata for a tileset
 
 ```javascript
+  const credential = new EmptyTokenCredential();
+  const operationOptions = {
+    requestOptions: {
+      customHeaders: { "subscription-key": process.env.MAPS_SUBSCRIPTION_KEY }
+    }
+  };
+  const client = new RenderClient(credential).renderV2;
+  const metadata = await client.getMapTileset("microsoft.base", operationOptions);
+```
+Response
+```yaml
+{
+  tilejson: '2.2.0',
+  name: 'microsoft.base',
+  version: '1.0.0',
+  attribution: '<a data-azure-maps-attribution-tileset="microsoft.base">&copy;2021 TomTom</a>',
+  scheme: 'xyz',
+  tiles: [
+    'https://atlas.microsoft.com/map/tile?api-version=2.1&tilesetId=microsoft.base&zoom={z}&x={x}&y={y}'
+  ],
+  grids: [],
+  data: [],
+  minzoom: 0,
+  maxzoom: 22,
+  bounds: [ -180, -90, 180, 90 ]
+}
 ```
 
 ## Troubleshooting
