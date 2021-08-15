@@ -113,6 +113,19 @@ async function main() {
   });
   // use result.blobBody for Browser, readableStreamBody for Node.js:
   result.readableStreamBody?.pipe(fs.createWriteStream("tmp/tile_v2.vector.pbf"));
+
+  console.log(" --- Get attribution:");
+  const attribution = await renderV2.getMapAttribution(
+    "microsoft.base",
+    6,
+    ["-122.414162", "47.579490", "-122.247157", "47.668372"],
+    operationOptions
+  );
+  console.log(attribution);
+
+  console.log(" --- Get tileset metadata:");
+  const metadata = await renderV2.getMapTileset("microsoft.base", operationOptions);
+  console.log(metadata);
 }
 
 main();
