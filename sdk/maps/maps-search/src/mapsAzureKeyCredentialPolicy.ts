@@ -1,0 +1,33 @@
+import { AzureKeyCredential } from "@azure/core-auth";
+import {
+  PipelineResponse,
+  PipelineRequest,
+  SendRequest,
+  PipelinePolicy
+} from "@azure/core-rest-pipeline";
+
+const API_KEY_HEADER_NAME = "subscription-key";
+
+/**
+ * The programmatic identifier of the mapsAzureKeyCredentialPolicy.
+ */
+export const mapsAzureKeyCredentialPolicyName = "mapsAzureKeyCredentialPolicy";
+
+/**
+ * Create an HTTP pipeline policy to authenticate a request
+ * using an `AzureKeyCredential` for Azure Maps
+ * @internal
+ */
+export function mapsAzureKeyCredentialPolicy(
+  azureKeyCredential: AzureKeyCredential
+): PipelinePolicy {
+  return {
+    name: mapsAzureKeyCredentialPolicyName,
+    async sendRequest(request: PipelineRequest, next: SendRequest): Promise<PipelineResponse> {
+      if (!request.headers.has(API_KEY_HEADER_NAME)) {
+        request.headers.set(API_KEY_HEADER_NAME, azureKeyCredential.key);
+      }
+      return next(request);
+    }
+  };
+}

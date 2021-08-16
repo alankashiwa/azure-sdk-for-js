@@ -6,9 +6,8 @@
  */
 
 import fs from "fs";
-import { getDefaultAzureCredential } from "@azure/identity";
-import * as coreAuth from "@azure/core-auth";
-import * as coreClient from "@azure/core-client";
+import { DefaultAzureCredential } from "@azure/identity";
+import { TokenCredential, AzureKeyCredential } from "@azure/core-auth";
 import { SearchClient } from "@azure/maps-search";
 import * as dotenv from "dotenv";
 dotenv.config();
@@ -24,37 +23,20 @@ dotenv.config();
  * More info is available at https://docs.microsoft.com/en-us/azure/azure-maps/azure-maps-authentication.
  */
 
-/**
- * Empty token class definition. To be used with AzureKey credentials.
- */
-class EmptyTokenCredential implements coreAuth.TokenCredential {
-  async getToken(
-    _scopes: string | string[],
-    _options?: coreAuth.GetTokenOptions
-  ): Promise<coreAuth.AccessToken | null> {
-    return {
-      token: "token",
-      expiresOnTimestamp: Date.now() + 60 * 60 * 1000
-    };
-  }
-}
-
 async function main() {
-  let credential: coreAuth.TokenCredential;
-  let operationOptions: coreClient.OperationOptions = {};
+  let credential: TokenCredential | AzureKeyCredential;
+  let mapsClientId: string | undefined;
 
   if (process.env.MAPS_SUBSCRIPTION_KEY) {
     // Use subscription key authentication
-    credential = new EmptyTokenCredential();
-    operationOptions.requestOptions = {
-      customHeaders: { "subscription-key": process.env.MAPS_SUBSCRIPTION_KEY }
-    };
+    credential = new AzureKeyCredential(process.env.MAPS_SUBSCRIPTION_KEY);
   } else {
     // Use Azure AD authentication
-    credential = getDefaultAzureCredential();
+    credential = new DefaultAzureCredential();
+    mapsClientId = process.env.CLIENT_ID;
   }
 
-  const search = new SearchClient(credential).search;
+  const search = new SearchClient(credential, { xMsClientId: mapsClientId }).search;
 
   const filePathForPostSearchAddressBatch =
     "../../resources/search_address_batch_request_body.json";
@@ -66,21 +48,13 @@ async function main() {
     "../../resources/search_inside_geometry_request_body.json";
 
   console.log(" --- Get search address:");
-  console.log(
-    await search.getSearchAddress(
-      "json",
-      "15127 NE 24th Street, Redmond, WA 98052",
-      operationOptions
-    )
-  );
+  console.log(await search.getSearchAddress("json", "15127 NE 24th Street, Redmond, WA 98052"));
 
   console.log(" --- Get search address reverse:");
-  console.log(await search.getSearchAddressReverse("json", "37.337,-121.89", operationOptions));
+  console.log(await search.getSearchAddressReverse("json", "37.337,-121.89"));
 
   console.log(" --- Get search address reverse cross street:");
-  console.log(
-    await search.getSearchAddressReverseCrossStreet("json", "37.337,-121.89", operationOptions)
-  );
+  console.log(await search.getSearchAddressReverseCrossStreet("json", "37.337,-121.89"));
 
   console.log(" --- Get search address structured:");
   const searchAddressStructuredOptions = {
@@ -91,15 +65,10 @@ async function main() {
     countrySubdivision: "WA",
     postalCode: "98052"
   };
-  console.log(
-    await search.getSearchAddressStructured("json", {
-      ...searchAddressStructuredOptions,
-      ...operationOptions
-    })
-  );
+  console.log(await search.getSearchAddressStructured("json", searchAddressStructuredOptions));
 
   console.log(" --- Get search fuzzy:");
-  const fuzzyResult = await search.getSearchFuzzy("json", "Seattle", operationOptions);
+  const fuzzyResult = await search.getSearchFuzzy("json", "Seattle");
   console.log(fuzzyResult);
 
   // let's save geometry IDs from the fuzzy search for the getSearchPolygon example
@@ -108,12 +77,7 @@ async function main() {
 
   console.log(" --- Get search nearby:");
   const searchNearbyOptions = { radius: 8046 };
-  console.log(
-    await search.getSearchNearby("json", 40.70627, -74.011454, {
-      ...searchNearbyOptions,
-      ...operationOptions
-    })
-  );
+  console.log(await search.getSearchNearby("json", 40.70627, -74.011454, searchNearbyOptions));
 
   console.log(" --- Get search POI:");
   const searchPOIOptions = {
@@ -122,9 +86,7 @@ async function main() {
     lon: -122.333345,
     radius: 8046
   };
-  console.log(
-    await search.getSearchPOI("json", "juice bars", { ...searchPOIOptions, ...operationOptions })
-  );
+  console.log(await search.getSearchPOI("json", "juice bars", searchPOIOptions));
 
   console.log(" --- Get search POI category:");
   const searchPOICategoryOptions = {
@@ -133,24 +95,20 @@ async function main() {
     lon: -122.333345,
     radius: 8046
   };
-  console.log(await search.getSearchPOICategory("json", "atm", operationOptions));
+  console.log(await search.getSearchPOICategory("json", "atm", searchPOICategoryOptions));
 
   console.log(" --- Get search POI category tree:");
-  console.log(await search.getSearchPOICategoryTreePreview("json", operationOptions));
+  console.log(await search.getSearchPOICategoryTreePreview("json"));
 
   console.log(" --- Get search polygon:");
-  console.log(await search.getSearchPolygon("json", geometries, operationOptions));
+  console.log(await search.getSearchPolygon("json", geometries));
 
   console.log(" --- Post search address batch:");
   const postSearchAddressBatchPayload = JSON.parse(
     fs.readFileSync(filePathForPostSearchAddressBatch, "utf8")
   );
   console.log(
-    await search.beginPostSearchAddressBatchAndWait(
-      "json",
-      postSearchAddressBatchPayload,
-      operationOptions
-    )
+    await search.beginPostSearchAddressBatchAndWait("json", postSearchAddressBatchPayload)
   );
 
   console.log(" --- Post search address reverse batch:");
@@ -160,8 +118,7 @@ async function main() {
   console.log(
     await search.beginPostSearchAddressReverseBatchAndWait(
       "json",
-      postSearchAddressReverseBatchPayload,
-      operationOptions
+      postSearchAddressReverseBatchPayload
     )
   );
 
@@ -169,13 +126,7 @@ async function main() {
   const postSearchFuzzyBatchPayload = JSON.parse(
     fs.readFileSync(filePathForPostSearchFuzzyBatch, "utf8")
   );
-  console.log(
-    await search.beginPostSearchFuzzyBatchAndWait(
-      "json",
-      postSearchFuzzyBatchPayload,
-      operationOptions
-    )
-  );
+  console.log(await search.beginPostSearchFuzzyBatchAndWait("json", postSearchFuzzyBatchPayload));
 
   console.log(" --- Post search along route:");
   const searchAlongRouteOptions = { limit: 2 };
@@ -183,10 +134,13 @@ async function main() {
     fs.readFileSync(filePathForPostSearchAlongRoute, "utf8")
   );
   console.log(
-    await search.postSearchAlongRoute("json", "burger", 1000, postSearchAlongRoutePayload, {
-      ...searchAlongRouteOptions,
-      ...operationOptions
-    })
+    await search.postSearchAlongRoute(
+      "json",
+      "burger",
+      1000,
+      postSearchAlongRoutePayload,
+      searchAlongRouteOptions
+    )
   );
 
   console.log(" --- Post search inside geometry:");
@@ -195,10 +149,12 @@ async function main() {
     fs.readFileSync(filePathForPostSearchInsideGeometry, "utf8")
   );
   console.log(
-    await search.postSearchInsideGeometry("json", "burger", postSearchInsideGeometryPayload, {
-      ...searchInsideGeometryOptions,
-      ...operationOptions
-    })
+    await search.postSearchInsideGeometry(
+      "json",
+      "burger",
+      postSearchInsideGeometryPayload,
+      searchInsideGeometryOptions
+    )
   );
 }
 

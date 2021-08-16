@@ -4,8 +4,10 @@
 
 ```ts
 
+import { AzureKeyCredential } from '@azure/core-auth';
 import * as coreAuth from '@azure/core-auth';
 import * as coreClient from '@azure/core-client';
+import { TokenCredential } from '@azure/core-auth';
 
 // @public
 export interface ErrorAdditionalInfo {
@@ -216,36 +218,11 @@ export interface RegionCopyrightsCountry {
     readonly label?: string;
 }
 
-// @public
-export interface Render {
-    getCopyrightCaption(format: TextFormat, options?: RenderGetCopyrightCaptionOptionalParams): Promise<RenderGetCopyrightCaptionResponse>;
-    getCopyrightForTile(format: TextFormat, zoom: number, xTileIndex: number, yTileIndex: number, options?: RenderGetCopyrightForTileOptionalParams): Promise<RenderGetCopyrightForTileResponse>;
-    getCopyrightForWorld(format: TextFormat, options?: RenderGetCopyrightForWorldOptionalParams): Promise<RenderGetCopyrightForWorldResponse>;
-    getCopyrightFromBoundingBox(format: TextFormat, mincoordinates: string, maxcoordinates: string, options?: RenderGetCopyrightFromBoundingBoxOptionalParams): Promise<RenderGetCopyrightFromBoundingBoxResponse>;
-    getMapImageryTile(format: RasterTileFormat, style: MapImageryStyle, zoom: number, xTileIndex: number, yTileIndex: number, options?: RenderGetMapImageryTileOptionalParams): Promise<RenderGetMapImageryTileResponse>;
-    getMapStateTilePreview(zoom: number, xTileIndex: number, yTileIndex: number, statesetId: string, options?: RenderGetMapStateTilePreviewOptionalParams): Promise<RenderGetMapStateTilePreviewResponse>;
-    getMapStaticImage(format: RasterTileFormat, options?: RenderGetMapStaticImageOptionalParams): Promise<RenderGetMapStaticImageResponse>;
-    getMapTile(format: TileFormat, layer: MapTileLayer, style: MapTileStyle, zoom: number, xTileIndex: number, yTileIndex: number, options?: RenderGetMapTileOptionalParams): Promise<RenderGetMapTileResponse>;
-}
-
+// Warning: (ae-forgotten-export) The symbol "RenderClient" needs to be exported by the entry point index.d.ts
+//
 // @public (undocumented)
-export class RenderClient extends RenderClientContext {
-    constructor(credentials: coreAuth.TokenCredential, options?: RenderClientOptionalParams);
-    // (undocumented)
-    render: Render;
-    // (undocumented)
-    renderV2: RenderV2;
-}
-
-// @public (undocumented)
-export class RenderClientContext extends coreClient.ServiceClient {
-    // (undocumented)
-    $host: string;
-    constructor(credentials: coreAuth.TokenCredential, options?: RenderClientOptionalParams);
-    // (undocumented)
-    geography: Geography;
-    // (undocumented)
-    xMsClientId?: string;
+export class RenderClient extends RenderClient_2 {
+    constructor(credential: TokenCredential | AzureKeyCredential, options?: RenderClientOptionalParams);
 }
 
 // @public
@@ -360,13 +337,6 @@ export type RenderGetMapTileResponse = RenderGetMapTileHeaders & {
     blobBody?: Promise<Blob>;
     readableStreamBody?: NodeJS.ReadableStream;
 };
-
-// @public
-export interface RenderV2 {
-    getMapAttribution(tilesetId: TilesetID, zoom: number, bounds: string[], options?: RenderV2GetMapAttributionOptionalParams): Promise<RenderV2GetMapAttributionResponse>;
-    getMapTilePreview(tilesetId: TilesetID, zoom: number, xTileIndex: number, yTileIndex: number, options?: RenderV2GetMapTilePreviewOptionalParams): Promise<RenderV2GetMapTilePreviewResponse>;
-    getMapTileset(tilesetId: TilesetID, options?: RenderV2GetMapTilesetOptionalParams): Promise<RenderV2GetMapTilesetResponse>;
-}
 
 // @public
 export interface RenderV2GetMapAttributionOptionalParams extends coreClient.OperationOptions {

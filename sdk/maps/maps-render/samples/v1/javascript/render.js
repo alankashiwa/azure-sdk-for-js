@@ -7,6 +7,7 @@
 
 const fs = require("fs");
 const { DefaultAzureCredential } = require("@azure/identity");
+const { AzureKeyCredential } = require("@azure/core-auth");
 const { RenderClient } = require("@azure/maps-render");
 require("dotenv").config();
 
@@ -21,67 +22,47 @@ require("dotenv").config();
  * More info is available at https://docs.microsoft.com/en-us/azure/azure-maps/azure-maps-authentication.
  */
 
-/**
- * Empty token class definition. To be used with AzureKey credentials.
- */
-class EmptyTokenCredential {
-  async getToken(_scopes, _options) {
-    return {
-      token: "token",
-      expiresOnTimestamp: Date.now() + 60 * 60 * 1000
-    };
-  }
-}
-
 async function main() {
   let credential;
-  let operationOptions = {};
+  let mapsClientId;
 
   if (process.env.MAPS_SUBSCRIPTION_KEY) {
     // Use subscription key authentication
-    credential = new EmptyTokenCredential();
-    operationOptions.requestOptions = {
-      customHeaders: { "subscription-key": process.env.MAPS_SUBSCRIPTION_KEY }
-    };
+    credential = new AzureKeyCredential(process.env.MAPS_SUBSCRIPTION_KEY);
   } else {
     // Use Azure AD authentication
     credential = new DefaultAzureCredential();
+    mapsClientId = process.env.CLIENT_ID;
   }
 
-  let maps = new RenderClient(credential);
+  const maps = new RenderClient(credential, { xMsClientId: mapsClientId });
   const render = maps.render;
   const renderV2 = maps.renderV2;
 
   console.log(" --- Get copyright caption:");
-  console.log(await render.getCopyrightCaption("json", operationOptions));
+  console.log(await render.getCopyrightCaption("json"));
 
   console.log(" --- Get copyright for tile:");
-  console.log(await render.getCopyrightForTile("json", 6, 9, 22, operationOptions));
+  console.log(await render.getCopyrightForTile("json", 6, 9, 22));
 
   console.log(" --- Get copyright for world:");
-  console.log(await render.getCopyrightForWorld("json", operationOptions));
-
+  console.log(await render.getCopyrightForWorld("json"));
   console.log(" --- Get copyright from bounding box:");
   console.log(
-    await render.getCopyrightFromBoundingBox(
-      "json",
-      "52.41064,4.84228",
-      "52.41072,4.84239",
-      operationOptions
-    )
+    await render.getCopyrightFromBoundingBox("json", "52.41064,4.84228", "52.41072,4.84239")
   );
 
   if (!fs.existsSync("tmp")) fs.mkdirSync("tmp");
 
   console.log(" --- Get map imagery tile:");
-  let result = await render.getMapImageryTile("png", "satellite", 6, 10, 22, operationOptions);
+  let result = await render.getMapImageryTile("png", "satellite", 6, 10, 22);
   // use result.blobBody for Browser, readableStreamBody for Node.js:
   result.readableStreamBody?.pipe(fs.createWriteStream("tmp/map_imagery_tile.png"));
 
   const statesetId = process.env.CREATOR_STATESET_ID;
   if (typeof statesetId === "string" && statesetId.length == 36) {
     console.log(" --- Get map state tile:");
-    result = await render.getMapStateTilePreview(6, 10, 22, statesetId, operationOptions);
+    result = await render.getMapStateTilePreview(6, 10, 22, statesetId);
     // use result.blobBody for Browser, readableStreamBody for Node.js:
     result.readableStreamBody?.pipe(fs.createWriteStream("tmp/state_tile.pbf"));
   }
@@ -93,38 +74,32 @@ async function main() {
     zoom: 2,
     bbox: "1.355233,42.982261,24.980233,56.526017"
   };
-  result = await render.getMapStaticImage("png", { ...mapStaticImageOptions, ...operationOptions });
+  result = await render.getMapStaticImage("png", mapStaticImageOptions);
   // use result.blobBody for Browser, readableStreamBody for Node.js:
   result.readableStreamBody?.pipe(fs.createWriteStream("tmp/static_image.png"));
 
   console.log(" --- Get map tile:");
   const mapTileOptions = { tileSize: "512" };
-  result = await render.getMapTile("png", "basic", "main", 6, 10, 22, {
-    ...mapTileOptions,
-    ...operationOptions
-  });
+  result = await render.getMapTile("png", "basic", "main", 6, 10, 22, mapTileOptions);
   // use result.blobBody for Browser, readableStreamBody for Node.js:
   result.readableStreamBody?.pipe(fs.createWriteStream("tmp/tile.png"));
 
   console.log(" --- Get map tile v2:");
-  result = await renderV2.getMapTilePreview("microsoft.base", 6, 10, 22, {
-    ...mapTileOptions,
-    ...operationOptions
-  });
+  result = await renderV2.getMapTilePreview("microsoft.base", 6, 10, 22, mapTileOptions);
   // use result.blobBody for Browser, readableStreamBody for Node.js:
   result.readableStreamBody?.pipe(fs.createWriteStream("tmp/tile_v2.vector.pbf"));
 
   console.log(" --- Get attribution:");
-  const attribution = await renderV2.getMapAttribution(
-    "microsoft.base",
-    6,
-    ["-122.414162", "47.579490", "-122.247157", "47.668372"],
-    operationOptions
-  );
+  const attribution = await renderV2.getMapAttribution("microsoft.base", 6, [
+    "-122.414162",
+    "47.579490",
+    "-122.247157",
+    "47.668372"
+  ]);
   console.log(attribution);
 
   console.log(" --- Get tileset metadata:");
-  const metadata = await renderV2.getMapTileset("microsoft.base", operationOptions);
+  const metadata = await renderV2.getMapTileset("microsoft.base");
   console.log(metadata);
 }
 
