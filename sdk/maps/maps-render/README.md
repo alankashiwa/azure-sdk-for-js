@@ -1,4 +1,4 @@
-# Azure Maps Render client library for JavaScript
+# Azure Maps Render client library for JavaScript/TypeScript
 
 The Azure Maps Render Service is a set of RESTful APIs designed to help developers retrieve maps rendering data such as map tiles, copyright attribution, and metadata for a tileset.
 
