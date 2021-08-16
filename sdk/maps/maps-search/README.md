@@ -51,12 +51,26 @@ npm install @azure/identity
 
 You will also need to register a new AAD application and grant access to Azure Maps Search by assigning the suitable role to your service principal. Please refer to the [Manage authentication](https://docs.microsoft.com/en-us/azure/azure-maps/how-to-manage-authentication) page.
 
-Set the values of the client ID, tenant ID, and client secret of the AAD application as environment variables: `AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, `AZURE_CLIENT_SECRET`.
+Set the values of the client ID, tenant ID, and client secret of the AAD application as environment variables: `AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, `AZURE_CLIENT_SECRET`. Additionally, set the optional `xMsClientId` property to the Azure Maps resource client id.
 
 ```javascript
 const { SearchClient } = require("@azure/maps-search");
 const { DefaultAzureCredential } = require("@azure/identity");
-const client = new SearchClient(new DefaultAzureCredential());
+const client = new SearchClient(new DefaultAzureCredential(), { xMsClientId: '<maps-client-id>' });
+```
+
+### Using Subscription Key Credential
+
+You can authenticate with your Azure Maps Subscriptiion Key. Please install the `@azure/core-auth` package:
+
+```bash
+npm install @azure/core-auth
+```
+
+```javascript
+const { SearchClient } = require("@azure/maps-search");
+const { AzureKeyCredential } = require("@azure/core-auth");
+const client = new SearchClient(new AzureKeyCredential('<subscription-key>'));
 ```
 
 ## Key concepts
@@ -80,13 +94,7 @@ You can use an authenticated client to convert an address into latitude and long
 
 ```javascript
   const credential = new DefaultAzureCredential();
-  const operationOptions = {
-    requestOptions: {
-      customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
-    }
-  };
-  
-  const client = new SearchClient(credential).search;
+  const client = new SearchClient(credential, { xMsClientId: '<maps-client-id>' }).search;
   const response = await client.getSearchAddress(
     "json",
     "400 Broad, Seattle",
@@ -145,17 +153,8 @@ You can use Fuzzy Search to search an address or a point of interest (POI). The 
 
 ```javascript
   const credential = new DefaultAzureCredential();
-  const operationOptions = {
-    requestOptions: {
-      customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
-    }
-  };
-  
-  const client = new SearchClient(credential).search;
-  const response = await client.getSearchFuzzy("json", "pizza", {
-    ...operationOptions,
-    countrySet: ["Brazil"]
-  });
+  const client = new SearchClient(credential, { xMsClientId: '<maps-client-id>' }).search;
+  const response = await client.getSearchFuzzy("json", "pizza", { countrySet: ["Brazil"] });
 ```
 
 Response
@@ -222,17 +221,10 @@ This is often used for applications that consume GPS feeds and want to discover 
 
 ```javascript
   const credential = new DefaultAzureCredential();
-  const operationOptions = {
-    requestOptions: {
-      customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
-    }
-  };
-  
-  const client = new SearchClient(credential).search;
+  const client = new SearchClient(credential, { xMsClientId: '<maps-client-id>' }).search;
   const response = await client.getSearchAddressReverse(
     "json",
-    "47.591180,-122.332700",
-    operationOptions
+    "47.591180,-122.332700"
   );
 ```
 
@@ -276,16 +268,11 @@ Response
 Translate coordinate location into a human understandable cross street by using Search Address Reverse Cross Street API. Most often, this is needed in tracking applications that receive a GPS feed from a device or asset, and wish to know where the coordinate is located.
 
 ```javascript
-  credential = new EmptyTokenCredential();
-  operationOptions.requestOptions = {
-    customHeaders: { "subscription-key": process.env.MAPS_SUBSCRIPTION_KEY }
-  };
-  
-  const client = new SearchClient(credential).search;
+  const credential = new DefaultAzureCredential();
+  const client = new SearchClient(credential, { xMsClientId: '<maps-client-id>' }).search;
   const response = await client.getSearchAddressReverseCrossStreet(
     "json",
-    "47.591180,-122.332700",
-    operationOptions
+    "47.591180,-122.332700"
   );
 ```
 

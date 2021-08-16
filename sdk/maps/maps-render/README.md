@@ -52,12 +52,26 @@ npm install @azure/identity
 
 You will also need to register a new AAD application and grant access to Azure Maps Search by assigning the suitable role to your service principal. Please refer to the [Manage authentication](https://docs.microsoft.com/en-us/azure/azure-maps/how-to-manage-authentication) page.
 
-Set the values of the client ID, tenant ID, and client secret of the AAD application as environment variables: `AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, `AZURE_CLIENT_SECRET`.
+Set the values of the client ID, tenant ID, and client secret of the AAD application as environment variables: `AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, `AZURE_CLIENT_SECRET`. Additionally, set the optional `xMsClientId` property to the Azure Maps resource client id.
 
 ```javascript
-const { RenderClient } = require("@azure/maps-render");
+const { SearchClient } = require("@azure/maps-search");
 const { DefaultAzureCredential } = require("@azure/identity");
-const client = new RenderClient(new DefaultAzureCredential());
+const client = new SearchClient(new DefaultAzureCredential(), { xMsClientId: '<maps-client-id>' });
+```
+
+### Using Subscription Key Credential
+
+You can authenticate with your Azure Maps Subscriptiion Key. Please install the `@azure/core-auth` package:
+
+```bash
+npm install @azure/core-auth
+```
+
+```javascript
+const { SearchClient } = require("@azure/maps-search");
+const { AzureKeyCredential } = require("@azure/core-auth");
+const client = new SearchClient(new AzureKeyCredential('<subscription-key>'));
 ```
 
 ## Key concepts
@@ -79,14 +93,8 @@ The following sections provide several code snippets covering some of the most c
 
 ```javascript
   const credential = new DefaultAzureCredential();
-  const operationOptions = {
-    requestOptions: {
-      customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
-    }
-  };
-
-  const client = new RenderClient(credential).renderV2;
-  const response = await client.getMapTilePreview("microsoft.base", 6, 10, 22, operationOptions);
+  const client = new RenderClient(credential, { xMsClientId: '<maps-client-id>' }).renderV2;
+  const response = await client.getMapTilePreview("microsoft.base", 6, 10, 22);
 ```
 
 The response will contain the tile object based on the request parameters.
@@ -95,18 +103,11 @@ The response will contain the tile object based on the request parameters.
 
 ```javascript
   const credential = new DefaultAzureCredential();
-  const operationOptions = {
-    requestOptions: {
-      customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
-    }
-  };
-
-  const client = new RenderClient(credential).renderV2;
+  const client = new RenderClient(credential, { xMsClientId: '<maps-client-id>' }).renderV2;
   const attribution = await client.getMapAttribution(
     "microsoft.base",
     6,
-    ["-122.414162", "47.579490", "-122.247157", "47.668372"],
-    operationOptions
+    ["-122.414162", "47.579490", "-122.247157", "47.668372"]
   );
 ```
 
@@ -123,14 +124,8 @@ Response
 
 ```javascript
   const credential = new DefaultAzureCredential();
-  const operationOptions = {
-    requestOptions: {
-      customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
-    }
-  };
-  
-  const client = new RenderClient(credential).renderV2;
-  const metadata = await client.getMapTileset("microsoft.base", operationOptions);
+  const client = new RenderClient(credential, { xMsClientId: '<maps-client-id>' }).renderV2;
+  const metadata = await client.getMapTileset("microsoft.base");
 ```
 Response
 ```yaml
