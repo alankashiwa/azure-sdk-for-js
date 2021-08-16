@@ -60,7 +60,7 @@ const { DefaultAzureCredential } = require("@azure/identity");
 const client = new SearchClient(new DefaultAzureCredential(), { xMsClientId: '<maps-client-id>' });
 ```
 
-### Using Subscription Key Credential
+#### Using a Subscription Key Credential
 
 You can authenticate with your Azure Maps Subscriptiion Key. Please install the `@azure/core-auth` package:
 
