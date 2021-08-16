@@ -79,10 +79,10 @@ The following sections provide several code snippets covering some of the most c
 You can use an authenticated client to convert an address into latitude and longitude coordinates. This process is also called geocoding. In addition to returning the coordinates, the response will also return detailed address properties such as street, postal code, municipality, and country/region information.
 
 ```javascript
-  const credential = new EmptyTokenCredential();
+  const credential = new DefaultAzureCredential();
   const operationOptions = {
     requestOptions: {
-      customHeaders: { "subscription-key": process.env.MAPS_SUBSCRIPTION_KEY }
+      customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
     }
   };
   
@@ -144,10 +144,10 @@ Response
 You can use Fuzzy Search to search an address or a point of interest (POI). The following examples demostrate how to search for `pizza` over the scope of a specific country (`Brazil`, in this example).
 
 ```javascript
-  const credential = new EmptyTokenCredential();
+  const credential = new DefaultAzureCredential();
   const operationOptions = {
     requestOptions: {
-      customHeaders: { "subscription-key": process.env.MAPS_SUBSCRIPTION_KEY }
+      customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
     }
   };
   
@@ -221,10 +221,10 @@ You can translate coordinates into human readable street addresses. This process
 This is often used for applications that consume GPS feeds and want to discover addresses at specific coordinate points.
 
 ```javascript
-  const credential = new EmptyTokenCredential();
+  const credential = new DefaultAzureCredential();
   const operationOptions = {
     requestOptions: {
-      customHeaders: { "subscription-key": process.env.MAPS_SUBSCRIPTION_KEY }
+      customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
     }
   };
   
