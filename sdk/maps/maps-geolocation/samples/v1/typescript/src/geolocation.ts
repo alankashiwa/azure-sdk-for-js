@@ -5,7 +5,7 @@
  * @summary Demonstrates Geolocation API usage. Simple queries are performed.
  */
 
-import { getDefaultAzureCredential } from "@azure/identity";
+import { DefaultAzureCredential } from "@azure/identity";
 import * as coreAuth from "@azure/core-auth";
 import * as coreClient from "@azure/core-client";
 import { GeolocationClient } from "@azure/maps-geolocation";
@@ -50,7 +50,12 @@ async function main() {
     };
   } else {
     // Use Azure AD authentication
-    credential = getDefaultAzureCredential();
+    credential = new DefaultAzureCredential();
+    if (process.env.MAPS_CLIENT_ID) {
+      operationOptions.requestOptions = {
+        customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
+      };
+    }
   }
 
   const geolocation = new GeolocationClient(credential).geolocation;

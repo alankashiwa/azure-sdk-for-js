@@ -1,4 +1,4 @@
-# Azure Maps Render client library for JavaScript
+# Azure Maps Render client library for JavaScript/TypeScript
 
 The Azure Maps Render Service is a set of RESTful APIs designed to help developers retrieve maps rendering data such as map tiles, copyright attribution, and metadata for a tileset.
 
@@ -78,12 +78,13 @@ The following sections provide several code snippets covering some of the most c
 
 
 ```javascript
-  const credential = new EmptyTokenCredential();
+  const credential = new DefaultAzureCredential();
   const operationOptions = {
     requestOptions: {
-      customHeaders: { "subscription-key": process.env.MAPS_SUBSCRIPTION_KEY }
+      customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
     }
   };
+
   const client = new RenderClient(credential).renderV2;
   const response = await client.getMapTilePreview("microsoft.base", 6, 10, 22, operationOptions);
 ```
@@ -93,12 +94,13 @@ The response will contain the tile object based on the request parameters.
 ### Request map copyright attribution information
 
 ```javascript
-  const credential = new EmptyTokenCredential();
+  const credential = new DefaultAzureCredential();
   const operationOptions = {
     requestOptions: {
-      customHeaders: { "subscription-key": process.env.MAPS_SUBSCRIPTION_KEY }
+      customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
     }
   };
+
   const client = new RenderClient(credential).renderV2;
   const attribution = await client.getMapAttribution(
     "microsoft.base",
@@ -120,12 +122,13 @@ Response
 ### Request metadata for a tileset
 
 ```javascript
-  const credential = new EmptyTokenCredential();
+  const credential = new DefaultAzureCredential();
   const operationOptions = {
     requestOptions: {
-      customHeaders: { "subscription-key": process.env.MAPS_SUBSCRIPTION_KEY }
+      customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
     }
   };
+  
   const client = new RenderClient(credential).renderV2;
   const metadata = await client.getMapTileset("microsoft.base", operationOptions);
 ```

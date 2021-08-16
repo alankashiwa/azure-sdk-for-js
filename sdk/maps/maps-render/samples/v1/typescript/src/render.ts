@@ -33,7 +33,7 @@ async function main() {
   } else {
     // Use Azure AD authentication
     credential = new DefaultAzureCredential();
-    mapsClientId = process.env.CLIENT_ID;
+    mapsClientId = process.env.MAPS_CLIENT_ID;
   }
 
   const maps = new RenderClient(credential, { xMsClientId: mapsClientId });
