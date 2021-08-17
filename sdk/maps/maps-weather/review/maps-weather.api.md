@@ -4,8 +4,10 @@
 
 ```ts
 
+import { AzureKeyCredential } from '@azure/core-auth';
 import * as coreAuth from '@azure/core-auth';
 import * as coreClient from '@azure/core-client';
+import { TokenCredential } from '@azure/core-auth';
 
 // @public (undocumented)
 export interface AirAndPollen {
@@ -432,18 +434,6 @@ export interface TemperatureSummaryPast6Hours {
 }
 
 // @public
-export interface Weather {
-    getCurrentConditions(format: ResponseFormat, query: string, options?: WeatherGetCurrentConditionsOptionalParams): Promise<WeatherGetCurrentConditionsResponse>;
-    getDailyForecast(format: ResponseFormat, query: string, options?: WeatherGetDailyForecastOptionalParams): Promise<WeatherGetDailyForecastResponse>;
-    getDailyIndices(format: ResponseFormat, query: string, options?: WeatherGetDailyIndicesOptionalParams): Promise<WeatherGetDailyIndicesResponse>;
-    getHourlyForecast(format: ResponseFormat, query: string, options?: WeatherGetHourlyForecastOptionalParams): Promise<WeatherGetHourlyForecastResponse>;
-    getMinuteForecast(format: ResponseFormat, query: string, options?: WeatherGetMinuteForecastOptionalParams): Promise<WeatherGetMinuteForecastResponse>;
-    getQuarterDayForecast(format: ResponseFormat, query: string, options?: WeatherGetQuarterDayForecastOptionalParams): Promise<WeatherGetQuarterDayForecastResponse>;
-    getSevereWeatherAlerts(format: ResponseFormat, query: string, options?: WeatherGetSevereWeatherAlertsOptionalParams): Promise<WeatherGetSevereWeatherAlertsResponse>;
-    getWeatherAlongRoute(format: ResponseFormat, query: string, options?: WeatherGetWeatherAlongRouteOptionalParams): Promise<WeatherGetWeatherAlongRouteResponse>;
-}
-
-// @public
 export interface WeatherAlongRoutePrecipitation {
     dbz?: number;
     type?: string;
@@ -461,22 +451,11 @@ export interface WeatherAlongRouteSummary {
     iconCode?: number;
 }
 
+// Warning: (ae-forgotten-export) The symbol "WeatherClient" needs to be exported by the entry point index.d.ts
+//
 // @public (undocumented)
-export class WeatherClient extends WeatherClientContext {
-    constructor(credentials: coreAuth.TokenCredential, options?: WeatherClientOptionalParams);
-    // (undocumented)
-    weather: Weather;
-}
-
-// @public (undocumented)
-export class WeatherClientContext extends coreClient.ServiceClient {
-    constructor(credentials: coreAuth.TokenCredential, options?: WeatherClientOptionalParams);
-    // (undocumented)
-    apiVersion: string;
-    // (undocumented)
-    geography: Geography;
-    // (undocumented)
-    xMsClientId?: string;
+export class WeatherClient extends WeatherClient_2 {
+    constructor(credential: TokenCredential | AzureKeyCredential, options?: WeatherClientOptionalParams);
 }
 
 // @public

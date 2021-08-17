@@ -57,8 +57,23 @@ Set the values of the client ID, tenant ID, and client secret of the AAD applica
 ```javascript
 const { WeatherClient } = require("@azure/maps-weather");
 const { DefaultAzureCredential } = require("@azure/identity");
-const client = new WeatherClient(new DefaultAzureCredential());
+const client = new WeatherClient(new DefaultAzureCredential(), { xMsClientId: '<maps-client-id>' });
 ```
+
+#### Using a Subscription Key Credential
+
+You can authenticate with your Azure Maps Subscriptiion Key. Please install the `@azure/core-auth` package:
+
+```bash
+npm install @azure/core-auth
+```
+
+```javascript
+const { WeatherClient } = require("@azure/maps-weather");
+const { AzureKeyCredential } = require("@azure/core-auth");
+const client = new WeatherClient(new AzureKeyCredential('<subscription-key>'));
+```
+
 
 ## Key concepts
 
@@ -84,13 +99,7 @@ Detailed weather conditions such as precipitation, temperature, and wind for a g
 
 ```javascript
   const credential = new DefaultAzureCredential();
-  const operationOptions = {
-    requestOptions: {
-      customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
-    }
-  };
-
-  const client = new WeatherClient(credential).weather;
+  const client = new WeatherClient(credential, { xMsClientId: '<maps-client-id>' }).weather;
   const response = await client.getCurrentConditions("json", "47.641268,-122.125679", operationOptions);
 
 ```
@@ -160,13 +169,7 @@ To retrieve the severe weather alerts at a given set of coordinates, you can
 
 ```javascript
   const credential = new DefaultAzureCredential();
-  const operationOptions = {
-    requestOptions: {
-      customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
-    }
-  };
-
-  const client = new WeatherClient(credential).weather;
+  const client = new WeatherClient(credential, { xMsClientId: '<maps-client-id>' }).weather;
   const response = await client.getSevereWeatherAlerts("json", "41.161079,-104.805450", operationOptions);
 
 ```
@@ -211,13 +214,7 @@ The request can specify how many days to return: 1, 5, 10, 15, 25, or 45 days fo
 
 ```javascript
   const credential = new DefaultAzureCredential();
-  const operationOptions = {
-    requestOptions: {
-      customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
-    }
-  };
-
-  const client = new WeatherClient(credential).weather;
+  const client = new WeatherClient(credential, { xMsClientId: '<maps-client-id>' }).weather;
   const dailyForecastOptions = { duration: 5 };
   const response = await client.getDailyForecast("json", "47.60357,-122.32945", {
       ...dailyForecastOptions,
@@ -462,15 +459,9 @@ To retrieve the hourly weather forecast for the next 12 hours at a given set of 
 
 ```javascript
   const credential = new DefaultAzureCredential();
-  const operationOptions = {
-    requestOptions: {
-      customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
-    }
-  };
-
-  const client = new WeatherClient(credential).weather;
+  const client = new WeatherClient(credential, { xMsClientId: '<maps-client-id>' }).weather;
   const hourlyForecastOptions = { duration: 12 };
-  const response = await weather.getHourlyForecas("json", "47.60357,-122.32945", {
+  const response = await client.getHourlyForecas("json", "47.60357,-122.32945", {
     ...hourlyForecastOptions,
     ...operationOptions
   })
@@ -575,15 +566,9 @@ To retrieve the minute-by-minute weather forecast at a given set of coordinates,
 
 ```javascript
   const credential = new DefaultAzureCredential();
-  const operationOptions = {
-    requestOptions: {
-      customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
-    }
-  };
-
-  const client = new WeatherClient(credential).weather;
+  const client = new WeatherClient(credential, { xMsClientId: '<maps-client-id>' }).weather;
   const minuteForecastOptions = { interval: 15 };
-  const response = await weather.getMinuteForecast("json", "47.632346,-122.138874", {
+  const response = await client.getMinuteForecast("json", "47.632346,-122.138874", {
     ...minuteForecastOptions,
     ...operationOptions
   })
