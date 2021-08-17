@@ -153,7 +153,7 @@ response
   ]
 }
 ```
-### Request severe weather alert
+### Request severe weather alerts
 The service can return details such as alert type, category, level, and detailed descriptions about the active severe alerts for the requested location, such as hurricanes, thunderstorms, lightning, heat waves or forest fires. As an example, logistics managers can visualize severe weather conditions on a map, along with business locations and planned routes, and coordinate further with drivers and local workers.
 
 To retrieve the severe weather alerts at a given set of coordinates, you can use the code snippet below.
