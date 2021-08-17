@@ -470,7 +470,7 @@ To retrieve the hourly weather forecast for the next 12 hours at a given set of 
 
   const client = new WeatherClient(credential).weather;
   const hourlyForecastOptions = { duration: 12 };
-  const response = await weather.getHourlyForecas("json", "47.60357,-122.32945", {
+  const response = await client.getHourlyForecas("json", "47.60357,-122.32945", {
     ...hourlyForecastOptions,
     ...operationOptions
   })
@@ -583,7 +583,7 @@ To retrieve the minute-by-minute weather forecast at a given set of coordinates,
 
   const client = new WeatherClient(credential).weather;
   const minuteForecastOptions = { interval: 15 };
-  const response = await weather.getMinuteForecast("json", "47.632346,-122.138874", {
+  const response = await client.getMinuteForecast("json", "47.632346,-122.138874", {
     ...minuteForecastOptions,
     ...operationOptions
   })
