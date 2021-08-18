@@ -40,7 +40,7 @@ npm install @azure/maps-weather
 
 ### Create and authenticate a `WeatherClient`
 
-To create a client object to access the Azure Maps Weather API, you will need a `credential` object. The Azure Maps Search client can use an Azure Active Directory credential to authenticate.
+To create a client object to access the Azure Maps Weather API, you will need a `credential` object. The Azure Maps Weather client can use an Azure Active Directory credential to authenticate.
 
 #### Using an Azure Active Directory Credential
 
@@ -67,7 +67,7 @@ const client = new WeatherClient(new DefaultAzureCredential());
 `WeatherClient` is the primary interface for developers using the Azure Maps Weather client library. Explore the methods on this client object to understand the different features of the Azure Maps Weather service that you can access.
 
 ## Examples
-The following sections provide several code snippets covering some of the most common Azure Maps Search tasks, including:
+The following sections provide several code snippets covering some of the most common Azure Maps Weather tasks, including:
 
 - [Request real-time weather data](#request-real-time-weather-data)
 
@@ -94,7 +94,7 @@ Detailed weather conditions such as precipitation, temperature, and wind for a g
   const response = await client.getCurrentConditions("json", "47.641268,-122.125679", operationOptions);
 
 ```
-response
+Response
 ```yaml
 {
   "results": [
