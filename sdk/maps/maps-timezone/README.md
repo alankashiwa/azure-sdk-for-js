@@ -56,8 +56,30 @@ Set the values of the client ID, tenant ID, and client secret of the AAD applica
 ```javascript
 const { TimezoneClient } = require("@azure/maps-timezone");
 const { DefaultAzureCredential } = require("@azure/identity");
-const client = new TimezoneClient(new DefaultAzureCredential());
+const client = new TimezoneClient(new DefaultAzureCredential(), { xMsClientId: '<maps-client-id>' });
 ```
+
+#### Using a Subscription Key Credential
+
+You can authenticate with your Azure Maps Subscriptiion Key. Please install the `@azure/core-auth` package:
+
+```bash
+npm install @azure/core-auth
+```
+
+```javascript
+const { TimezoneClient } = require("@azure/maps-timezone");
+const { AzureKeyCredential } = require("@azure/core-auth");
+const client = new TimezoneClient(new AzureKeyCredential('<subscription-key>'));
+```
+
+
+## Key concepts
+
+### TimezoneClient
+
+`TimezoneClient` is the primary interface for developers using the Azure Maps Timezone client library. Explore the methods on this client object to understand the different features of the Azure Timezone service that you can access.
+
 ## Examples
 The following sections provide several code snippets covering some of the most common Azure Maps Timezone tasks, including:
 - [Request timezone information by coordinates](#request-timezone-information-by-coordinates)
@@ -69,13 +91,7 @@ The service provides current, historical, and future time zone information for a
 
 ```javascript
   const credential = new DefaultAzureCredential();
-  const operationOptions = {
-    requestOptions: {
-      customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
-    }
-  };
-
-  const client = new TimezoneClient(credential).timezone;
+  const client = new TimezoneClient(credential, { xMsClientId: '<maps-client-id>' }).timezone;
   const response = await client.getTimezoneByCoordinates("json", "47.0,-122", {
     ...timezoneByCoordinatesOptions,
     ...operationOptions
@@ -142,13 +158,7 @@ This service provides a full list of IANA time zone IDs. Updates to the IANA ser
 
 ```javascript
   const credential = new DefaultAzureCredential();
-  const operationOptions = {
-    requestOptions: {
-      customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
-    }
-  };
-
-  const client = new TimezoneClient(credential).timezone;
+  const client = new TimezoneClient(credential, { xMsClientId: '<maps-client-id>' }).timezone;
   const response = await client.getTimezoneEnumIana("json", operationOptions)
 ```
 Response
@@ -175,13 +185,7 @@ This service provides current, historical, and future time zone information for 
 
 ```javascript
   const credential = new DefaultAzureCredential();
-  const operationOptions = {
-    requestOptions: {
-      customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
-    }
-  };
-
-  const client = new TimezoneClient(credential).timezone;
+  const client = new TimezoneClient(credential, { xMsClientId: '<maps-client-id>' }).timezone;
   const response = await client.getTimezoneByID("json", "Asia/Bahrain", {
     ...timezoneByIdOptions,
     ...operationOptions
@@ -228,11 +232,6 @@ Response
   ]
 }
 ```
-## Key concepts
-
-### TimezoneClient
-
-`TimezoneClient` is the primary interface for developers using the Azure Maps Timezone client library. Explore the methods on this client object to understand the different features of the Azure Timezone service that you can access.
 
 ## Troubleshooting
 

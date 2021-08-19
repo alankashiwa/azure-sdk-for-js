@@ -56,8 +56,28 @@ Set the values of the client ID, tenant ID, and client secret of the AAD applica
 ```javascript
 const { TrafficClient } = require("@azure/maps-traffic");
 const { DefaultAzureCredential } = require("@azure/identity");
-const client = new TrafficClient(new DefaultAzureCredential());
+const client = new TrafficClient(new DefaultAzureCredential(), { xMsClientId: '<maps-client-id>' });
 ```
+
+#### Using a Subscription Key Credential
+
+You can authenticate with your Azure Maps Subscriptiion Key. Please install the `@azure/core-auth` package:
+
+```bash
+npm install @azure/core-auth
+```
+
+```javascript
+const { TrafficClient } = require("@azure/maps-traffic");
+const { AzureKeyCredential } = require("@azure/core-auth");
+const client = new TrafficClient(new AzureKeyCredential('<subscription-key>'));
+```
+
+## Key concepts
+
+### TrafficClient
+
+`TrafficClient` is the primary interface for developers using the Azure Maps Traffic client library. Explore the methods on this client object to understand the different features of the Azure Maps Traffic service that you can access.
 
 ## Examples
 The following sections provide several code snippets covering some of the most common Azure Maps Traffic tasks, including:
@@ -71,13 +91,7 @@ This service provides information about the speeds and travel times of the road 
 
 ```javascript
   const credential = new DefaultAzureCredential();
-  const operationOptions = {
-    requestOptions: {
-      customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
-    }
-  };
-
-  const client = new TrafficClient(credential).traffic;
+  const client = new TrafficClient(credential, { xMsClientId: '<maps-client-id>' }).traffic;
   const response = await client.getTrafficFlowSegment(
     "json",
     "absolute",
@@ -121,13 +135,7 @@ The service serves 256 x 256 pixel tiles showing traffic flow. All tiles use the
 
 ```javascript
   const credential = new DefaultAzureCredential();
-  const operationOptions = {
-    requestOptions: {
-      customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
-    }
-  };
-
-  const client = new TrafficClient(credential).traffic;
+  const client = new TrafficClient(credential, { xMsClientId: '<maps-client-id>' }).traffic;
   const response = await client.getTrafficFlowTile(
     "png",
     "absolute",
@@ -144,23 +152,12 @@ The response will contain the traffic flow tile based on the request parameters.
 
 ```javascript
   const credential = new DefaultAzureCredential();
-  const operationOptions = {
-    requestOptions: {
-      customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
-    }
-  };
-
-  const client = new TrafficClient(credential).traffic;
+  const client = new TrafficClient(credential, { xMsClientId: '<maps-client-id>' }).traffic;
   const response = await client.getTrafficIncidentTile("png", "night", 10, 175, 408, operationOptions);
 ```
 
 The response will contain the traffic incident tile based on the request parameters.
 
-## Key concepts
-
-### TrafficClient
-
-`TrafficClient` is the primary interface for developers using the Azure Maps Traffic client library. Explore the methods on this client object to understand the different features of the Azure Maps Traffic service that you can access.
 
 ## Troubleshooting
 
