@@ -4,8 +4,10 @@
 
 ```ts
 
+import { AzureKeyCredential } from '@azure/core-auth';
 import * as coreAuth from '@azure/core-auth';
 import * as coreClient from '@azure/core-client';
+import { TokenCredential } from '@azure/core-auth';
 
 // @public
 export interface CoordinatesPair {
@@ -132,31 +134,11 @@ export type TextFormat = string;
 // @public
 export type TileFormat = string;
 
-// @public
-export interface Traffic {
-    getTrafficFlowSegment(format: TextFormat, style: TrafficFlowSegmentStyle, zoom: number, query: string, options?: TrafficGetTrafficFlowSegmentOptionalParams): Promise<TrafficGetTrafficFlowSegmentResponse>;
-    getTrafficFlowTile(format: TileFormat, style: TrafficFlowTileStyle, zoom: number, xTileIndex: number, yTileIndex: number, options?: TrafficGetTrafficFlowTileOptionalParams): Promise<TrafficGetTrafficFlowTileResponse>;
-    getTrafficIncidentDetail(format: TextFormat, style: TrafficIncidentDetailStyle, boundingbox: string, boundingZoom: number, trafficmodelid: string, options?: TrafficGetTrafficIncidentDetailOptionalParams): Promise<TrafficGetTrafficIncidentDetailResponse>;
-    getTrafficIncidentTile(format: TileFormat, style: TrafficIncidentTileStyle, zoom: number, xTileIndex: number, yTileIndex: number, options?: TrafficGetTrafficIncidentTileOptionalParams): Promise<TrafficGetTrafficIncidentTileResponse>;
-    getTrafficIncidentViewport(format: TextFormat, boundingbox: string, boundingzoom: number, overviewbox: string, overviewzoom: number, options?: TrafficGetTrafficIncidentViewportOptionalParams): Promise<TrafficGetTrafficIncidentViewportResponse>;
-}
-
+// Warning: (ae-forgotten-export) The symbol "TrafficClient" needs to be exported by the entry point index.d.ts
+//
 // @public (undocumented)
-export class TrafficClient extends TrafficClientContext {
-    constructor(credentials: coreAuth.TokenCredential, options?: TrafficClientOptionalParams);
-    // (undocumented)
-    traffic: Traffic;
-}
-
-// @public (undocumented)
-export class TrafficClientContext extends coreClient.ServiceClient {
-    constructor(credentials: coreAuth.TokenCredential, options?: TrafficClientOptionalParams);
-    // (undocumented)
-    apiVersion: string;
-    // (undocumented)
-    geography: Geography;
-    // (undocumented)
-    xMsClientId?: string;
+export class TrafficClient extends TrafficClient_2 {
+    constructor(credential: TokenCredential | AzureKeyCredential, options?: TrafficClientOptionalParams);
 }
 
 // @public
