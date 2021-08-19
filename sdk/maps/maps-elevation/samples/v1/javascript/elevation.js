@@ -6,6 +6,7 @@
  */
 
 const { DefaultAzureCredential } = require("@azure/identity");
+const { AzureKeyCredential } = require("@azure/core-auth");
 const { ElevationClient } = require("@azure/maps-elevation");
 require("dotenv").config();
 
@@ -20,39 +21,20 @@ require("dotenv").config();
  * More info is available at https://docs.microsoft.com/en-us/azure/azure-maps/azure-maps-authentication.
  */
 
-/**
- * Empty token class definition. To be used with AzureKey credentials.
- */
-class EmptyTokenCredential {
-  async getToken(_scopes, _options) {
-    return {
-      token: "token",
-      expiresOnTimestamp: Date.now() + 60 * 60 * 1000
-    };
-  }
-}
-
 async function main() {
   let credential;
-  let operationOptions = {};
+  let mapsClientId;
 
   if (process.env.MAPS_SUBSCRIPTION_KEY) {
     // Use subscription key authentication
-    credential = new EmptyTokenCredential();
-    operationOptions.requestOptions = {
-      customHeaders: { "subscription-key": process.env.MAPS_SUBSCRIPTION_KEY }
-    };
+    credential = new AzureKeyCredential(process.env.MAPS_SUBSCRIPTION_KEY);
   } else {
     // Use Azure AD authentication
     credential = new DefaultAzureCredential();
-    if (process.env.MAPS_CLIENT_ID) {
-      operationOptions.requestOptions = {
-        customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
-      };
-    }
+    mapsClientId = process.env.MAPS_CLIENT_ID;
   }
 
-  const elevation = new ElevationClient(credential).elevation;
+  const elevation = new ElevationClient(credential, { xMsClientId: mapsClientId }).elevation;
 
   console.log(" --- Get Data For Bounding Box:");
   console.log(
@@ -60,51 +42,40 @@ async function main() {
       "json",
       ["-121.66853362143818", "46.84646479863713", "-121.65853362143818", "46.85646479863713"],
       3,
-      3,
-      operationOptions
+      3
     )
   );
 
   console.log(" --- Get Data For Points:");
   console.log(
-    await elevation.getDataForPoints(
-      "json",
-      ["-121.66853362143818,46.84646479863713", "-121.65853362143818,46.85646479863713"],
-      operationOptions
-    )
+    await elevation.getDataForPoints("json", [
+      "-121.66853362143818,46.84646479863713",
+      "-121.65853362143818,46.85646479863713"
+    ])
   );
 
   console.log(" --- Get Data For Polyline:");
   console.log(
-    await elevation.getDataForPolyline(
-      "json",
-      ["-121.66853362143818,46.84646479863713", "-121.65853362143818,46.85646479863713"],
-      operationOptions
-    )
+    await elevation.getDataForPolyline("json", [
+      "-121.66853362143818,46.84646479863713",
+      "-121.65853362143818,46.85646479863713"
+    ])
   );
 
   console.log(" --- Post Data For Points:");
   console.log(
-    await elevation.postDataForPoints(
-      "json",
-      [
-        { lat: 46.84646479863713, lon: -121.66853362143818 },
-        { lat: 46.85646479863713, lon: -121.65853362143818 }
-      ],
-      operationOptions
-    )
+    await elevation.postDataForPoints("json", [
+      { lat: 46.84646479863713, lon: -121.66853362143818 },
+      { lat: 46.85646479863713, lon: -121.65853362143818 }
+    ])
   );
 
   console.log(" --- Post Data For Polyline:");
   console.log(
-    await elevation.postDataForPolyline(
-      "json",
-      [
-        { lat: 46.84646479863713, lon: -121.66853362143818 },
-        { lat: 46.85646479863713, lon: -121.65853362143818 }
-      ],
-      operationOptions
-    )
+    await elevation.postDataForPolyline("json", [
+      { lat: 46.84646479863713, lon: -121.66853362143818 },
+      { lat: 46.85646479863713, lon: -121.65853362143818 }
+    ])
   );
 }
 

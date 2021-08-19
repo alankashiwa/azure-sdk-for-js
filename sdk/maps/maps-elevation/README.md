@@ -55,7 +55,20 @@ Set the values of the client ID, tenant ID, and client secret of the AAD applica
 ```javascript
 const { ElevationClient } = require("@azure/maps-elevation");
 const { DefaultAzureCredential } = require("@azure/identity");
-const client = new ElevationClient(new DefaultAzureCredential());
+const client = new ElevationClient(new DefaultAzureCredential(), { xMsClientId: '<maps-client-id>' });
+```
+#### Using a Subscription Key Credential
+
+You can authenticate with your Azure Maps Subscriptiion Key. Please install the `@azure/core-auth` package:
+
+```bash
+npm install @azure/core-auth
+```
+
+```javascript
+const { ElevationClient } = require("@azure/maps-elevation");
+const { AzureKeyCredential } = require("@azure/core-auth");
+const client = new ElevationClient(new AzureKeyCredential('<subscription-key>'));
 ```
 
 ## Key concepts
@@ -83,7 +96,7 @@ You can request elevation data using the coordinates. Latitudes and longitudes a
     }
   };
 
-  const client = new ElevationClient(credential).elevation;
+  const client = new ElevationClient(credential, { xMsClientId: '<maps-client-id>' }).elevation;
   const response = await client.getDataForPoints(
     "json",
     ["-121.66853362143818,46.84646479863713", "-121.65853362143818,46.85646479863713"],
@@ -117,7 +130,7 @@ You can request elevation data samples along a straight line. Both coordinates m
     }
   };
 
-  const client = new ElevationClient(credential).elevation;
+  const client = new ElevationClient(credential, { xMsClientId: '<maps-client-id>' }).elevation;
   const response = await client.getDataForPolyline(
     "json",
     ["-121.66853362143818,46.84646479863713", "-121.65853362143818,46.85646479863713"],
@@ -183,7 +196,7 @@ You can request elevation data by a bounding box. The elevation data will be ret
     }
   };
 
-  const client = new ElevationClient(credential).elevation;
+  const client = new ElevationClient(credential, { xMsClientId: '<maps-client-id>' }).elevation;
   const response = await client.getDataForBoundingBox(
     "json",
     ["-121.66853362143818", "46.84646479863713", "-121.65853362143818", "46.85646479863713"],

@@ -4,8 +4,10 @@
 
 ```ts
 
+import { AzureKeyCredential } from '@azure/core-auth';
 import * as coreAuth from '@azure/core-auth';
 import * as coreClient from '@azure/core-client';
+import { TokenCredential } from '@azure/core-auth';
 
 // @public
 export interface BoundingBoxResult {
@@ -24,31 +26,11 @@ export interface CoordinatesPairAbbreviated {
     lon?: number;
 }
 
-// @public
-export interface Elevation {
-    getDataForBoundingBox(format: ResponseFormat, bounds: string[], rows: number, columns: number, options?: ElevationGetDataForBoundingBoxOptionalParams): Promise<ElevationGetDataForBoundingBoxResponse>;
-    getDataForPoints(format: ResponseFormat, points: string[], options?: ElevationGetDataForPointsOptionalParams): Promise<ElevationGetDataForPointsResponse>;
-    getDataForPolyline(format: ResponseFormat, lines: string[], options?: ElevationGetDataForPolylineOptionalParams): Promise<ElevationGetDataForPolylineResponse>;
-    postDataForPoints(format: ResponseFormat, pointsRequestBody: CoordinatesPairAbbreviated[], options?: ElevationPostDataForPointsOptionalParams): Promise<ElevationPostDataForPointsResponse>;
-    postDataForPolyline(format: ResponseFormat, linesRequestBody: CoordinatesPairAbbreviated[], options?: ElevationPostDataForPolylineOptionalParams): Promise<ElevationPostDataForPolylineResponse>;
-}
-
+// Warning: (ae-forgotten-export) The symbol "ElevationClient" needs to be exported by the entry point index.d.ts
+//
 // @public (undocumented)
-export class ElevationClient extends ElevationClientContext {
-    constructor(credentials: coreAuth.TokenCredential, options?: ElevationClientOptionalParams);
-    // (undocumented)
-    elevation: Elevation;
-}
-
-// @public (undocumented)
-export class ElevationClientContext extends coreClient.ServiceClient {
-    constructor(credentials: coreAuth.TokenCredential, options?: ElevationClientOptionalParams);
-    // (undocumented)
-    apiVersion: string;
-    // (undocumented)
-    geography: Geography;
-    // (undocumented)
-    xMsClientId?: string;
+export class ElevationClient extends ElevationClient_2 {
+    constructor(credential: TokenCredential | AzureKeyCredential, options?: ElevationClientOptionalParams);
 }
 
 // @public
