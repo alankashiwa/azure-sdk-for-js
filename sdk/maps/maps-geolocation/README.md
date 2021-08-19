@@ -38,7 +38,7 @@ npm install @azure/maps-geolocation
 
 ### Create and authenticate a `GeolocationClient`
 
-To create a client object to access the Azure Maps Geolocation API, you will need a `credential` object. The Azure Maps Timezone client can use an Azure Active Directory credential to authenticate.
+To create a client object to access the Azure Maps Geolocation API, you will need a `credential` object. The Azure Maps Geolocation client can use an Azure Active Directory credential to authenticate.
 
 #### Using an Azure Active Directory Credential
 
@@ -85,8 +85,8 @@ The following sections provide several code snippets covering some of the most c
 
 ```javascript
   const credential = new DefaultAzureCredential();
-  const geolocation = new GeolocationClient(credential, { xMsClientId: '<maps-client-id>' }).geolocation;
-  const response = await geolocation.getIPToLocationPreview("json", ipAddressToTest, operationOptions);
+  const client = new GeolocationClient(credential, { xMsClientId: '<maps-client-id>' }).geolocation;
+  const response = await client.getIPToLocationPreview("json", ipAddressToTest, operationOptions);
 ```
 Response
 ```yaml

@@ -1,13 +1,14 @@
-# Azure Elevation client library for JavaScript
+# Azure Maps Elevation client library for JavaScript/TypeScript
 
-This package contains an isomorphic SDK (runs both in Node.js and in browsers) for Azure Elevation client.
+The Azure Maps Elevation service provides APIs to query elevation data anywhere on the earth's surface. You can request sampled elevation data along paths, within a defined bounding box, or at specific coordinates. Also, you can use the [Render V2 - Get Map Tile API](https://docs.microsoft.com/en-us/rest/api/maps/render-v2) to retrieve elevation data in tile format. The tiles are delivered in GeoTIFF raster format.
 
-The Azure Maps Elevation API provides an HTTP interface to query elevation data on the  surface of the Earth. Elevation data can be retrieved at specific locations by sending  lat/lon coordinates, by defining an ordered set of vertices that form a Polyline and a  number of sample points along the length of a Polyline, or by defining a bounding box  that consists of equally spaced vertices as rows and columns. The vertical datum is EPSG:3855.  This datum uses the EGM2008 geoid model applied to the WGS84 ellipsoid as its zero height  reference surface. The vertical unit is measured in meters, the spatial resolution of the  elevation data is 0.8 arc-second for global coverage (~24 meters).
+This package contains an isomorphic SDK (runs both in Node.js and in browsers) for Azure Maps Elevation client.
 
-[Source code](https://github.com/Azure/azure-sdk-for-js/tree/master/sdk/maps/maps-elevation) |
+[Source code](https://github.com/Azure/azure-sdk-for-js/tree/main/sdk/maps/maps-elevation) |
 [Package (NPM)](https://www.npmjs.com/package/@azure/maps-elevation) |
 [API reference documentation](https://docs.microsoft.com/javascript/api/@azure/maps-elevation) |
-[Samples](https://github.com/Azure/azure-sdk-for-js/tree/master/sdk/maps/maps-elevation/samples)
+[Samples](https://github.com/Azure/azure-sdk-for-js/tree/main/sdk/maps/maps-elevation/samples) |
+[Product Information](https://docs.microsoft.com/en-us/azure/azure-maps/how-to-request-elevation-data)
 
 ## Getting started
 
@@ -19,10 +20,17 @@ The Azure Maps Elevation API provides an HTTP interface to query elevation data 
 ### Prerequisites
 
 - An [Azure subscription][azure_sub].
+- An [Azure Maps account](https://docs.microsoft.com/en-us/azure/azure-maps/how-to-manage-account-keys). You can create the resource via [Azure Portal][azure_portal] or [Azure CLI][azure_cli].
+
+If you use Azure CLI, replace `<resource-group-name>` and `<account-name>` of your choice, and select a proper [pricing tier](https://docs.microsoft.com/en-us/azure/azure-maps/choose-pricing-tier) based on your needs via the `<sku-name>` parameter. Please refer to [this page](https://docs.microsoft.com/en-us/cli/azure/maps/account?view=azure-cli-latest#az_maps_account_create) for more details.
+
+```bash
+az maps account create --resource-group <resource-group-name> --account-name <account-name> --sku <sku-name>
+```
 
 ### Install the `@azure/maps-elevation` package
 
-Install the Azure Elevation client library for JavaScript with `npm`:
+Install the Azure Maps Elevation client library for JavaScript with `npm`:
 
 ```bash
 npm install @azure/maps-elevation
@@ -30,8 +38,7 @@ npm install @azure/maps-elevation
 
 ### Create and authenticate a `ElevationClient`
 
-To create a client object to access the Azure Elevation API, you will need the `endpoint` of your Azure Elevation resource and a `credential`. The Azure Elevation client can use Azure Active Directory credentials to authenticate.
-You can find the endpoint for your Azure Elevation resource in the [Azure Portal][azure_portal].
+To create a client object to access the Azure Maps Elevation API, you will need a `credential` object. The Azure Maps Elevation client can use an Azure Active Directory credential to authenticate.
 
 #### Using an Azure Active Directory Credential
 
@@ -41,20 +48,194 @@ You can authenticate with Azure Active Directory using the [Azure Identity libra
 npm install @azure/identity
 ```
 
-You will also need to register a new AAD application and grant access to Azure Elevation by assigning the suitable role to your service principal (note: roles such as `"Owner"` will not grant the necessary permissions).
+You will also need to register a new AAD application and grant access to Azure Maps by assigning the suitable role to your service principal. Please refer to the [Manage authentication](https://docs.microsoft.com/en-us/azure/azure-maps/how-to-manage-authentication) page.
+
 Set the values of the client ID, tenant ID, and client secret of the AAD application as environment variables: `AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, `AZURE_CLIENT_SECRET`.
 
 ```javascript
 const { ElevationClient } = require("@azure/maps-elevation");
 const { DefaultAzureCredential } = require("@azure/identity");
-const client = new ElevationClient("<endpoint>", new DefaultAzureCredential());
+const client = new ElevationClient(new DefaultAzureCredential());
 ```
 
 ## Key concepts
 
 ### ElevationClient
 
-`ElevationClient` is the primary interface for developers using the Azure Elevation client library. Explore the methods on this client object to understand the different features of the Azure Elevation service that you can access.
+`ElevationClient` is the primary interface for developers using the Azure Maps Elevation client library. Explore the methods on this client object to understand the different features of the Azure Maps Elevation service that you can access.
+
+## Examples
+The following sections provide several code snippets covering some of the most common Azure Maps Elevation tasks, including:
+
+- [Request elevation data for points](#request-elevation-data-for-points)
+- [Request elevation data samples along a Polyline](#request-elevation-data-samples-along-a-polyline)
+- [Request elevation data by Bounding Box](#request-elevation-data-by-bounding-box)
+
+### Request elevation data for points
+
+You can request elevation data using the coordinates. Latitudes and longitudes are expected to be in WGS84 (World Geodetic System) decimal degree.
+
+```javascript
+  const credential = new DefaultAzureCredential();
+  const operationOptions = {
+    requestOptions: {
+      customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
+    }
+  };
+
+  const client = new ElevationClient(credential).elevation;
+  const response = await client.getDataForPoints(
+    "json",
+    ["-121.66853362143818,46.84646479863713", "-121.65853362143818,46.85646479863713"],
+    operationOptions
+  )
+```
+Response
+```yaml
+{
+  "data": [
+    {
+      "coordinate": { "latitude": 46.84646479863713, "longitude": -121.66853362143819 },
+      "elevationInMeter": 2298.65819
+    },
+    {
+      "coordinate": { "latitude": 46.85646479863713, "longitude": -121.65853362143818 },
+      "elevationInMeter": 1988.36315
+    }
+  ]
+}
+
+```
+### Request elevation data samples along a Polyline
+You can request elevation data samples along a straight line. Both coordinates must be defined in longitude/latitude format. If you don't specify a value for the samples parameter, the number of samples defaults to 10. The maximum number of samples is 2,000.
+
+```javascript
+  const credential = new DefaultAzureCredential();
+  const operationOptions = {
+    requestOptions: {
+      customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
+    }
+  };
+
+  const client = new ElevationClient(credential).elevation;
+  const response = await client.getDataForPolyline(
+    "json",
+    ["-121.66853362143818,46.84646479863713", "-121.65853362143818,46.85646479863713"],
+    operationOptions
+  )
+```
+
+Response
+```yaml
+{
+  "data": [
+    {
+      "coordinate": { "latitude": 46.84646479863713, "longitude": -121.66853362143819 },
+      "elevationInMeter": 2298.65819
+    },
+    {
+      "coordinate": { "latitude": 46.84757590974824, "longitude": -121.66742251032707 },
+      "elevationInMeter": 2330.53627
+    },
+    {
+      "coordinate": { "latitude": 46.84868702085935, "longitude": -121.66631139921596 },
+      "elevationInMeter": 2298.10707
+    },
+    {
+      "coordinate": { "latitude": 46.84979813197046, "longitude": -121.66520028810486 },
+      "elevationInMeter": 2266.74946
+    },
+    {
+      "coordinate": { "latitude": 46.850909243081574, "longitude": -121.66408917699374 },
+      "elevationInMeter": 2258.03966
+    },
+    {
+      "coordinate": { "latitude": 46.85202035419268, "longitude": -121.66297806588263 },
+      "elevationInMeter": 2209.64516
+    },
+    {
+      "coordinate": { "latitude": 46.8531314653038, "longitude": -121.66186695477151 },
+      "elevationInMeter": 2083.25575
+    },
+    {
+      "coordinate": { "latitude": 46.854242576414904, "longitude": -121.66075584366041 },
+      "elevationInMeter": 2033.04355
+    },
+    {
+      "coordinate": { "latitude": 46.85535368752602, "longitude": -121.6596447325493 },
+      "elevationInMeter": 2016.0694
+    },
+    {
+      "coordinate": { "latitude": 46.85646479863713, "longitude": -121.65853362143818 },
+      "elevationInMeter": 1988.36315
+    }
+  ]
+}
+```
+### Request elevation data by Bounding Box
+You can request elevation data by a bounding box. The elevation data will be returned at equally spaced locations within a bounding box. The bounding area is defined by two sets of latitude/longitude coordinates (south latitude, west longitude | north latitude, east longitude) and is divided into rows and columns. The edges of the bounding box account for two of the rows and two of the columns. Elevations are returned for the grid vertices created at row and column intersections. Up to 2000 elevations can be returned in a single request.
+
+```javascript
+  const credential = new DefaultAzureCredential();
+  const operationOptions = {
+    requestOptions: {
+      customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
+    }
+  };
+
+  const client = new ElevationClient(credential).elevation;
+  const response = await client.getDataForBoundingBox(
+    "json",
+    ["-121.66853362143818", "46.84646479863713", "-121.65853362143818", "46.85646479863713"],
+    3,
+    3,
+    operationOptions
+  )
+```
+
+Response
+```yaml
+{
+  "data": [
+    {
+      "coordinate": { "latitude": 46.84646479863713, "longitude": -121.66853362143819 },
+      "elevationInMeter": 2298.65819
+    },
+    {
+      "coordinate": { "latitude": 46.84646479863713, "longitude": -121.66353362143818 },
+      "elevationInMeter": 2257.62784
+    },
+    {
+      "coordinate": { "latitude": 46.84646479863713, "longitude": -121.65853362143818 },
+      "elevationInMeter": 2133.17568
+    },
+    {
+      "coordinate": { "latitude": 46.851464798637124, "longitude": -121.66853362143819 },
+      "elevationInMeter": 2370.3053
+    },
+    {
+      "coordinate": { "latitude": 46.851464798637124, "longitude": -121.66353362143818 },
+      "elevationInMeter": 2247.90366
+    },
+    {
+      "coordinate": { "latitude": 46.851464798637124, "longitude": -121.65853362143818 },
+      "elevationInMeter": 2124.02787
+    },
+    {
+      "coordinate": { "latitude": 46.85646479863713, "longitude": -121.66853362143819 },
+      "elevationInMeter": 2318.75315
+    },
+    {
+      "coordinate": { "latitude": 46.85646479863713, "longitude": -121.66353362143818 },
+      "elevationInMeter": 2100.20795
+    },
+    {
+      "coordinate": { "latitude": 46.85646479863713, "longitude": -121.65853362143818 },
+      "elevationInMeter": 1988.36315
+    }
+  ]
+}
+```
 
 ## Troubleshooting
 
@@ -85,7 +266,6 @@ If you'd like to contribute to this library, please read the [contributing guide
 
 [azure_cli]: https://docs.microsoft.com/cli/azure
 [azure_sub]: https://azure.microsoft.com/free/
-[azure_sub]: https://azure.microsoft.com/free/
 [azure_portal]: https://portal.azure.com
-[azure_identity]: https://github.com/Azure/azure-sdk-for-js/tree/master/sdk/identity/identity
-[defaultazurecredential]: https://github.com/Azure/azure-sdk-for-js/tree/master/sdk/identity/identity#defaultazurecredential
+[azure_identity]: https://github.com/Azure/azure-sdk-for-js/tree/main/sdk/identity/identity
+[defaultazurecredential]: https://github.com/Azure/azure-sdk-for-js/tree/main/sdk/identity/identity#defaultazurecredential
