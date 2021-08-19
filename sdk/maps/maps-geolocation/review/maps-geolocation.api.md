@@ -4,8 +4,10 @@
 
 ```ts
 
+import { AzureKeyCredential } from '@azure/core-auth';
 import * as coreAuth from '@azure/core-auth';
 import * as coreClient from '@azure/core-client';
+import { TokenCredential } from '@azure/core-auth';
 
 // @public
 export interface CountryRegion {
@@ -38,27 +40,11 @@ export type GeographicResourceLocation = string;
 // @public
 export type Geography = string;
 
-// @public
-export interface Geolocation {
-    getIPToLocationPreview(format: ResponseFormat, ip: string, options?: GeolocationGetIPToLocationPreviewOptionalParams): Promise<GeolocationGetIPToLocationPreviewResponse>;
-}
-
+// Warning: (ae-forgotten-export) The symbol "GeolocationClient" needs to be exported by the entry point index.d.ts
+//
 // @public (undocumented)
-export class GeolocationClient extends GeolocationClientContext {
-    constructor(credentials: coreAuth.TokenCredential, options?: GeolocationClientOptionalParams);
-    // (undocumented)
-    geolocation: Geolocation;
-}
-
-// @public (undocumented)
-export class GeolocationClientContext extends coreClient.ServiceClient {
-    constructor(credentials: coreAuth.TokenCredential, options?: GeolocationClientOptionalParams);
-    // (undocumented)
-    apiVersion: string;
-    // (undocumented)
-    geography: Geography;
-    // (undocumented)
-    xMsClientId?: string;
+export class GeolocationClient extends GeolocationClient_2 {
+    constructor(credential: TokenCredential | AzureKeyCredential, options?: GeolocationClientOptionalParams);
 }
 
 // @public

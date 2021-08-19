@@ -55,7 +55,20 @@ Set the values of the client ID, tenant ID, and client secret of the AAD applica
 ```javascript
 const { GeolocationClient } = require("@azure/maps-geolocation");
 const { DefaultAzureCredential } = require("@azure/identity");
-const client = new GeolocationClient(new DefaultAzureCredential());
+const client = new GeolocationClient(new DefaultAzureCredential(), { xMsClientId: '<maps-client-id>' });
+```
+#### Using a Subscription Key Credential
+
+You can authenticate with your Azure Maps Subscriptiion Key. Please install the `@azure/core-auth` package:
+
+```bash
+npm install @azure/core-auth
+```
+
+```javascript
+const { GeolocationClient } = require("@azure/maps-geolocation");
+const { AzureKeyCredential } = require("@azure/core-auth");
+const client = new GeolocationClient(new AzureKeyCredential('<subscription-key>'));
 ```
 
 ## Key concepts
@@ -72,13 +85,7 @@ The following sections provide several code snippets covering some of the most c
 
 ```javascript
   const credential = new DefaultAzureCredential();
-  const operationOptions = {
-    requestOptions: {
-      customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
-    }
-  };
-
-  const geolocation = new GeolocationClient(credential).geolocation;
+  const geolocation = new GeolocationClient(credential, { xMsClientId: '<maps-client-id>' }).geolocation;
   const response = await geolocation.getIPToLocationPreview("json", ipAddressToTest, operationOptions);
 ```
 Response

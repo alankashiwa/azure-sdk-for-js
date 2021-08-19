@@ -6,8 +6,7 @@
  */
 
 import { DefaultAzureCredential } from "@azure/identity";
-import * as coreAuth from "@azure/core-auth";
-import * as coreClient from "@azure/core-client";
+import { TokenCredential, AzureKeyCredential } from "@azure/core-auth";
 import { GeolocationClient } from "@azure/maps-geolocation";
 import * as dotenv from "dotenv";
 dotenv.config();
@@ -23,47 +22,25 @@ dotenv.config();
  * More info is available at https://docs.microsoft.com/en-us/azure/azure-maps/azure-maps-authentication.
  */
 
-/**
- * Empty token class definition. To be used with AzureKey credentials.
- */
-class EmptyTokenCredential implements coreAuth.TokenCredential {
-  async getToken(
-    _scopes: string | string[],
-    _options?: coreAuth.GetTokenOptions
-  ): Promise<coreAuth.AccessToken | null> {
-    return {
-      token: "token",
-      expiresOnTimestamp: Date.now() + 60 * 60 * 1000
-    };
-  }
-}
-
 async function main() {
-  let credential: coreAuth.TokenCredential;
-  let operationOptions: coreClient.OperationOptions = {};
+  let credential: TokenCredential | AzureKeyCredential;
+  let mapsClientId: string | undefined;
 
   if (process.env.MAPS_SUBSCRIPTION_KEY) {
     // Use subscription key authentication
-    credential = new EmptyTokenCredential();
-    operationOptions.requestOptions = {
-      customHeaders: { "subscription-key": process.env.MAPS_SUBSCRIPTION_KEY }
-    };
+    credential = new AzureKeyCredential(process.env.MAPS_SUBSCRIPTION_KEY);
   } else {
     // Use Azure AD authentication
     credential = new DefaultAzureCredential();
-    if (process.env.MAPS_CLIENT_ID) {
-      operationOptions.requestOptions = {
-        customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
-      };
-    }
+    mapsClientId = process.env.MAPS_CLIENT_ID;
   }
 
-  const geolocation = new GeolocationClient(credential).geolocation;
+  const geolocation = new GeolocationClient(credential, { xMsClientId: mapsClientId }).geolocation;
 
   const ipAddressToTest = "8.8.8.8";
 
   console.log(" --- Get IP to location:");
-  console.log(await geolocation.getIPToLocationPreview("json", ipAddressToTest, operationOptions));
+  console.log(await geolocation.getIPToLocationPreview("json", ipAddressToTest));
 }
 
 main();
