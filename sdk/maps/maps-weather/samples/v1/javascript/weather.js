@@ -21,18 +21,6 @@ require("dotenv").config();
  * More info is available at https://docs.microsoft.com/en-us/azure/azure-maps/azure-maps-authentication.
  */
 
-/**
- * Empty token class definition. To be used with AzureKey credentials.
- */
-class EmptyTokenCredential {
-  async getToken(_scopes, _options) {
-    return {
-      token: "token",
-      expiresOnTimestamp: Date.now() + 60 * 60 * 1000
-    };
-  }
-}
-
 async function main() {
   let credential;
   let mapsClientId;
@@ -49,9 +37,7 @@ async function main() {
   const weather = new WeatherClient(credential, { xMsClientId: mapsClientId }).weather;
 
   console.log(" --- Get current weather conditions:");
-  console.log(
-    await weather.getCurrentConditions("json", "47.641268,-122.125679")
-  );
+  console.log(await weather.getCurrentConditions("json", "47.641268,-122.125679"));
 
   console.log(" --- Get daily forecast:");
   const dailyForecastOptions = { duration: 5 };
@@ -61,9 +47,7 @@ async function main() {
 
   console.log(" --- Get daily indices:");
   const dailyIndicesOptions = { indexGroupId: 11 };
-  console.log(
-    await weather.getDailyIndices("json", "43.84745,-79.37849", dailyIndicesOptions)
-  );
+  console.log(await weather.getDailyIndices("json", "43.84745,-79.37849", dailyIndicesOptions));
 
   console.log(" --- Get hourly forecast:");
   const hourlyForecastOptions = { duration: 12 };
@@ -90,7 +74,7 @@ async function main() {
   console.log(
     await weather.getWeatherAlongRoute(
       "json",
-      "38.907,-77.037,0:38.907,-77.009,10:38.926,-76.928,20:39.033,-76.852,30:39.168,-76.732,40:39.269,-76.634,50:39.287,-76.612,60",
+      "38.907,-77.037,0:38.907,-77.009,10:38.926,-76.928,20:39.033,-76.852,30:39.168,-76.732,40:39.269,-76.634,50:39.287,-76.612,60"
     )
   );
 }
