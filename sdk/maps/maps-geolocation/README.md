@@ -1,13 +1,14 @@
-# Azure Geolocation client library for JavaScript
+# Azure Maps Geolocation client library for JavaScript/TypeScript
 
-This package contains an isomorphic SDK (runs both in Node.js and in browsers) for Azure Geolocation client.
+The Azure Maps Geolocation Service returns the ISO country code for the provided IP address. Developers can use this information to block or alter certain content based on geographical locations where the application is being viewed from.
 
-Azure Maps Geolocation REST APIs
+This package contains an isomorphic SDK (runs both in Node.js and in browsers) for Azure Maps Geolocation client.
 
-[Source code](https://github.com/Azure/azure-sdk-for-js/tree/master/sdk/maps/maps-geolocation) |
+[Source code](https://github.com/Azure/azure-sdk-for-js/tree/main/sdk/maps/maps-geolocation) |
 [Package (NPM)](https://www.npmjs.com/package/@azure/maps-geolocation) |
 [API reference documentation](https://docs.microsoft.com/javascript/api/@azure/maps-geolocation) |
-[Samples](https://github.com/Azure/azure-sdk-for-js/tree/master/sdk/maps/maps-geolocation/samples)
+[Samples](https://github.com/Azure/azure-sdk-for-js/tree/main/sdk/maps/maps-geolocation/samples) |
+[Product Information](https://docs.microsoft.com/en-us/rest/api/maps/geolocation)
 
 ## Getting started
 
@@ -19,10 +20,17 @@ Azure Maps Geolocation REST APIs
 ### Prerequisites
 
 - An [Azure subscription][azure_sub].
+- An [Azure Maps account](https://docs.microsoft.com/en-us/azure/azure-maps/how-to-manage-account-keys). You can create the resource via [Azure Portal][azure_portal] or [Azure CLI][azure_cli].
+
+If you use Azure CLI, replace `<resource-group-name>` and `<account-name>` of your choice, and select a proper [pricing tier](https://docs.microsoft.com/en-us/azure/azure-maps/choose-pricing-tier) based on your needs via the `<sku-name>` parameter. Please refer to [this page](https://docs.microsoft.com/en-us/cli/azure/maps/account?view=azure-cli-latest#az_maps_account_create) for more details.
+
+```bash
+az maps account create --resource-group <resource-group-name> --account-name <account-name> --sku <sku-name>
+```
 
 ### Install the `@azure/maps-geolocation` package
 
-Install the Azure Geolocation client library for JavaScript with `npm`:
+Install the Azure Maps Geolocation client library with `npm`:
 
 ```bash
 npm install @azure/maps-geolocation
@@ -30,8 +38,7 @@ npm install @azure/maps-geolocation
 
 ### Create and authenticate a `GeolocationClient`
 
-To create a client object to access the Azure Geolocation API, you will need the `endpoint` of your Azure Geolocation resource and a `credential`. The Azure Geolocation client can use Azure Active Directory credentials to authenticate.
-You can find the endpoint for your Azure Geolocation resource in the [Azure Portal][azure_portal].
+To create a client object to access the Azure Maps Geolocation API, you will need a `credential` object. The Azure Maps Timezone client can use an Azure Active Directory credential to authenticate.
 
 #### Using an Azure Active Directory Credential
 
@@ -41,20 +48,43 @@ You can authenticate with Azure Active Directory using the [Azure Identity libra
 npm install @azure/identity
 ```
 
-You will also need to register a new AAD application and grant access to Azure Geolocation by assigning the suitable role to your service principal (note: roles such as `"Owner"` will not grant the necessary permissions).
+You will also need to register a new AAD application and grant access to Azure Maps by assigning the suitable role to your service principal. Please refer to the [Manage authentication](https://docs.microsoft.com/en-us/azure/azure-maps/how-to-manage-authentication) page.
+
 Set the values of the client ID, tenant ID, and client secret of the AAD application as environment variables: `AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, `AZURE_CLIENT_SECRET`.
 
 ```javascript
 const { GeolocationClient } = require("@azure/maps-geolocation");
 const { DefaultAzureCredential } = require("@azure/identity");
-const client = new GeolocationClient("<endpoint>", new DefaultAzureCredential());
+const client = new GeolocationClient(new DefaultAzureCredential());
 ```
 
 ## Key concepts
 
 ### GeolocationClient
 
-`GeolocationClient` is the primary interface for developers using the Azure Geolocation client library. Explore the methods on this client object to understand the different features of the Azure Geolocation service that you can access.
+`GeolocationClient` is the primary interface for developers using the Azure Maps Geolocation client library. Explore the methods on this client object to understand the different features of the Azure Geolocation service that you can access.
+
+## Examples
+The following sections provide several code snippets covering some of the most common Azure Maps Geolocation tasks, including:
+
+- [Retrieve the ISO country code for the provided IP address](#retrieve-the-ISO-country-code-for-the-provided-IP-address)
+### Retrieve the ISO country code for the provided IP address
+
+```javascript
+  const credential = new DefaultAzureCredential();
+  const operationOptions = {
+    requestOptions: {
+      customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
+    }
+  };
+
+  const geolocation = new GeolocationClient(credential).geolocation;
+  const response = await geolocation.getIPToLocationPreview("json", ipAddressToTest, operationOptions);
+```
+Response
+```yaml
+{ countryRegion: { isoCode: 'US' }, ipAddress: '8.8.8.8' }
+```
 
 ## Troubleshooting
 
@@ -85,7 +115,6 @@ If you'd like to contribute to this library, please read the [contributing guide
 
 [azure_cli]: https://docs.microsoft.com/cli/azure
 [azure_sub]: https://azure.microsoft.com/free/
-[azure_sub]: https://azure.microsoft.com/free/
 [azure_portal]: https://portal.azure.com
-[azure_identity]: https://github.com/Azure/azure-sdk-for-js/tree/master/sdk/identity/identity
-[defaultazurecredential]: https://github.com/Azure/azure-sdk-for-js/tree/master/sdk/identity/identity#defaultazurecredential
+[azure_identity]: https://github.com/Azure/azure-sdk-for-js/tree/main/sdk/identity/identity
+[defaultazurecredential]: https://github.com/Azure/azure-sdk-for-js/tree/main/sdk/identity/identity#defaultazurecredential
