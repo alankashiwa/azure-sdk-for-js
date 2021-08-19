@@ -2,7 +2,7 @@
 
 The Azure Maps Timezone Service is a set of RESTful APIs designed to make it easy for users to see what time it is anywhere in the world.  Users can select a location to find the time zone, its offset to Coordinated Universal Time (UTC), and daylight saving time updates.
 
-This package contains an isomorphic SDK (runs both in Node.js and in browsers) for Azure Timezone client.
+This package contains an isomorphic SDK (runs both in Node.js and in browsers) for Azure Maps Timezone client.
 
 
 [Source code](https://github.com/Azure/azure-sdk-for-js/tree/main/sdk/maps/maps-timezone) |
@@ -72,7 +72,6 @@ const { TimezoneClient } = require("@azure/maps-timezone");
 const { AzureKeyCredential } = require("@azure/core-auth");
 const client = new TimezoneClient(new AzureKeyCredential('<subscription-key>'));
 ```
-
 
 ## Key concepts
 

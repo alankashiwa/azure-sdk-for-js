@@ -2,7 +2,7 @@
 
 The Azure Maps Traffic Service is a set of RESTful APIs designed to help developers design mobility solutions that improve travel time and avoid gridlock. It offer multiple alternate routes around traffic jams, insight into the length of the backup and the time it takes to get through it, and a faster travel experience during rush hour.
 
-This package contains an isomorphic SDK (runs both in Node.js and in browsers) for Azure MapsTraffic client.
+This package contains an isomorphic SDK (runs both in Node.js and in browsers) for Azure Maps Traffic client.
 
 
 [Source code](https://github.com/Azure/azure-sdk-for-js/tree/main/sdk/maps/maps-traffic) |
@@ -157,7 +157,6 @@ The response will contain the traffic flow tile based on the request parameters.
 ```
 
 The response will contain the traffic incident tile based on the request parameters.
-
 
 ## Troubleshooting
 
