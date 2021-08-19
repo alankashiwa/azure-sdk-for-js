@@ -4,8 +4,10 @@
 
 ```ts
 
+import { AzureKeyCredential } from '@azure/core-auth';
 import * as coreAuth from '@azure/core-auth';
 import * as coreClient from '@azure/core-client';
+import { TokenCredential } from '@azure/core-auth';
 
 // @public
 export interface CountryRecord {
@@ -114,16 +116,6 @@ export interface TimeTransition {
     readonly utcStart?: Date;
 }
 
-// @public
-export interface Timezone {
-    getTimezoneByCoordinates(format: ResponseFormat, query: string, options?: TimezoneGetTimezoneByCoordinatesOptionalParams): Promise<TimezoneGetTimezoneByCoordinatesResponse>;
-    getTimezoneByID(format: ResponseFormat, query: string, options?: TimezoneGetTimezoneByIDOptionalParams): Promise<TimezoneGetTimezoneByIDResponse>;
-    getTimezoneEnumIana(format: ResponseFormat, options?: TimezoneGetTimezoneEnumIanaOptionalParams): Promise<TimezoneGetTimezoneEnumIanaResponse>;
-    getTimezoneEnumWindows(format: ResponseFormat, options?: TimezoneGetTimezoneEnumWindowsOptionalParams): Promise<TimezoneGetTimezoneEnumWindowsResponse>;
-    getTimezoneIanaVersion(format: ResponseFormat, options?: TimezoneGetTimezoneIanaVersionOptionalParams): Promise<TimezoneGetTimezoneIanaVersionResponse>;
-    getTimezoneWindowsToIana(format: ResponseFormat, query: string, options?: TimezoneGetTimezoneWindowsToIanaOptionalParams): Promise<TimezoneGetTimezoneWindowsToIanaResponse>;
-}
-
 // @public (undocumented)
 export interface TimeZoneByCoordinates {
     readonly aliases?: string[];
@@ -160,22 +152,11 @@ export interface TimezoneByIdResult {
     readonly version?: string;
 }
 
+// Warning: (ae-forgotten-export) The symbol "TimezoneClient" needs to be exported by the entry point index.d.ts
+//
 // @public (undocumented)
-export class TimezoneClient extends TimezoneClientContext {
-    constructor(credentials: coreAuth.TokenCredential, options?: TimezoneClientOptionalParams);
-    // (undocumented)
-    timezone: Timezone;
-}
-
-// @public (undocumented)
-export class TimezoneClientContext extends coreClient.ServiceClient {
-    constructor(credentials: coreAuth.TokenCredential, options?: TimezoneClientOptionalParams);
-    // (undocumented)
-    apiVersion: string;
-    // (undocumented)
-    geography: Geography;
-    // (undocumented)
-    xMsClientId?: string;
+export class TimezoneClient extends TimezoneClient_2 {
+    constructor(credential: TokenCredential | AzureKeyCredential, options?: TimezoneClientOptionalParams);
 }
 
 // @public

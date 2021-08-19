@@ -6,6 +6,7 @@
  */
 
 const { DefaultAzureCredential } = require("@azure/identity");
+const { AzureKeyCredential } = require("@azure/core-auth");
 const { TimezoneClient } = require("@azure/maps-timezone");
 require("dotenv").config();
 
@@ -20,71 +21,48 @@ require("dotenv").config();
  * More info is available at https://docs.microsoft.com/en-us/azure/azure-maps/azure-maps-authentication.
  */
 
-/**
- * Empty token class definition. To be used with AzureKey credentials.
- */
-class EmptyTokenCredential {
-  async getToken(_scopes, _options) {
-    return {
-      token: "token",
-      expiresOnTimestamp: Date.now() + 60 * 60 * 1000
-    };
-  }
-}
-
 async function main() {
   let credential;
-  let operationOptions = {};
+  let mapsClientId;
 
   if (process.env.MAPS_SUBSCRIPTION_KEY) {
     // Use subscription key authentication
-    credential = new EmptyTokenCredential();
-    operationOptions.requestOptions = {
-      customHeaders: { "subscription-key": process.env.MAPS_SUBSCRIPTION_KEY }
-    };
+    credential = new AzureKeyCredential(process.env.MAPS_SUBSCRIPTION_KEY);
   } else {
     // Use Azure AD authentication
     credential = new DefaultAzureCredential();
-    if (process.env.MAPS_CLIENT_ID) {
-      operationOptions.requestOptions = {
-        customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
-      };
-    }
+    mapsClientId = process.env.MAPS_CLIENT_ID;
   }
 
-  const timezone = new TimezoneClient(credential).timezone;
+  const timezone = new TimezoneClient(credential, { xMsClientId: mapsClientId }).timezone;
 
   console.log(" --- Get timezone by coordinates:");
   const timezoneByCoordinatesOptions = { options: "all" };
   console.log(
     await timezone.getTimezoneByCoordinates("json", "47.0,-122", {
-      ...timezoneByCoordinatesOptions,
-      ...operationOptions
+      ...timezoneByCoordinatesOptions
     })
   );
 
   console.log(" --- Get enum IANA timezones:");
-  console.log(await timezone.getTimezoneEnumIana("json", operationOptions));
+  console.log(await timezone.getTimezoneEnumIana("json"));
 
   console.log(" --- Get IANA version:");
-  console.log(await timezone.getTimezoneIanaVersion("json", operationOptions));
+  console.log(await timezone.getTimezoneIanaVersion("json"));
 
   console.log(" --- Get timezone by IANA ID:");
   const timezoneByIdOptions = { options: "all" };
   console.log(
     await timezone.getTimezoneByID("json", "Asia/Bahrain", {
-      ...timezoneByIdOptions,
-      ...operationOptions
+      ...timezoneByIdOptions
     })
   );
 
   console.log(" --- Get enum Windows timezones:");
-  console.log(await timezone.getTimezoneEnumWindows("json", operationOptions));
+  console.log(await timezone.getTimezoneEnumWindows("json"));
 
   console.log(" --- Get Windows timezone to IANA:");
-  console.log(
-    await timezone.getTimezoneWindowsToIana("json", "Eastern Standard Time", operationOptions)
-  );
+  console.log(await timezone.getTimezoneWindowsToIana("json", "Eastern Standard Time"));
 }
 
 main();
