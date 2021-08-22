@@ -30,7 +30,7 @@ az maps account create --resource-group <resource-group-name> --account-name <ac
 
 ### Install the `@azure/maps-elevation` package
 
-Install the Azure Maps Elevation client library for JavaScript with `npm`:
+Install the Azure Maps Elevation client library with `npm`:
 
 ```bash
 npm install @azure/maps-elevation
