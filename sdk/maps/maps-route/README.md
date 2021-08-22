@@ -56,7 +56,21 @@ Set the values of the client ID, tenant ID, and client secret of the AAD applica
 ```javascript
 const { RouteClient } = require("@azure/maps-route");
 const { DefaultAzureCredential } = require("@azure/identity");
-const client = new RouteClient(new DefaultAzureCredential());
+const client = new RouteClient(new DefaultAzureCredential(), { xMsClientId: '<maps-client-id>' });
+```
+
+#### Using a Subscription Key Credential
+
+You can authenticate with your Azure Maps Subscriptiion Key. Please install the `@azure/core-auth` package:
+
+```bash
+npm install @azure/core-auth
+```
+
+```javascript
+const { RouteClient } = require("@azure/maps-route");
+const { AzureKeyCredential } = require("@azure/core-auth");
+const client = new RouteClient(new AzureKeyCredential('<subscription-key>'));
 ```
 
 ## Key concepts
@@ -80,14 +94,8 @@ By default, the Route service will return an array of coordinates. The response 
 
 ```javascript
   const credential = new DefaultAzureCredential();
-  const operationOptions = {
-    requestOptions: {
-      customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
-    }
-  };
-
-  const client = new RouteClient(credential).route;
-  const response = await client.getRouteDirections("json", "52.50931,13.42936:52.50274,13.43872", operationOptions)
+  const client = new RouteClient(credential, { xMsClientId: '<maps-client-id>' }).route;
+  const response = await client.getRouteDirections("json", "52.50931,13.42936:52.50274,13.43872");
 ```
 Response
 ```yaml
@@ -148,20 +156,13 @@ The service supports commercial vehicle routing, covering commercial trucks rout
 
 ```javascript
   const credential = new DefaultAzureCredential();
-  const operationOptions = {
-    requestOptions: {
-      customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
-    }
-  };
-
-  const client = new RouteClient(credential).route;
+  const client = new RouteClient(credential, { xMsClientId: '<maps-client-id>' }).route
   const response = await client.getRouteDirections("json", "51.368752,-0.118332:41.385426,-0.128929", {
     vehicleWidth: 2,
     vehicleHeight: 2,
     vehicleCommercial: true,
     vehicleLoadType: "USHazmatClass1",
-    travelMode: "truck",
-    ...operationOptions
+    travelMode: "truck"
   });
 ```
 ### Calculate and optimize a multi-stop route
@@ -177,19 +178,10 @@ If you want to optimize the best order to visit the given waypoints, then you ne
 
 ```javascript
   const credential = new DefaultAzureCredential();
-  const operationOptions = {
-    requestOptions: {
-      customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
-    }
-  };
-
-  const client = new RouteClient(credential).route;
+  const client = new RouteClient(credential, { xMsClientId: '<maps-client-id>' }).route
   const response = await client.getRouteDirections(
     "json", 
-    "47.606544,-122.336502:47.759892,-122.204821:47.670682,-122.120415:47.480133,-122.213369", {
-      computeBestOrder: false,
-      ...operationOptions
-    })
+    "47.606544,-122.336502:47.759892,-122.204821:47.670682,-122.120415:47.480133,-122.213369", { computeBestOrder: false });
 ```
 
 ## Troubleshooting

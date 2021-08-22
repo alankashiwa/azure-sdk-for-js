@@ -4,10 +4,12 @@
 
 ```ts
 
+import { AzureKeyCredential } from '@azure/core-auth';
 import * as coreAuth from '@azure/core-auth';
 import * as coreClient from '@azure/core-client';
 import { PollerLike } from '@azure/core-lro';
 import { PollOperationState } from '@azure/core-lro';
+import { TokenCredential } from '@azure/core-auth';
 
 // @public
 export type AlternativeRouteType = string;
@@ -428,37 +430,13 @@ export interface PostRouteMatrixRequestBody {
 export type ResponseFormat = string;
 
 // @public
-export interface Route {
-    beginPostRouteDirectionsBatch(format: ResponseFormat, postRouteDirectionsBatchRequestBody: BatchRequestBody, options?: RoutePostRouteDirectionsBatchOptionalParams): Promise<PollerLike<PollOperationState<RoutePostRouteDirectionsBatchResponse>, RoutePostRouteDirectionsBatchResponse>>;
-    beginPostRouteDirectionsBatchAndWait(format: ResponseFormat, postRouteDirectionsBatchRequestBody: BatchRequestBody, options?: RoutePostRouteDirectionsBatchOptionalParams): Promise<RoutePostRouteDirectionsBatchResponse>;
-    beginPostRouteMatrix(format: ResponseFormat, postRouteMatrixRequestBody: PostRouteMatrixRequestBody, options?: RoutePostRouteMatrixOptionalParams): Promise<PollerLike<PollOperationState<RoutePostRouteMatrixResponse>, RoutePostRouteMatrixResponse>>;
-    beginPostRouteMatrixAndWait(format: ResponseFormat, postRouteMatrixRequestBody: PostRouteMatrixRequestBody, options?: RoutePostRouteMatrixOptionalParams): Promise<RoutePostRouteMatrixResponse>;
-    getRouteDirections(format: TextFormat, query: string, options?: RouteGetRouteDirectionsOptionalParams): Promise<RouteGetRouteDirectionsResponse>;
-    getRouteRange(format: TextFormat, query: string, options?: RouteGetRouteRangeOptionalParams): Promise<RouteGetRouteRangeResponse>;
-    postRouteDirections(format: TextFormat, query: string, postRouteDirectionsRequestBody: PostRouteDirectionsRequestBody, options?: RoutePostRouteDirectionsOptionalParams): Promise<RoutePostRouteDirectionsResponse>;
-    postRouteDirectionsBatchSync(format: ResponseFormat, postRouteDirectionsBatchRequestBody: BatchRequestBody, options?: RoutePostRouteDirectionsBatchSyncOptionalParams): Promise<RoutePostRouteDirectionsBatchSyncResponse>;
-    postRouteMatrixSync(format: ResponseFormat, postRouteMatrixRequestBody: PostRouteMatrixRequestBody, options?: RoutePostRouteMatrixSyncOptionalParams): Promise<RoutePostRouteMatrixSyncResponse>;
-}
-
-// @public
 export type RouteAvoidType = string;
 
+// Warning: (ae-forgotten-export) The symbol "RouteClient" needs to be exported by the entry point index.d.ts
+//
 // @public (undocumented)
-export class RouteClient extends RouteClientContext {
-    constructor(credentials: coreAuth.TokenCredential, options?: RouteClientOptionalParams);
-    // (undocumented)
-    route: Route;
-}
-
-// @public (undocumented)
-export class RouteClientContext extends coreClient.ServiceClient {
-    constructor(credentials: coreAuth.TokenCredential, options?: RouteClientOptionalParams);
-    // (undocumented)
-    apiVersion: string;
-    // (undocumented)
-    geography: Geography;
-    // (undocumented)
-    xMsClientId?: string;
+export class RouteClient extends RouteClient_2 {
+    constructor(credential: TokenCredential | AzureKeyCredential, options?: RouteClientOptionalParams);
 }
 
 // @public
