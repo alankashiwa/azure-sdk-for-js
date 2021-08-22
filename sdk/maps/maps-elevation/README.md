@@ -90,18 +90,11 @@ You can request elevation data using the coordinates. Latitudes and longitudes a
 
 ```javascript
   const credential = new DefaultAzureCredential();
-  const operationOptions = {
-    requestOptions: {
-      customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
-    }
-  };
-
   const client = new ElevationClient(credential, { xMsClientId: '<maps-client-id>' }).elevation;
   const response = await client.getDataForPoints(
     "json",
-    ["-121.66853362143818,46.84646479863713", "-121.65853362143818,46.85646479863713"],
-    operationOptions
-  )
+    ["-121.66853362143818,46.84646479863713", "-121.65853362143818,46.85646479863713"]
+  );
 ```
 Response
 ```yaml
@@ -124,18 +117,11 @@ You can request elevation data samples along a straight line. Both coordinates m
 
 ```javascript
   const credential = new DefaultAzureCredential();
-  const operationOptions = {
-    requestOptions: {
-      customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
-    }
-  };
-
   const client = new ElevationClient(credential, { xMsClientId: '<maps-client-id>' }).elevation;
   const response = await client.getDataForPolyline(
     "json",
-    ["-121.66853362143818,46.84646479863713", "-121.65853362143818,46.85646479863713"],
-    operationOptions
-  )
+    ["-121.66853362143818,46.84646479863713", "-121.65853362143818,46.85646479863713"]
+  );
 ```
 
 Response
@@ -190,20 +176,13 @@ You can request elevation data by a bounding box. The elevation data will be ret
 
 ```javascript
   const credential = new DefaultAzureCredential();
-  const operationOptions = {
-    requestOptions: {
-      customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
-    }
-  };
-
   const client = new ElevationClient(credential, { xMsClientId: '<maps-client-id>' }).elevation;
   const response = await client.getDataForBoundingBox(
     "json",
     ["-121.66853362143818", "46.84646479863713", "-121.65853362143818", "46.85646479863713"],
     3,
-    3,
-    operationOptions
-  )
+    3
+  );
 ```
 
 Response
