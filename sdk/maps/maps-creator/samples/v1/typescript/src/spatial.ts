@@ -7,8 +7,7 @@
 
 import fs from "fs";
 import { DefaultAzureCredential } from "@azure/identity";
-import * as coreAuth from "@azure/core-auth";
-import * as coreClient from "@azure/core-client";
+import { TokenCredential, AzureKeyCredential } from "@azure/core-auth";
 import { CreatorClient } from "@azure/maps-creator";
 import * as dotenv from "dotenv";
 dotenv.config();
@@ -24,39 +23,17 @@ dotenv.config();
  * More info is available at https://docs.microsoft.com/en-us/azure/azure-maps/azure-maps-authentication.
  */
 
-/**
- * Empty token class definition. To be used with AzureKey credentials.
- */
-class EmptyTokenCredential implements coreAuth.TokenCredential {
-  async getToken(
-    _scopes: string | string[],
-    _options?: coreAuth.GetTokenOptions
-  ): Promise<coreAuth.AccessToken | null> {
-    return {
-      token: "token",
-      expiresOnTimestamp: Date.now() + 60 * 60 * 1000
-    };
-  }
-}
-
 async function main() {
-  let credential: coreAuth.TokenCredential;
-  let operationOptions: coreClient.OperationOptions = {};
+  let credential: TokenCredential | AzureKeyCredential;
+  let mapsClientId: string | undefined;
 
   if (process.env.MAPS_SUBSCRIPTION_KEY) {
     // Use subscription key authentication
-    credential = new EmptyTokenCredential();
-    operationOptions.requestOptions = {
-      customHeaders: { "subscription-key": process.env.MAPS_SUBSCRIPTION_KEY }
-    };
+    credential = new AzureKeyCredential(process.env.MAPS_SUBSCRIPTION_KEY);
   } else {
     // Use Azure AD authentication
     credential = new DefaultAzureCredential();
-    if (process.env.MAPS_CLIENT_ID) {
-      operationOptions.requestOptions = {
-        customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
-      };
-    }
+    mapsClientId = process.env.MAPS_CLIENT_ID;
   }
 
   const spatial = new CreatorClient(credential).spatial;
@@ -75,14 +52,12 @@ async function main() {
   }
 
   console.log(" --- Get buffer:");
-  const res = await spatial.getBuffer("json", udid, "176.3", operationOptions);
+  const res = await spatial.getBuffer("json", udid, "176.3");
   console.log(res);
   console.log(res.result?.features);
 
   console.log(" --- Get closest point:");
-  console.log(
-    await spatial.getClosestPoint("json", udid, 47.622942, -122.316456, operationOptions)
-  );
+  console.log(await spatial.getClosestPoint("json", udid, 47.622942, -122.316456));
 
   console.log(" --- Get geofence:");
   const spatialGeofenceParams = {
@@ -91,43 +66,37 @@ async function main() {
     mode: "EnterAndExit"
   };
   console.log(
-    await spatial.getGeofence("json", "unique_device_name_under_account", udid, 48.36, -124.63, {
-      ...spatialGeofenceParams,
-      ...operationOptions
-    })
+    await spatial.getGeofence(
+      "json",
+      "unique_device_name_under_account",
+      udid,
+      48.36,
+      -124.63,
+      spatialGeofenceParams
+    )
   );
 
   console.log(" --- Get great circle distance:");
   console.log(
-    await spatial.getGreatCircleDistance(
-      "json",
-      "47.622942,-122.316456:47.610378,-122.200676",
-      operationOptions
-    )
+    await spatial.getGreatCircleDistance("json", "47.622942,-122.316456:47.610378,-122.200676")
   );
 
   /* TODO: use udid with some Polygon as a "geometry" of the Feature
     console.log(" --- Get point in polygon:");
-    console.log(await spatial.getPointInPolygon("json", udid, 47.622942, -122.316456, operationOptions));*/
+    console.log(await spatial.getPointInPolygon("json", udid, 47.622942, -122.316456));*/
 
   console.log(" --- Post buffer:");
   const postSpatialBufferPayload = JSON.parse(
     fs.readFileSync(filePathForPostSpatialBuffer, "utf8")
   );
-  console.log(await spatial.postBuffer("json", postSpatialBufferPayload, operationOptions));
+  console.log(await spatial.postBuffer("json", postSpatialBufferPayload));
 
   console.log(" --- Post closest point:");
   const postSpatialClosestPointPayload = JSON.parse(
     fs.readFileSync(filePathForPostSpatialClosestPoint, "utf8")
   );
   console.log(
-    await spatial.postClosestPoint(
-      "json",
-      47.622942,
-      -122.316456,
-      postSpatialClosestPointPayload,
-      operationOptions
-    )
+    await spatial.postClosestPoint("json", 47.622942, -122.316456, postSpatialClosestPointPayload)
   );
 
   console.log(" --- Post geofence:");
@@ -141,7 +110,7 @@ async function main() {
       48.36,
       -124.63,
       postSpatialGeofencePayload,
-      { ...spatialGeofenceParams, ...operationOptions }
+      spatialGeofenceParams
     )
   );
 
@@ -150,13 +119,7 @@ async function main() {
     fs.readFileSync(filePathForPostSpatialPointInPolygon, "utf8")
   );
   console.log(
-    await spatial.postPointInPolygon(
-      "json",
-      48.36,
-      -124.63,
-      postSpatialPointInPolygonPayload,
-      operationOptions
-    )
+    await spatial.postPointInPolygon("json", 48.36, -124.63, postSpatialPointInPolygonPayload)
   );
 }
 

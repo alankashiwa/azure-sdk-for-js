@@ -6,6 +6,7 @@
  */
 
 const { DefaultAzureCredential } = require("@azure/identity");
+const { AzureKeyCredential } = require("@azure/core-auth");
 const { CreatorClient } = require("@azure/maps-creator");
 require("dotenv").config();
 
@@ -20,42 +21,23 @@ require("dotenv").config();
  * More info is available at https://docs.microsoft.com/en-us/azure/azure-maps/azure-maps-authentication.
  */
 
-/**
- * Empty token class definition. To be used with AzureKey credentials.
- */
-class EmptyTokenCredential {
-  async getToken(_scopes, _options) {
-    return {
-      token: "token",
-      expiresOnTimestamp: Date.now() + 60 * 60 * 1000
-    };
-  }
-}
-
 async function main() {
   let credential;
-  let operationOptions = {};
+  let mapsClientId;
 
   if (process.env.MAPS_SUBSCRIPTION_KEY) {
     // Use subscription key authentication
-    credential = new EmptyTokenCredential();
-    operationOptions.requestOptions = {
-      customHeaders: { "subscription-key": process.env.MAPS_SUBSCRIPTION_KEY }
-    };
+    credential = new AzureKeyCredential(process.env.MAPS_SUBSCRIPTION_KEY);
   } else {
     // Use Azure AD authentication
     credential = new DefaultAzureCredential();
-    if (process.env.MAPS_CLIENT_ID) {
-      operationOptions.requestOptions = {
-        customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
-      };
-    }
+    mapsClientId = process.env.MAPS_CLIENT_ID;
   }
 
   const alias = new CreatorClient(credential).alias;
 
   console.log(" --- Create Alias:");
-  const aliasCreateResponse = await alias.create(operationOptions);
+  const aliasCreateResponse = await alias.create();
   console.log(aliasCreateResponse);
   const aliasId = aliasCreateResponse.aliasId;
 
@@ -63,18 +45,18 @@ async function main() {
   const udid = process.env.CREATOR_DWG_ZIP_UDID;
   if (typeof udid === "string" && udid.length == 36) {
     console.log(" --- Assign the aliasId to some Creator's udid:");
-    console.log(await alias.assign(aliasId, udid, operationOptions));
+    console.log(await alias.assign(aliasId, udid));
   }
 
   console.log(" --- Get details about the created Alias:");
-  console.log(await alias.getDetails(aliasId, operationOptions));
+  console.log(await alias.getDetails(aliasId));
 
   console.log(" --- Delete the created Alias:");
-  await alias.delete(aliasId, operationOptions);
+  await alias.delete(aliasId);
   console.log("Done (no response body)");
 
   console.log(" --- List all the created Aliases:");
-  for await (const aliasItem of alias.list(operationOptions)) {
+  for await (const aliasItem of alias.list()) {
     console.log(aliasItem);
   }
 }

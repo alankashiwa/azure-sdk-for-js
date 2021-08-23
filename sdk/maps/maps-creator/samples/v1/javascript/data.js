@@ -7,6 +7,7 @@
 
 const fs = require("fs");
 const { DefaultAzureCredential } = require("@azure/identity");
+const { AzureKeyCredential } = require("@azure/core-auth");
 const { CreatorClient } = require("@azure/maps-creator");
 require("dotenv").config();
 
@@ -55,36 +56,17 @@ async function pollUntilOperationIsDone(operation) {
  * More info is available at https://docs.microsoft.com/en-us/azure/azure-maps/azure-maps-authentication.
  */
 
-/**
- * Empty token class definition. To be used with AzureKey credentials.
- */
-class EmptyTokenCredential {
-  async getToken(_scopes, _options) {
-    return {
-      token: "token",
-      expiresOnTimestamp: Date.now() + 60 * 60 * 1000
-    };
-  }
-}
-
 async function main() {
   let credential;
-  let operationOptions = {};
+  let mapsClientId;
 
   if (process.env.MAPS_SUBSCRIPTION_KEY) {
     // Use subscription key authentication
-    credential = new EmptyTokenCredential();
-    operationOptions.requestOptions = {
-      customHeaders: { "subscription-key": process.env.MAPS_SUBSCRIPTION_KEY }
-    };
+    credential = new AzureKeyCredential(process.env.MAPS_SUBSCRIPTION_KEY);
   } else {
     // Use Azure AD authentication
     credential = new DefaultAzureCredential();
-    if (process.env.MAPS_CLIENT_ID) {
-      operationOptions.requestOptions = {
-        customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
-      };
-    }
+    mapsClientId = process.env.MAPS_CLIENT_ID;
   }
 
   const data = new CreatorClient(credential).data;
@@ -104,16 +86,15 @@ async function main() {
   const uploadResult = await data.beginUploadPreviewAndWait(
     "geojson",
     "application/json",
-    geoJsonUpload,
-    operationOptions
+    geoJsonUpload
   );
   console.log(uploadResult);
   const udid = await pollUntilOperationIsDone(() =>
-    data.getOperationPreview(uploadResult.operationId, operationOptions)
+    data.getOperationPreview(uploadResult.operationId)
   );
 
   console.log(" --- Download the uploaded Data:");
-  let result = await data.downloadPreview(udid, operationOptions);
+  let result = await data.downloadPreview(udid);
   console.log("Done (content type: " + result.contentType + ")");
   // use result.blobBody for Browser, readableStreamBody for Node.js:
   console.log(
@@ -126,14 +107,12 @@ async function main() {
   const geoJsonUpdate = JSON.parse(fs.readFileSync(filePathForUpdate, "utf8"));
 
   console.log(" --- Begin the update Data (single JSON file):");
-  const updateResult = await data.beginUpdatePreviewAndWait(udid, geoJsonUpdate, operationOptions);
+  const updateResult = await data.beginUpdatePreviewAndWait(udid, geoJsonUpdate);
   console.log(updateResult);
-  await pollUntilOperationIsDone(() =>
-    data.getOperationPreview(updateResult.operationId, operationOptions)
-  );
+  await pollUntilOperationIsDone(() => data.getOperationPreview(updateResult.operationId));
 
   console.log(" --- Download the updated Data:");
-  result = await data.downloadPreview(udid, operationOptions);
+  result = await data.downloadPreview(udid);
   console.log("Done (content type: " + result.contentType + ")");
   // use result.blobBody for Browser, readableStreamBody for Node.js:
   console.log(
@@ -144,7 +123,7 @@ async function main() {
   // Delete the data (cleanup)
 
   console.log(" --- Delete the created Data item:");
-  await data.deletePreview(udid, operationOptions);
+  await data.deletePreview(udid);
   console.log("Done (no response body)");
 
   // Upload ZIP with DWG files:
@@ -153,18 +132,17 @@ async function main() {
   const uploadZipResult = await data.beginUploadPreviewAndWait(
     "dwgzippackage",
     "application/octet-stream",
-    fs.readFileSync(filePathForZipUpload),
-    operationOptions
+    fs.readFileSync(filePathForZipUpload)
   );
   console.log(uploadZipResult);
   const zipUdid = await pollUntilOperationIsDone(() =>
-    data.getOperationPreview(uploadZipResult.operationId, operationOptions)
+    data.getOperationPreview(uploadZipResult.operationId)
   );
 
   if (!fs.existsSync("tmp")) fs.mkdirSync("tmp");
 
   console.log(" --- Download the uploaded Data:");
-  let zipResult = await data.downloadPreview(zipUdid, operationOptions);
+  let zipResult = await data.downloadPreview(zipUdid);
   console.log("Done (content type: " + zipResult.contentType + ")");
   // use result.blobBody for Browser, readableStreamBody for Node.js:
   zipResult.readableStreamBody?.pipe(fs.createWriteStream("tmp/Data_uploaded.zip"));
@@ -172,13 +150,13 @@ async function main() {
   // Delete the data (cleanup)
 
   console.log(" --- Delete the created Data item:");
-  await data.deletePreview(zipUdid, operationOptions);
+  await data.deletePreview(zipUdid);
   console.log("Done (no response body)");
 
   // List all the data
 
   console.log(" --- List all the Data uploaded:");
-  (await data.listPreview(operationOptions)).mapDataList?.forEach((dataItem) => {
+  (await data.listPreview()).mapDataList?.forEach((dataItem) => {
     console.log(dataItem);
   });
 }

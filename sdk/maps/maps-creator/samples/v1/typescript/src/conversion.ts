@@ -6,8 +6,7 @@
  */
 
 import { DefaultAzureCredential } from "@azure/identity";
-import * as coreAuth from "@azure/core-auth";
-import * as coreClient from "@azure/core-client";
+import { TokenCredential, AzureKeyCredential } from "@azure/core-auth";
 import { CreatorClient, LongRunningOperationResult } from "@azure/maps-creator";
 import * as dotenv from "dotenv";
 dotenv.config();
@@ -59,39 +58,17 @@ export async function pollUntilOperationIsDone(
  * More info is available at https://docs.microsoft.com/en-us/azure/azure-maps/azure-maps-authentication.
  */
 
-/**
- * Empty token class definition. To be used with AzureKey credentials.
- */
-class EmptyTokenCredential implements coreAuth.TokenCredential {
-  async getToken(
-    _scopes: string | string[],
-    _options?: coreAuth.GetTokenOptions
-  ): Promise<coreAuth.AccessToken | null> {
-    return {
-      token: "token",
-      expiresOnTimestamp: Date.now() + 60 * 60 * 1000
-    };
-  }
-}
-
 async function main() {
-  let credential: coreAuth.TokenCredential;
-  let operationOptions: coreClient.OperationOptions = {};
+  let credential: TokenCredential | AzureKeyCredential;
+  let mapsClientId: string | undefined;
 
   if (process.env.MAPS_SUBSCRIPTION_KEY) {
     // Use subscription key authentication
-    credential = new EmptyTokenCredential();
-    operationOptions.requestOptions = {
-      customHeaders: { "subscription-key": process.env.MAPS_SUBSCRIPTION_KEY }
-    };
+    credential = new AzureKeyCredential(process.env.MAPS_SUBSCRIPTION_KEY);
   } else {
     // Use Azure AD authentication
     credential = new DefaultAzureCredential();
-    if (process.env.MAPS_CLIENT_ID) {
-      operationOptions.requestOptions = {
-        customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
-      };
-    }
+    mapsClientId = process.env.MAPS_CLIENT_ID;
   }
 
   const conversion = new CreatorClient(credential).conversion;
@@ -103,27 +80,23 @@ async function main() {
   }
 
   console.log(" --- Begin the Conversion:");
-  const convertResult = await conversion.beginConvertAndWait(
-    udid,
-    "facility-2.0",
-    operationOptions
-  );
+  const convertResult = await conversion.beginConvertAndWait(udid, "facility-2.0");
   console.log(convertResult);
   const conversionId = await pollUntilOperationIsDone(() =>
-    conversion.getOperation(convertResult.operationId!, operationOptions)
+    conversion.getOperation(convertResult.operationId!)
   );
 
   // ! you can use the converted data in the Dataset API - please put in env CREATOR_CONVERSION_ID
 
   console.log(" --- Get details about the created Conversion:");
-  console.log(await conversion.get(conversionId!, operationOptions));
+  console.log(await conversion.get(conversionId!));
 
   console.log(" --- Delete the created Conversion:");
-  await conversion.delete(conversionId!, operationOptions);
+  await conversion.delete(conversionId!);
   console.log("Done (no response body)");
 
   console.log(" --- List all the Conversions:");
-  for await (const conversionItem of conversion.list(operationOptions)) {
+  for await (const conversionItem of conversion.list()) {
     console.log(conversionItem);
   }
 }

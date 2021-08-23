@@ -4,21 +4,14 @@
 
 ```ts
 
+import { AzureKeyCredential } from '@azure/core-auth';
 import * as coreAuth from '@azure/core-auth';
 import * as coreClient from '@azure/core-client';
 import * as coreRestPipeline from '@azure/core-rest-pipeline';
 import { PagedAsyncIterableIterator } from '@azure/core-paging';
 import { PollerLike } from '@azure/core-lro';
 import { PollOperationState } from '@azure/core-lro';
-
-// @public
-export interface Alias {
-    assign(aliasId: string, creatorDataItemId: string, options?: AliasAssignOptionalParams): Promise<AliasAssignResponse>;
-    create(options?: AliasCreateOptionalParams): Promise<AliasCreateResponse>;
-    delete(aliasId: string, options?: AliasDeleteOptionalParams): Promise<void>;
-    getDetails(aliasId: string, options?: AliasGetDetailsOptionalParams): Promise<AliasGetDetailsResponse>;
-    list(options?: AliasListOptionalParams): PagedAsyncIterableIterator<AliasListItem>;
-}
+import { TokenCredential } from '@azure/core-auth';
 
 // @public
 export interface AliasAssignOptionalParams extends coreClient.OperationOptions {
@@ -172,16 +165,6 @@ export interface ConformanceResponse {
 }
 
 // @public
-export interface Conversion {
-    beginConvert(udid: string, outputOntology: string, options?: ConversionConvertOptionalParams): Promise<PollerLike<PollOperationState<ConversionConvertResponse>, ConversionConvertResponse>>;
-    beginConvertAndWait(udid: string, outputOntology: string, options?: ConversionConvertOptionalParams): Promise<ConversionConvertResponse>;
-    delete(conversionId: string, options?: ConversionDeleteOptionalParams): Promise<void>;
-    get(conversionId: string, options?: ConversionGetOptionalParams): Promise<ConversionGetResponse>;
-    getOperation(operationId: string, options?: ConversionGetOperationOptionalParams): Promise<ConversionGetOperationResponse>;
-    list(options?: ConversionListOptionalParams): PagedAsyncIterableIterator<ConversionListDetailInfo>;
-}
-
-// @public
 export interface ConversionConvertHeaders {
     resourceLocation?: string;
 }
@@ -249,34 +232,11 @@ export interface ConversionListResponse {
     readonly nextLink?: string;
 }
 
+// Warning: (ae-forgotten-export) The symbol "CreatorClient" needs to be exported by the entry point index.d.ts
+//
 // @public (undocumented)
-export class CreatorClient extends CreatorClientContext {
-    constructor(credentials: coreAuth.TokenCredential, options?: CreatorClientOptionalParams);
-    // (undocumented)
-    alias: Alias;
-    // (undocumented)
-    conversion: Conversion;
-    // (undocumented)
-    data: Data;
-    // (undocumented)
-    dataset: Dataset;
-    // (undocumented)
-    featureState: FeatureState;
-    // (undocumented)
-    spatial: Spatial;
-    // (undocumented)
-    tileset: Tileset;
-    // (undocumented)
-    wfs: Wfs;
-}
-
-// @public (undocumented)
-export class CreatorClientContext extends coreClient.ServiceClient {
-    constructor(credentials: coreAuth.TokenCredential, options?: CreatorClientOptionalParams);
-    // (undocumented)
-    geography: Geography;
-    // (undocumented)
-    xMsClientId?: string;
+export class CreatorClient extends CreatorClient_2 {
+    constructor(credential: TokenCredential | AzureKeyCredential, options?: CreatorClientOptionalParams);
 }
 
 // @public
@@ -284,38 +244,6 @@ export interface CreatorClientOptionalParams extends coreClient.ServiceClientOpt
     endpoint?: string;
     geography?: Geography;
     xMsClientId?: string;
-}
-
-// @public
-export interface Data {
-    beginUpdatePreview(uniqueDataId: string, updateContent: Record<string, unknown>, options?: DataUpdatePreviewOptionalParams): Promise<PollerLike<PollOperationState<DataUpdatePreviewResponse>, DataUpdatePreviewResponse>>;
-    beginUpdatePreviewAndWait(uniqueDataId: string, updateContent: Record<string, unknown>, options?: DataUpdatePreviewOptionalParams): Promise<DataUpdatePreviewResponse>;
-    beginUploadPreview(...args: [
-        UploadDataFormat,
-        "application/octet-stream",
-        coreRestPipeline.RequestBodyType,
-        DataUploadPreview$binaryOptionalParams?
-    ] | [
-        UploadDataFormat,
-        "application/json",
-        Record<string, unknown>,
-        DataUploadPreview$jsonOptionalParams?
-    ]): Promise<PollerLike<PollOperationState<DataUploadPreviewResponse>, DataUploadPreviewResponse>>;
-    beginUploadPreviewAndWait(...args: [
-        UploadDataFormat,
-        "application/octet-stream",
-        coreRestPipeline.RequestBodyType,
-        DataUploadPreview$binaryOptionalParams?
-    ] | [
-        UploadDataFormat,
-        "application/json",
-        Record<string, unknown>,
-        DataUploadPreview$jsonOptionalParams?
-    ]): Promise<DataUploadPreviewResponse>;
-    deletePreview(uniqueDataId: string, options?: DataDeletePreviewOptionalParams): Promise<void>;
-    downloadPreview(uniqueDataId: string, options?: DataDownloadPreviewOptionalParams): Promise<DataDownloadPreviewResponse>;
-    getOperationPreview(operationId: string, options?: DataGetOperationPreviewOptionalParams): Promise<DataGetOperationPreviewResponse>;
-    listPreview(options?: DataListPreviewOptionalParams): Promise<DataListPreviewResponse>;
 }
 
 // @public
@@ -355,16 +283,6 @@ export interface DataListPreviewOptionalParams extends coreClient.OperationOptio
 
 // @public
 export type DataListPreviewResponse = MapDataListResponse;
-
-// @public
-export interface Dataset {
-    beginCreate(conversionId: string, options?: DatasetCreateOptionalParams): Promise<PollerLike<PollOperationState<DatasetCreateResponse>, DatasetCreateResponse>>;
-    beginCreateAndWait(conversionId: string, options?: DatasetCreateOptionalParams): Promise<DatasetCreateResponse>;
-    delete(datasetId: string, options?: DatasetDeleteOptionalParams): Promise<void>;
-    get(datasetId: string, options?: DatasetGetOptionalParams): Promise<DatasetGetResponse>;
-    getOperation(operationId: string, options?: DatasetGetOperationOptionalParams): Promise<DatasetGetOperationResponse>;
-    list(options?: DatasetListOptionalParams): PagedAsyncIterableIterator<DatasetDetailInfo>;
-}
 
 // @public
 export interface DatasetCreateHeaders {
@@ -520,18 +438,6 @@ export interface FeatureResponse {
     feature: GeoJsonFeature;
     links?: WfsEndpointLink[];
     readonly ontology?: string;
-}
-
-// @public
-export interface FeatureState {
-    createStateset(datasetId: string, statesetCreateRequestBody: StylesObject, options?: FeatureStateCreateStatesetOptionalParams): Promise<FeatureStateCreateStatesetResponse>;
-    deleteState(statesetId: string, featureId: string, stateKeyName: string, options?: FeatureStateDeleteStateOptionalParams): Promise<void>;
-    deleteStateset(statesetId: string, options?: FeatureStateDeleteStatesetOptionalParams): Promise<void>;
-    getStates(statesetId: string, featureId: string, options?: FeatureStateGetStatesOptionalParams): Promise<FeatureStateGetStatesResponse>;
-    getStateset(statesetId: string, options?: FeatureStateGetStatesetOptionalParams): Promise<FeatureStateGetStatesetResponse>;
-    listStateset(options?: FeatureStateListStatesetOptionalParams): PagedAsyncIterableIterator<StatesetInfoObject>;
-    putStateset(statesetId: string, statesetStyleUpdateRequestBody: StylesObject, options?: FeatureStatePutStatesetOptionalParams): Promise<void>;
-    updateStates(statesetId: string, featureId: string, featureStateUpdateRequestBody: FeatureStatesStructure, options?: FeatureStateUpdateStatesOptionalParams): Promise<void>;
 }
 
 // @public
@@ -894,19 +800,6 @@ export interface RangeObject {
 export type ResponseFormat = string;
 
 // @public
-export interface Spatial {
-    getBuffer(format: ResponseFormat, udid: string, distances: string, options?: SpatialGetBufferOptionalParams): Promise<SpatialGetBufferResponse>;
-    getClosestPoint(format: ResponseFormat, udid: string, latitude: number, longitude: number, options?: SpatialGetClosestPointOptionalParams): Promise<SpatialGetClosestPointResponse>;
-    getGeofence(format: ResponseFormat, deviceId: string, udid: string, latitude: number, longitude: number, options?: SpatialGetGeofenceOptionalParams): Promise<SpatialGetGeofenceResponse>;
-    getGreatCircleDistance(format: ResponseFormat, query: string, options?: SpatialGetGreatCircleDistanceOptionalParams): Promise<SpatialGetGreatCircleDistanceResponse>;
-    getPointInPolygon(format: ResponseFormat, udid: string, latitude: number, longitude: number, options?: SpatialGetPointInPolygonOptionalParams): Promise<SpatialGetPointInPolygonResponse>;
-    postBuffer(format: ResponseFormat, bufferRequestBody: BufferRequestBody, options?: SpatialPostBufferOptionalParams): Promise<SpatialPostBufferResponse>;
-    postClosestPoint(format: ResponseFormat, latitude: number, longitude: number, closestPointRequestBody: Record<string, unknown>, options?: SpatialPostClosestPointOptionalParams): Promise<SpatialPostClosestPointResponse>;
-    postGeofence(format: ResponseFormat, deviceId: string, latitude: number, longitude: number, searchGeofenceRequestBody: Record<string, unknown>, options?: SpatialPostGeofenceOptionalParams): Promise<SpatialPostGeofenceResponse>;
-    postPointInPolygon(format: ResponseFormat, latitude: number, longitude: number, pointInPolygonRequestBody: Record<string, unknown>, options?: SpatialPostPointInPolygonOptionalParams): Promise<SpatialPostPointInPolygonResponse>;
-}
-
-// @public
 export interface SpatialCoordinate {
     readonly lat?: number;
     readonly lon?: number;
@@ -1049,16 +942,6 @@ export interface StylesObject {
 }
 
 // @public
-export interface Tileset {
-    beginCreate(datasetId: string, options?: TilesetCreateOptionalParams): Promise<PollerLike<PollOperationState<TilesetCreateResponse>, TilesetCreateResponse>>;
-    beginCreateAndWait(datasetId: string, options?: TilesetCreateOptionalParams): Promise<TilesetCreateResponse>;
-    delete(tilesetId: string, options?: TilesetDeleteOptionalParams): Promise<void>;
-    get(tilesetId: string, options?: TilesetGetOptionalParams): Promise<TilesetGetResponse>;
-    getOperation(operationId: string, options?: TilesetGetOperationOptionalParams): Promise<TilesetGetOperationResponse>;
-    list(options?: TilesetListOptionalParams): PagedAsyncIterableIterator<TilesetDetailInfo>;
-}
-
-// @public
 export interface TilesetCreateHeaders {
     resourceLocation?: string;
 }
@@ -1129,18 +1012,6 @@ export interface TilesetListResponse {
 
 // @public
 export type UploadDataFormat = string;
-
-// @public
-export interface Wfs {
-    deleteFeature(datasetId: string, collectionId: string, featureId: string, options?: WfsDeleteFeatureOptionalParams): Promise<void>;
-    getCollection(datasetId: string, collectionId: string, options?: WfsGetCollectionOptionalParams): Promise<WfsGetCollectionResponse>;
-    getCollectionDefinition(datasetId: string, collectionId: string, options?: WfsGetCollectionDefinitionOptionalParams): Promise<WfsGetCollectionDefinitionResponse>;
-    getCollections(datasetId: string, options?: WfsGetCollectionsOptionalParams): Promise<WfsGetCollectionsResponse>;
-    getConformance(datasetId: string, options?: WfsGetConformanceOptionalParams): Promise<WfsGetConformanceResponse>;
-    getFeature(datasetId: string, collectionId: string, featureId: string, options?: WfsGetFeatureOptionalParams): Promise<WfsGetFeatureResponse>;
-    getFeatures(datasetId: string, collectionId: string, options?: WfsGetFeaturesOptionalParams): Promise<WfsGetFeaturesResponse>;
-    getLandingPage(datasetId: string, options?: WfsGetLandingPageOptionalParams): Promise<WfsGetLandingPageResponse>;
-}
 
 // @public
 export interface WfsDeleteFeatureOptionalParams extends coreClient.OperationOptions {

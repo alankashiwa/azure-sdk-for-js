@@ -7,6 +7,7 @@
 
 const fs = require("fs");
 const { DefaultAzureCredential } = require("@azure/identity");
+const { AzureKeyCredential } = require("@azure/core-auth");
 const { CreatorClient } = require("@azure/maps-creator");
 require("dotenv").config();
 
@@ -21,36 +22,17 @@ require("dotenv").config();
  * More info is available at https://docs.microsoft.com/en-us/azure/azure-maps/azure-maps-authentication.
  */
 
-/**
- * Empty token class definition. To be used with AzureKey credentials.
- */
-class EmptyTokenCredential {
-  async getToken(_scopes, _options) {
-    return {
-      token: "token",
-      expiresOnTimestamp: Date.now() + 60 * 60 * 1000
-    };
-  }
-}
-
 async function main() {
   let credential;
-  let operationOptions = {};
+  let mapsClientId;
 
   if (process.env.MAPS_SUBSCRIPTION_KEY) {
     // Use subscription key authentication
-    credential = new EmptyTokenCredential();
-    operationOptions.requestOptions = {
-      customHeaders: { "subscription-key": process.env.MAPS_SUBSCRIPTION_KEY }
-    };
+    credential = new AzureKeyCredential(process.env.MAPS_SUBSCRIPTION_KEY);
   } else {
     // Use Azure AD authentication
     credential = new DefaultAzureCredential();
-    if (process.env.MAPS_CLIENT_ID) {
-      operationOptions.requestOptions = {
-        customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
-      };
-    }
+    mapsClientId = process.env.MAPS_CLIENT_ID;
   }
 
   const featureState = new CreatorClient(credential).featureState;
@@ -69,52 +51,41 @@ async function main() {
   const featureStateSetCreate = JSON.parse(fs.readFileSync(filePathForCreate, "utf8"));
 
   console.log(" --- Create Feature State Set:");
-  const createResult = await featureState.createStateset(
-    datasetId,
-    featureStateSetCreate,
-    operationOptions
-  );
+  const createResult = await featureState.createStateset(datasetId, featureStateSetCreate);
   console.log(createResult);
   const statesetId = createResult.statesetId;
 
   console.log(" --- Get Feature State Set:");
-  console.log(await featureState.getStateset(statesetId, operationOptions));
+  console.log(await featureState.getStateset(statesetId));
 
   const featureStateSetUpdateStates = JSON.parse(fs.readFileSync(filePathForUpdateStates, "utf8"));
 
   console.log(" --- Update states of the Feature State set:");
-  console.log(
-    await featureState.updateStates(
-      statesetId,
-      featureId,
-      featureStateSetUpdateStates,
-      operationOptions
-    )
-  );
+  console.log(await featureState.updateStates(statesetId, featureId, featureStateSetUpdateStates));
 
   console.log(" --- Get states of the Feature State set:");
-  console.log(await featureState.getStates(statesetId, featureId, operationOptions));
+  console.log(await featureState.getStates(statesetId, featureId));
 
   const featureStateSetUpdate = JSON.parse(fs.readFileSync(filePathForUpdate, "utf8"));
 
   console.log(" --- Update Feature State set:");
-  console.log(await featureState.putStateset(statesetId, featureStateSetUpdate, operationOptions));
+  console.log(await featureState.putStateset(statesetId, featureStateSetUpdate));
 
   console.log(" --- Get states of the Feature State set:");
-  console.log(await featureState.getStates(statesetId, featureId, operationOptions));
+  console.log(await featureState.getStates(statesetId, featureId));
 
   console.log(" --- Delete state of the Feature State set:");
-  console.log(await featureState.deleteState(statesetId, featureId, "s1", operationOptions));
+  console.log(await featureState.deleteState(statesetId, featureId, "s1"));
 
   console.log(" --- Get states of the Feature State set:");
-  console.log(await featureState.getStates(statesetId, featureId, operationOptions));
+  console.log(await featureState.getStates(statesetId, featureId));
 
   console.log(" --- Delete the created Feature State set:");
-  await featureState.deleteStateset(statesetId, operationOptions);
+  await featureState.deleteStateset(statesetId);
   console.log("Done (no response body)");
 
   console.log(" --- List all the Feature State sets:");
-  for await (const featureStateSet of featureState.listStateset(operationOptions)) {
+  for await (const featureStateSet of featureState.listStateset()) {
     console.log(featureStateSet);
   }
 }

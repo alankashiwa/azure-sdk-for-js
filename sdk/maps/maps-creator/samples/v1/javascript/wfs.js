@@ -6,6 +6,7 @@
  */
 
 const { DefaultAzureCredential } = require("@azure/identity");
+const { AzureKeyCredential } = require("@azure/core-auth");
 const { CreatorClient } = require("@azure/maps-creator");
 require("dotenv").config();
 
@@ -20,36 +21,17 @@ require("dotenv").config();
  * More info is available at https://docs.microsoft.com/en-us/azure/azure-maps/azure-maps-authentication.
  */
 
-/**
- * Empty token class definition. To be used with AzureKey credentials.
- */
-class EmptyTokenCredential {
-  async getToken(_scopes, _options) {
-    return {
-      token: "token",
-      expiresOnTimestamp: Date.now() + 60 * 60 * 1000
-    };
-  }
-}
-
 async function main() {
   let credential;
-  let operationOptions = {};
+  let mapsClientId;
 
   if (process.env.MAPS_SUBSCRIPTION_KEY) {
     // Use subscription key authentication
-    credential = new EmptyTokenCredential();
-    operationOptions.requestOptions = {
-      customHeaders: { "subscription-key": process.env.MAPS_SUBSCRIPTION_KEY }
-    };
+    credential = new AzureKeyCredential(process.env.MAPS_SUBSCRIPTION_KEY);
   } else {
     // Use Azure AD authentication
     credential = new DefaultAzureCredential();
-    if (process.env.MAPS_CLIENT_ID) {
-      operationOptions.requestOptions = {
-        customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
-      };
-    }
+    mapsClientId = process.env.MAPS_CLIENT_ID;
   }
 
   const wfs = new CreatorClient(credential).wfs;
@@ -61,31 +43,31 @@ async function main() {
   }
 
   console.log(" --- Get conformance of the dataset:");
-  console.log(await wfs.getConformance(datasetId, operationOptions));
+  console.log(await wfs.getConformance(datasetId));
 
   console.log(" --- Get landing page of the dataset:");
-  console.log(await wfs.getLandingPage(datasetId, operationOptions));
+  console.log(await wfs.getLandingPage(datasetId));
 
   console.log(" --- Get collections:");
-  console.log(await wfs.getCollections(datasetId, operationOptions));
+  console.log(await wfs.getCollections(datasetId));
 
   console.log(" --- Get collection:");
-  console.log(await wfs.getCollection(datasetId, "facility", operationOptions));
+  console.log(await wfs.getCollection(datasetId, "facility"));
 
   console.log(" --- Get collection definition:");
-  console.log(await wfs.getCollectionDefinition(datasetId, "facility", operationOptions));
+  console.log(await wfs.getCollectionDefinition(datasetId, "facility"));
 
   console.log(" --- Get features of the collection:");
-  const collectionFeatures = await wfs.getFeatures(datasetId, "facility", operationOptions);
+  const collectionFeatures = await wfs.getFeatures(datasetId, "facility");
   console.log(collectionFeatures);
   const featureId = collectionFeatures.features[0].id;
 
   console.log(" --- Get details of the feature of the collection:");
-  console.log(await wfs.getFeature(datasetId, "facility", featureId, operationOptions));
+  console.log(await wfs.getFeature(datasetId, "facility", featureId));
 
   /* This code works as expected however it would remove the feature and require to create the dataset once again.
     console.log(" --- Remove the feature:");
-    await wfs.deleteFeature(datasetId, "facility", featureId, operationOptions);
+    await wfs.deleteFeature(datasetId, "facility", featureId);
     console.log("Done (no response body)");*/
 }
 

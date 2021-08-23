@@ -6,8 +6,7 @@
  */
 
 import { DefaultAzureCredential } from "@azure/identity";
-import * as coreAuth from "@azure/core-auth";
-import * as coreClient from "@azure/core-client";
+import { TokenCredential, AzureKeyCredential } from "@azure/core-auth";
 import { CreatorClient, LongRunningOperationResult } from "@azure/maps-creator";
 import * as dotenv from "dotenv";
 dotenv.config();
@@ -59,39 +58,17 @@ export async function pollUntilOperationIsDone(
  * More info is available at https://docs.microsoft.com/en-us/azure/azure-maps/azure-maps-authentication.
  */
 
-/**
- * Empty token class definition. To be used with AzureKey credentials.
- */
-class EmptyTokenCredential implements coreAuth.TokenCredential {
-  async getToken(
-    _scopes: string | string[],
-    _options?: coreAuth.GetTokenOptions
-  ): Promise<coreAuth.AccessToken | null> {
-    return {
-      token: "token",
-      expiresOnTimestamp: Date.now() + 60 * 60 * 1000
-    };
-  }
-}
-
 async function main() {
-  let credential: coreAuth.TokenCredential;
-  let operationOptions: coreClient.OperationOptions = {};
+  let credential: TokenCredential | AzureKeyCredential;
+  let mapsClientId: string | undefined;
 
   if (process.env.MAPS_SUBSCRIPTION_KEY) {
     // Use subscription key authentication
-    credential = new EmptyTokenCredential();
-    operationOptions.requestOptions = {
-      customHeaders: { "subscription-key": process.env.MAPS_SUBSCRIPTION_KEY }
-    };
+    credential = new AzureKeyCredential(process.env.MAPS_SUBSCRIPTION_KEY);
   } else {
     // Use Azure AD authentication
     credential = new DefaultAzureCredential();
-    if (process.env.MAPS_CLIENT_ID) {
-      operationOptions.requestOptions = {
-        customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
-      };
-    }
+    mapsClientId = process.env.MAPS_CLIENT_ID;
   }
 
   const tileset = new CreatorClient(credential).tileset;
@@ -103,21 +80,21 @@ async function main() {
   }
 
   console.log(" --- Create Tileset:");
-  const createResult = await tileset.beginCreateAndWait(datasetId, operationOptions);
+  const createResult = await tileset.beginCreateAndWait(datasetId);
   console.log(createResult);
   const tilesetId = await pollUntilOperationIsDone(() =>
-    tileset.getOperation(createResult.operationId!, operationOptions)
+    tileset.getOperation(createResult.operationId!)
   );
 
   console.log(" --- Get details about the created Tileset:");
-  console.log(await tileset.get(tilesetId!, operationOptions));
+  console.log(await tileset.get(tilesetId!));
 
   console.log(" --- Delete the created Tileset:");
-  await tileset.delete(tilesetId!, operationOptions);
+  await tileset.delete(tilesetId!);
   console.log("Done (no response body)");
 
   console.log(" --- List all the Tilesets:");
-  for await (const tileSet of tileset.list(operationOptions)) {
+  for await (const tileSet of tileset.list()) {
     console.log(tileSet);
   }
 }
