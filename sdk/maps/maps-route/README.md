@@ -3,7 +3,7 @@
 The Route Directions and Route Matrix APIs in Azure Maps Route Service can be used to calculate the estimated arrival times (ETAs) for each requested route. Route APIs consider factors such as real-time traffic information and historic traffic data, like the typical road speeds on the requested day of the week and time of day. The APIs return the shortest or fastest routes available to multiple destinations at a time in sequence or in optimized order, based on time or distance. Users can also request specialized routes and details for walkers, bicyclists, and commercial vehicles like trucks.
 
 
-This package contains an isomorphic SDK (runs both in Node.js and in browsers) for Azure Route client.
+This package contains an isomorphic SDK (runs both in Node.js and in browsers) for Azure Maps Route client.
 
 [Source code](https://github.com/Azure/azure-sdk-for-js/tree/main/sdk/maps/maps-route) |
 [Package (NPM)](https://www.npmjs.com/package/@azure/maps-route) |
