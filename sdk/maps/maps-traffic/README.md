@@ -89,7 +89,8 @@ This service provides information about the speeds and travel times of the road 
     "json",
     "absolute",
     10,
-    "52.41072,4.84239"
+    "52.41072,4.84239",
+    operationOptions
   );
 ```
 Response

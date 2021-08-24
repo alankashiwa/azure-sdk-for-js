@@ -68,7 +68,14 @@ async function main() {
 
   console.log(" --- Get route directions:");
   console.log(
-    await route.getRouteDirections("json", "52.50931,13.42936:52.50274,13.43872", operationOptions)
+    await route.getRouteDirections("json", "51.368752,-0.118332:41.385426,-0.128929", {
+      vehicleWidth: 2,
+      vehicleHeight: 2,
+      vehicleCommercial: true,
+      vehicleLoadType: "USHazmatClass1",
+      travelMode: "truck",
+      ...operationOptions
+    })
   );
 
   console.log(" --- Get route range:");

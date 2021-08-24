@@ -71,20 +71,20 @@ async function main() {
     "../../resources/search_inside_geometry_request_body.json";
 
   console.log(" --- Get search address:");
-  console.log(
-    await search.getSearchAddress(
-      "json",
-      "15127 NE 24th Street, Redmond, WA 98052",
-      operationOptions
-    )
-  );
+  console.log(await search.getSearchAddress("json", "400 Broad, Seattle", operationOptions));
 
   console.log(" --- Get search address reverse:");
-  console.log(await search.getSearchAddressReverse("json", "37.337,-121.89", operationOptions));
+  console.log(
+    await search.getSearchAddressReverse("json", "47.591180,-122.332700", operationOptions)
+  );
 
   console.log(" --- Get search address reverse cross street:");
   console.log(
-    await search.getSearchAddressReverseCrossStreet("json", "37.337,-121.89", operationOptions)
+    await search.getSearchAddressReverseCrossStreet(
+      "json",
+      "47.591180,-122.332700",
+      operationOptions
+    )
   );
 
   console.log(" --- Get search address structured:");
@@ -104,7 +104,10 @@ async function main() {
   );
 
   console.log(" --- Get search fuzzy:");
-  const fuzzyResult = await search.getSearchFuzzy("json", "Seattle", operationOptions);
+  const fuzzyResult = await search.getSearchFuzzy("json", "pizza", {
+    countrySet: ["Brazil"],
+    ...operationOptions
+  });
   console.log(fuzzyResult);
 
   // let's save geometry IDs from the fuzzy search for the getSearchPolygon example
