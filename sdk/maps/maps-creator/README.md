@@ -68,8 +68,8 @@ const client = new CreatorClient(new DefaultAzureCredential());
 
 ## Examples
 The following sections provide several code snippets covering some of the most common Azure Maps Creator tasks, including:
-- [Upload a Drawing package]([#upload-a-drawing-package)
-- [Convert a Drawing package][#convert-a-drawing-package)
+- [Upload a Drawing package](#upload-a-drawing-package)
+- [Convert a Drawing package](#convert-a-drawing-package)
 - [Create indoor map data](#create-indoor-map-data)
 - [Using indoor maps](#using-indoor-maps)
 ### Upload a Drawing package
@@ -215,12 +215,12 @@ const operationOptions = {
 const tilesetClient = new CreatorClient(credential).tileset;
 
 // Perform the dataset creation
-const conversionId = "<conversion-id-from-data-conversion>";
-const createResult = await tilesetClient.beginCreateAndWait(conversionId, operationOptions);
+const datasetId = "<dataset-id-from-dataset-creation>";
+const createResult = await tilesetClient.beginCreateAndWait(datasetId, operationOptions);
 
 
 // Get the dataset id until when the creation is complete
-const datasetId = await pollUntilOperationIsDone(() =>
+const tilesetId = await pollUntilOperationIsDone(() =>
   tilesetClient.getOperation(createResult.operationId!, operationOptions)
 );
 ```

@@ -153,8 +153,8 @@ You can use Fuzzy Search to search an address or a point of interest (POI). The 
   
   const client = new SearchClient(credential).search;
   const response = await client.getSearchFuzzy("json", "pizza", {
-    ...operationOptions,
-    countrySet: ["Brazil"]
+    countrySet: ["Brazil"],
+    ...operationOptions
   });
 ```
 
