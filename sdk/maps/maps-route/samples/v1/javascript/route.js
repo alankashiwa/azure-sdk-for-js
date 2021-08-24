@@ -43,7 +43,15 @@ async function main() {
   const filePathForPostRouteMatrix = "../../resources/route_matrix_request_body.json";
 
   console.log(" --- Get route directions:");
-  console.log(await route.getRouteDirections("json", "52.50931,13.42936:52.50274,13.43872"));
+  console.log(
+    await route.getRouteDirections("json", "51.368752,-0.118332:41.385426,-0.128929", {
+      vehicleWidth: 2,
+      vehicleHeight: 2,
+      vehicleCommercial: true,
+      vehicleLoadType: "USHazmatClass1",
+      travelMode: "truck"
+    })
+  );
 
   console.log(" --- Get route range:");
   const routeRangeOptions = { timeBudgetInSec: 6000 };

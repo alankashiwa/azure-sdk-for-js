@@ -91,10 +91,7 @@ The service provides current, historical, and future time zone information for a
 ```javascript
   const credential = new DefaultAzureCredential();
   const client = new TimezoneClient(credential, { xMsClientId: '<maps-client-id>' }).timezone;
-  const response = await client.getTimezoneByCoordinates("json", "47.0,-122", {
-    ...timezoneByCoordinatesOptions,
-    ...operationOptions
-  })
+  const response = await client.getTimezoneByCoordinates("json", "47.0,-122", timezoneByCoordinatesOptions);
 ```
 Response
 ```yaml
@@ -158,7 +155,7 @@ This service provides a full list of IANA time zone IDs. Updates to the IANA ser
 ```javascript
   const credential = new DefaultAzureCredential();
   const client = new TimezoneClient(credential, { xMsClientId: '<maps-client-id>' }).timezone;
-  const response = await client.getTimezoneEnumIana("json", operationOptions)
+  const response = await client.getTimezoneEnumIana("json");
 ```
 Response
 ```yaml
@@ -185,10 +182,7 @@ This service provides current, historical, and future time zone information for 
 ```javascript
   const credential = new DefaultAzureCredential();
   const client = new TimezoneClient(credential, { xMsClientId: '<maps-client-id>' }).timezone;
-  const response = await client.getTimezoneByID("json", "Asia/Bahrain", {
-    ...timezoneByIdOptions,
-    ...operationOptions
-  })
+  const response = await client.getTimezoneByID("json", "Asia/Bahrain", timezoneByIdOptions);
 ```
 Response
 ```yaml

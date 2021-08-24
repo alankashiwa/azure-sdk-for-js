@@ -100,7 +100,7 @@ Detailed weather conditions such as precipitation, temperature, and wind for a g
 ```javascript
   const credential = new DefaultAzureCredential();
   const client = new WeatherClient(credential, { xMsClientId: '<maps-client-id>' }).weather;
-  const response = await client.getCurrentConditions("json", "47.641268,-122.125679", operationOptions);
+  const response = await client.getCurrentConditions("json", "47.641268,-122.125679");
 
 ```
 Response
@@ -170,40 +170,41 @@ To retrieve the severe weather alerts at a given set of coordinates, you can
 ```javascript
   const credential = new DefaultAzureCredential();
   const client = new WeatherClient(credential, { xMsClientId: '<maps-client-id>' }).weather;
-  const response = await client.getSevereWeatherAlerts("json", "41.161079,-104.805450", operationOptions);
+  const response = await client.getSevereWeatherAlerts("json", "41.161079,-104.805450");
 
 ```
 Response
 ```yaml
 {
-"results": [
+  "results": [
     {
-        "countryCode": "US",
-        "alertId": 2194734,
-        "description": {
-            "localized": "Red Flag Warning",
-            "english": "Red Flag Warning"
-        },
-        "category": "FIRE",
-        "priority": 54,
-        "source": "U.S. National Weather Service",
-        "sourceId": 2,
-        "alertAreas": [
-            {
-                "name": "Platte/Goshen/Central and Eastern Laramie",
-                "summary": "Red Flag Warning in effect until 7:00 PM MDT.  Source: U.S. National Weather Service",
-                "startTime": "2020-10-05T15:00:00+00:00",
-                "endTime": "2020-10-06T01:00:00+00:00",
-                "latestStatus": {
-                    "localized": "Continue",
-                    "english": "Continue"
-                },
-                "alertDetails": "...RED FLAG WARNING REMAINS IN EFFECT FROM 9 AM THIS MORNING TO\n7 PM MDT THIS EVENING FOR STRONG GUSTY WINDS AND LOW HUMIDITY...\n\n* WHERE...Fire weather zones 303, 304, 305, 306, 307, 308, 309,\n  and 310 in southeast Wyoming. Fire weather zone 313 in Nebraska.\n\n* WIND...West to northwest 15 to 30 MPH with gusts around 40 MPH.\n\n* HUMIDITY...10 to 15 percent.\n\n* IMPACTS...Any fires that develop will likely spread rapidly.\n  Outdoor burning is not recommended.\n\nPRECAUTIONARY/PREPAREDNESS ACTIONS...\n\nA Red Flag Warning means that critical fire weather conditions\nare either occurring now...or will shortly. A combination of\nstrong winds...low relative humidity...and warm temperatures can\ncontribute to extreme fire behavior.\n\n&&",
-                "alertDetailsLanguageCode": "en"
-            }
-        ]
-        },...
-    ]
+      "countryCode": "US",
+      "alertId": 2194734,
+      "description": {
+        "localized": "Red Flag Warning",
+        "english": "Red Flag Warning"
+      },
+      "category": "FIRE",
+      "priority": 54,
+      "source": "U.S. National Weather Service",
+      "sourceId": 2,
+      "alertAreas": [
+        {
+          "name": "Platte/Goshen/Central and Eastern Laramie",
+          "summary": "Red Flag Warning in effect until 7:00 PM MDT.  Source: U.S. National Weather Service",
+          "startTime": "2020-10-05T15:00:00+00:00",
+          "endTime": "2020-10-06T01:00:00+00:00",
+          "latestStatus": {
+            "localized": "Continue",
+            "english": "Continue"
+          },
+          "alertDetails": "...RED FLAG WARNING REMAINS IN EFFECT FROM 9 AM THIS MORNING TO\n7 PM MDT THIS EVENING FOR STRONG GUSTY WINDS AND LOW HUMIDITY...\n\n* WHERE...Fire weather zones 303, 304, 305, 306, 307, 308, 309,\n  and 310 in southeast Wyoming. Fire weather zone 313 in Nebraska.\n\n* WIND...West to northwest 15 to 30 MPH with gusts around 40 MPH.\n\n* HUMIDITY...10 to 15 percent.\n\n* IMPACTS...Any fires that develop will likely spread rapidly.\n  Outdoor burning is not recommended.\n\nPRECAUTIONARY/PREPAREDNESS ACTIONS...\n\nA Red Flag Warning means that critical fire weather conditions\nare either occurring now...or will shortly. A combination of\nstrong winds...low relative humidity...and warm temperatures can\ncontribute to extreme fire behavior.\n\n&&",
+          "alertDetailsLanguageCode": "en"
+        }
+      ]
+    },
+    ...
+  ]
 }
 ```
 ### Request daily forecasts
@@ -216,239 +217,235 @@ The request can specify how many days to return: 1, 5, 10, 15, 25, or 45 days fo
   const credential = new DefaultAzureCredential();
   const client = new WeatherClient(credential, { xMsClientId: '<maps-client-id>' }).weather;
   const dailyForecastOptions = { duration: 5 };
-  const response = await client.getDailyForecast("json", "47.60357,-122.32945", {
-      ...dailyForecastOptions,
-      ...operationOptions
-    })
+  const response = await client.getDailyForecast("json", "47.60357,-122.32945", dailyForecastOptions)
 ```
 Response
 ```yaml
 {
-"summary": {
+  "summary": {
     "startDate": "2020-10-18T17:00:00+00:00",
     "endDate": "2020-10-19T23:00:00+00:00",
     "severity": 2,
     "phrase": "Snow, mixed with rain at times continuing through Monday evening and a storm total of 3-6 cm",
     "category": "snow/rain"
-},
-"forecasts": [
+  },
+  "forecasts": [
     {
-        "date": "2020-10-19T04:00:00+00:00",
-        "temperature": {
-            "minimum": {
-                "value": -1.1,
-                "unit": "C",
-                "unitType": 17
-            },
-            "maximum": {
-                "value": 1.3,
-                "unit": "C",
-                "unitType": 17
-            }
+      "date": "2020-10-19T04:00:00+00:00",
+      "temperature": {
+        "minimum": {
+          "value": -1.1,
+          "unit": "C",
+          "unitType": 17
         },
-        "realFeelTemperature": {
-            "minimum": {
-                "value": -6.0,
-                "unit": "C",
-                "unitType": 17
-            },
-            "maximum": {
-                "value": 0.5,
-                "unit": "C",
-                "unitType": 17
-            }
+        "maximum": {
+          "value": 1.3,
+          "unit": "C",
+          "unitType": 17
+        }
+      },
+      "realFeelTemperature": {
+        "minimum": {
+          "value": -6.0,
+          "unit": "C",
+          "unitType": 17
         },
-        "realFeelTemperatureShade": {
-            "minimum": {
-                "value": -6.0,
-                "unit": "C",
-                "unitType": 17
-            },
-            "maximum": {
-                "value": 0.7,
-                "unit": "C",
-                "unitType": 17
-            }
+        "maximum": {
+          "value": 0.5,
+          "unit": "C",
+          "unitType": 17
+        }
+      },
+      "realFeelTemperatureShade": {
+        "minimum": {
+          "value": -6.0,
+          "unit": "C",
+          "unitType": 17
         },
-        "hoursOfSun": 1.8,
-        "degreeDaySummary": {
-            "heating": {
-                "value": 18.0,
-                "unit": "C",
-                "unitType": 17
-            },
-            "cooling": {
-                "value": 0.0,
-                "unit": "C",
-                "unitType": 17
-            }
+        "maximum": {
+          "value": 0.7,
+          "unit": "C",
+          "unitType": 17
+        }
+      },
+      "hoursOfSun": 1.8,
+      "degreeDaySummary": {
+        "heating": {
+          "value": 18.0,
+          "unit": "C",
+          "unitType": 17
         },
-        "airAndPollen": [
-            {
-                "name": "AirQuality",
-                "value": 23,
-                "category": "Good",
-                "categoryValue": 1,
-                "type": "Ozone"
-            },
-            {
-                "name": "Grass",
-                "value": 0,
-                "category": "Low",
-                "categoryValue": 1
-            },
-            {
-                "name": "Mold",
-                "value": 0,
-                "category": "Low",
-                "categoryValue": 1
-            },
-            {
-                "name": "Ragweed",
-                "value": 0,
-                "category": "Low",
-                "categoryValue": 1
-            },
-            {
-                "name": "Tree",
-                "value": 0,
-                "category": "Low",
-                "categoryValue": 1
-            },
-            {
-                "name": "UVIndex",
-                "value": 0,
-                "category": "Low",
-                "categoryValue": 1
-            }
-        ],
-        "day": {
-            "iconCode": 22,
-            "iconPhrase": "Snow",
-            "hasPrecipitation": true,
-            "precipitationType": "Mixed",
-            "precipitationIntensity": "Light",
-            "shortPhrase": "Chilly with snow, 2-4 cm",
-            "longPhrase": "Chilly with snow, accumulating an additional 2-4 cm",
-            "precipitationProbability": 90,
-            "thunderstormProbability": 0,
-            "rainProbability": 54,
-            "snowProbability": 85,
-            "iceProbability": 8,
-            "wind": {
-                "direction": {
-                    "degrees": 36.0,
-                    "localizedDescription": "NE"
-                },
-                "speed": {
-                    "value": 9.3,
-                    "unit": "km/h",
-                    "unitType": 7
-                }
-            },
-            "windGust": {
-                "direction": {
-                    "degrees": 70.0,
-                    "localizedDescription": "ENE"
-                },
-                "speed": {
-                    "value": 25.9,
-                    "unit": "km/h",
-                    "unitType": 7
-                }
-            },
-            "totalLiquid": {
-                "value": 4.3,
-                "unit": "mm",
-                "unitType": 3
-            },
-            "rain": {
-                "value": 0.5,
-                "unit": "mm",
-                "unitType": 3
-            },
-            "snow": {
-                "value": 2.72,
-                "unit": "cm",
-                "unitType": 4
-            },
-            "ice": {
-                "value": 0.0,
-                "unit": "mm",
-                "unitType": 3
-            },
-            "hoursOfPrecipitation": 9.0,
-            "hoursOfRain": 1.0,
-            "hoursOfSnow": 9.0,
-            "hoursOfIce": 0.0,
-            "cloudCover": 96
+        "cooling": {
+          "value": 0.0,
+          "unit": "C",
+          "unitType": 17
+        }
+      },
+      "airAndPollen": [
+        {
+          "name": "AirQuality",
+          "value": 23,
+          "category": "Good",
+          "categoryValue": 1,
+          "type": "Ozone"
         },
-        "night": {
-            "iconCode": 29,
-            "iconPhrase": "Rain and snow",
-            "hasPrecipitation": true,
-            "precipitationType": "Mixed",
-            "precipitationIntensity": "Light",
-            "shortPhrase": "Showers of rain and snow",
-            "longPhrase": "A couple of showers of rain or snow this evening; otherwise, cloudy; storm total snowfall 1-3 cm",
-            "precipitationProbability": 65,
-            "thunderstormProbability": 0,
-            "rainProbability": 60,
-            "snowProbability": 54,
-            "iceProbability": 4,
-            "wind": {
-                "direction": {
-                    "degrees": 16.0,
-                    "localizedDescription": "NNE"
-                },
-                "speed": {
-                    "value": 16.7,
-                    "unit": "km/h",
-                    "unitType": 7
-                }
-            },
-            "windGust": {
-                "direction": {
-                    "degrees": 1.0,
-                    "localizedDescription": "N"
-                },
-                "speed": {
-                    "value": 35.2,
-                    "unit": "km/h",
-                    "unitType": 7
-                }
-            },
-            "totalLiquid": {
-                "value": 4.3,
-                "unit": "mm",
-                "unitType": 3
-            },
-            "rain": {
-                "value": 3.0,
-                "unit": "mm",
-                "unitType": 3
-            },
-            "snow": {
-                "value": 0.79,
-                "unit": "cm",
-                "unitType": 4
-            },
-            "ice": {
-                "value": 0.0,
-                "unit": "mm",
-                "unitType": 3
-            },
-            "hoursOfPrecipitation": 4.0,
-            "hoursOfRain": 1.0,
-            "hoursOfSnow": 3.0,
-            "hoursOfIce": 0.0,
-            "cloudCover": 94
+        {
+          "name": "Grass",
+          "value": 0,
+          "category": "Low",
+          "categoryValue": 1
         },
-        "sources": [
-            "AccuWeather"
-        ]
-    },...
-]
+        {
+          "name": "Mold",
+          "value": 0,
+          "category": "Low",
+          "categoryValue": 1
+        },
+        {
+          "name": "Ragweed",
+          "value": 0,
+          "category": "Low",
+          "categoryValue": 1
+        },
+        {
+          "name": "Tree",
+          "value": 0,
+          "category": "Low",
+          "categoryValue": 1
+        },
+        {
+          "name": "UVIndex",
+          "value": 0,
+          "category": "Low",
+          "categoryValue": 1
+        }
+      ],
+      "day": {
+        "iconCode": 22,
+        "iconPhrase": "Snow",
+        "hasPrecipitation": true,
+        "precipitationType": "Mixed",
+        "precipitationIntensity": "Light",
+        "shortPhrase": "Chilly with snow, 2-4 cm",
+        "longPhrase": "Chilly with snow, accumulating an additional 2-4 cm",
+        "precipitationProbability": 90,
+        "thunderstormProbability": 0,
+        "rainProbability": 54,
+        "snowProbability": 85,
+        "iceProbability": 8,
+        "wind": {
+          "direction": {
+            "degrees": 36.0,
+            "localizedDescription": "NE"
+          },
+          "speed": {
+            "value": 9.3,
+            "unit": "km/h",
+            "unitType": 7
+          }
+        },
+        "windGust": {
+          "direction": {
+            "degrees": 70.0,
+            "localizedDescription": "ENE"
+          },
+          "speed": {
+            "value": 25.9,
+            "unit": "km/h",
+            "unitType": 7
+          }
+        },
+        "totalLiquid": {
+          "value": 4.3,
+          "unit": "mm",
+          "unitType": 3
+        },
+        "rain": {
+          "value": 0.5,
+          "unit": "mm",
+          "unitType": 3
+        },
+        "snow": {
+          "value": 2.72,
+          "unit": "cm",
+          "unitType": 4
+        },
+        "ice": {
+          "value": 0.0,
+          "unit": "mm",
+          "unitType": 3
+        },
+        "hoursOfPrecipitation": 9.0,
+        "hoursOfRain": 1.0,
+        "hoursOfSnow": 9.0,
+        "hoursOfIce": 0.0,
+        "cloudCover": 96
+      },
+      "night": {
+        "iconCode": 29,
+        "iconPhrase": "Rain and snow",
+        "hasPrecipitation": true,
+        "precipitationType": "Mixed",
+        "precipitationIntensity": "Light",
+        "shortPhrase": "Showers of rain and snow",
+        "longPhrase": "A couple of showers of rain or snow this evening; otherwise, cloudy; storm total snowfall 1-3 cm",
+        "precipitationProbability": 65,
+        "thunderstormProbability": 0,
+        "rainProbability": 60,
+        "snowProbability": 54,
+        "iceProbability": 4,
+        "wind": {
+          "direction": {
+            "degrees": 16.0,
+            "localizedDescription": "NNE"
+          },
+          "speed": {
+            "value": 16.7,
+            "unit": "km/h",
+            "unitType": 7
+          }
+        },
+        "windGust": {
+          "direction": {
+            "degrees": 1.0,
+            "localizedDescription": "N"
+          },
+          "speed": {
+            "value": 35.2,
+            "unit": "km/h",
+            "unitType": 7
+          }
+        },
+        "totalLiquid": {
+          "value": 4.3,
+          "unit": "mm",
+          "unitType": 3
+        },
+        "rain": {
+          "value": 3.0,
+          "unit": "mm",
+          "unitType": 3
+        },
+        "snow": {
+          "value": 0.79,
+          "unit": "cm",
+          "unitType": 4
+        },
+        "ice": {
+          "value": 0.0,
+          "unit": "mm",
+          "unitType": 3
+        },
+        "hoursOfPrecipitation": 4.0,
+        "hoursOfRain": 1.0,
+        "hoursOfSnow": 3.0,
+        "hoursOfIce": 0.0,
+        "cloudCover": 94
+      },
+      "sources": ["AccuWeather"]
+    },
+    ...
+  ]
 }
 ```
 ### Request hourly forecasts
@@ -461,101 +458,99 @@ To retrieve the hourly weather forecast for the next 12 hours at a given set of 
   const credential = new DefaultAzureCredential();
   const client = new WeatherClient(credential, { xMsClientId: '<maps-client-id>' }).weather;
   const hourlyForecastOptions = { duration: 12 };
-  const response = await client.getHourlyForecas("json", "47.60357,-122.32945", {
-    ...hourlyForecastOptions,
-    ...operationOptions
-  })
+  const response = await client.getHourlyForecas("json", "47.60357,-122.32945", hourlyForecastOptions);
 ```
 Response
 ```yaml
 {
-"forecasts": [
+  "forecasts": [
     {
-        "date": "2020-10-19T21:00:00+00:00",
-        "iconCode": 12,
-        "iconPhrase": "Showers",
-        "hasPrecipitation": true,
-        "precipitationType": "Rain",
-        "precipitationIntensity": "Light",
-        "isDaylight": true,
-        "temperature": {
-            "value": 14.7,
-            "unit": "C",
-            "unitType": 17
+      "date": "2020-10-19T21:00:00+00:00",
+      "iconCode": 12,
+      "iconPhrase": "Showers",
+      "hasPrecipitation": true,
+      "precipitationType": "Rain",
+      "precipitationIntensity": "Light",
+      "isDaylight": true,
+      "temperature": {
+        "value": 14.7,
+        "unit": "C",
+        "unitType": 17
+      },
+      "realFeelTemperature": {
+        "value": 13.3,
+        "unit": "C",
+        "unitType": 17
+      },
+      "wetBulbTemperature": {
+        "value": 12.0,
+        "unit": "C",
+        "unitType": 17
+      },
+      "dewPoint": {
+        "value": 9.5,
+        "unit": "C",
+        "unitType": 17
+      },
+      "wind": {
+        "direction": {
+          "degrees": 242.0,
+          "localizedDescription": "WSW"
         },
-        "realFeelTemperature": {
-            "value": 13.3,
-            "unit": "C",
-            "unitType": 17
-        },
-        "wetBulbTemperature": {
-            "value": 12.0,
-            "unit": "C",
-            "unitType": 17
-        },
-        "dewPoint": {
-            "value": 9.5,
-            "unit": "C",
-            "unitType": 17
-        },
-        "wind": {
-            "direction": {
-                "degrees": 242.0,
-                "localizedDescription": "WSW"
-            },
-            "speed": {
-                "value": 9.3,
-                "unit": "km/h",
-                "unitType": 7
-            }
-        },
-        "windGust": {
-            "speed": {
-                "value": 14.8,
-                "unit": "km/h",
-                "unitType": 7
-            }
-        },
-        "relativeHumidity": 71,
-        "visibility": {
-            "value": 9.7,
-            "unit": "km",
-            "unitType": 6
-        },
-        "cloudCover": 100,
-        "ceiling": {
-            "value": 1128.0,
-            "unit": "m",
-            "unitType": 5
-        },
-        "uvIndex": 1,
-        "uvIndexPhrase": "Low",
-        "precipitationProbability": 51,
-        "rainProbability": 51,
-        "snowProbability": 0,
-        "iceProbability": 0,
-        "totalLiquid": {
-            "value": 0.3,
-            "unit": "mm",
-            "unitType": 3
-        },
-        "rain": {
-            "value": 0.3,
-            "unit": "mm",
-            "unitType": 3
-        },
-        "snow": {
-            "value": 0.0,
-            "unit": "cm",
-            "unitType": 4
-        },
-        "ice": {
-            "value": 0.0,
-            "unit": "mm",
-            "unitType": 3
+        "speed": {
+          "value": 9.3,
+          "unit": "km/h",
+          "unitType": 7
         }
-    }...
-]
+      },
+      "windGust": {
+        "speed": {
+          "value": 14.8,
+          "unit": "km/h",
+          "unitType": 7
+        }
+      },
+      "relativeHumidity": 71,
+      "visibility": {
+        "value": 9.7,
+        "unit": "km",
+        "unitType": 6
+      },
+      "cloudCover": 100,
+      "ceiling": {
+        "value": 1128.0,
+        "unit": "m",
+        "unitType": 5
+      },
+      "uvIndex": 1,
+      "uvIndexPhrase": "Low",
+      "precipitationProbability": 51,
+      "rainProbability": 51,
+      "snowProbability": 0,
+      "iceProbability": 0,
+      "totalLiquid": {
+        "value": 0.3,
+        "unit": "mm",
+        "unitType": 3
+      },
+      "rain": {
+        "value": 0.3,
+        "unit": "mm",
+        "unitType": 3
+      },
+      "snow": {
+        "value": 0.0,
+        "unit": "cm",
+        "unitType": 4
+      },
+      "ice": {
+        "value": 0.0,
+        "unit": "mm",
+        "unitType": 3
+      }
+    },
+    ...
+  ]
 }
 ```
 ### Request minute by minute forecasts
@@ -568,99 +563,96 @@ To retrieve the minute-by-minute weather forecast at a given set of coordinates,
   const credential = new DefaultAzureCredential();
   const client = new WeatherClient(credential, { xMsClientId: '<maps-client-id>' }).weather;
   const minuteForecastOptions = { interval: 15 };
-  const response = await client.getMinuteForecast("json", "47.632346,-122.138874", {
-    ...minuteForecastOptions,
-    ...operationOptions
-  })
+  const response = await client.getMinuteForecast("json", "47.632346,-122.138874", minuteForecastOptions);
 
 ```
 Response
 ```yaml
 {
-"summary": {
+  "summary": {
     "briefPhrase60": "No precipitation for at least 60 min",
     "shortPhrase": "No precip for 120 min",
     "briefPhrase": "No precipitation for at least 120 min",
     "longPhrase": "No precipitation for at least 120 min",
     "iconCode": 7
-},
-"intervalSummaries": [
+  },
+  "intervalSummaries": [
     {
-        "startMinute": 0,
-        "endMinute": 119,
-        "totalMinutes": 120,
-        "shortPhrase": "No precip for %MINUTE_VALUE min",
-        "briefPhrase": "No precipitation for at least %MINUTE_VALUE min",
-        "longPhrase": "No precipitation for at least %MINUTE_VALUE min",
-        "iconCode": 7
+      "startMinute": 0,
+      "endMinute": 119,
+      "totalMinutes": 120,
+      "shortPhrase": "No precip for %MINUTE_VALUE min",
+      "briefPhrase": "No precipitation for at least %MINUTE_VALUE min",
+      "longPhrase": "No precipitation for at least %MINUTE_VALUE min",
+      "iconCode": 7
     }
-],
-"intervals": [
+  ],
+  "intervals": [
     {
-        "startTime": "2020-10-19T20:51:00+00:00",
-        "minute": 0,
-        "dbz": 0.0,
-        "shortPhrase": "No Precipitation",
-        "iconCode": 7,
-        "cloudCover": 100
+      "startTime": "2020-10-19T20:51:00+00:00",
+      "minute": 0,
+      "dbz": 0.0,
+      "shortPhrase": "No Precipitation",
+      "iconCode": 7,
+      "cloudCover": 100
     },
     {
-        "startTime": "2020-10-19T21:06:00+00:00",
-        "minute": 15,
-        "dbz": 0.0,
-        "shortPhrase": "No Precipitation",
-        "iconCode": 7,
-        "cloudCover": 100
+      "startTime": "2020-10-19T21:06:00+00:00",
+      "minute": 15,
+      "dbz": 0.0,
+      "shortPhrase": "No Precipitation",
+      "iconCode": 7,
+      "cloudCover": 100
     },
     {
-        "startTime": "2020-10-19T21:21:00+00:00",
-        "minute": 30,
-        "dbz": 0.0,
-        "shortPhrase": "No Precipitation",
-        "iconCode": 7,
-        "cloudCover": 100
+      "startTime": "2020-10-19T21:21:00+00:00",
+      "minute": 30,
+      "dbz": 0.0,
+      "shortPhrase": "No Precipitation",
+      "iconCode": 7,
+      "cloudCover": 100
     },
     {
-        "startTime": "2020-10-19T21:36:00+00:00",
-        "minute": 45,
-        "dbz": 0.0,
-        "shortPhrase": "No Precipitation",
-        "iconCode": 7,
-        "cloudCover": 100
+      "startTime": "2020-10-19T21:36:00+00:00",
+      "minute": 45,
+      "dbz": 0.0,
+      "shortPhrase": "No Precipitation",
+      "iconCode": 7,
+      "cloudCover": 100
     },
     {
-        "startTime": "2020-10-19T21:51:00+00:00",
-        "minute": 60,
-        "dbz": 0.0,
-        "shortPhrase": "No Precipitation",
-        "iconCode": 7,
-        "cloudCover": 100
+      "startTime": "2020-10-19T21:51:00+00:00",
+      "minute": 60,
+      "dbz": 0.0,
+      "shortPhrase": "No Precipitation",
+      "iconCode": 7,
+      "cloudCover": 100
     },
     {
-        "startTime": "2020-10-19T22:06:00+00:00",
-        "minute": 75,
-        "dbz": 0.0,
-        "shortPhrase": "No Precipitation",
-        "iconCode": 7,
-        "cloudCover": 100
+      "startTime": "2020-10-19T22:06:00+00:00",
+      "minute": 75,
+      "dbz": 0.0,
+      "shortPhrase": "No Precipitation",
+      "iconCode": 7,
+      "cloudCover": 100
     },
     {
-        "startTime": "2020-10-19T22:21:00+00:00",
-        "minute": 90,
-        "dbz": 0.0,
-        "shortPhrase": "No Precipitation",
-        "iconCode": 7,
-        "cloudCover": 100
+      "startTime": "2020-10-19T22:21:00+00:00",
+      "minute": 90,
+      "dbz": 0.0,
+      "shortPhrase": "No Precipitation",
+      "iconCode": 7,
+      "cloudCover": 100
     },
     {
-        "startTime": "2020-10-19T22:36:00+00:00",
-        "minute": 105,
-        "dbz": 0.0,
-        "shortPhrase": "No Precipitation",
-        "iconCode": 7,
-        "cloudCover": 100
+      "startTime": "2020-10-19T22:36:00+00:00",
+      "minute": 105,
+      "dbz": 0.0,
+      "shortPhrase": "No Precipitation",
+      "iconCode": 7,
+      "cloudCover": 100
     }
-    ]
+  ]
 }
 ```
 

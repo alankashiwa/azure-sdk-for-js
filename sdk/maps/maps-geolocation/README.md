@@ -86,7 +86,7 @@ The following sections provide several code snippets covering some of the most c
 ```javascript
   const credential = new DefaultAzureCredential();
   const client = new GeolocationClient(credential, { xMsClientId: '<maps-client-id>' }).geolocation;
-  const response = await client.getIPToLocationPreview("json", ipAddressToTest, operationOptions);
+  const response = await client.getIPToLocationPreview("json", ipAddressToTest);
 ```
 Response
 ```yaml

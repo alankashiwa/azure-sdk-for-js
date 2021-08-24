@@ -141,8 +141,7 @@ The service serves 256 x 256 pixel tiles showing traffic flow. All tiles use the
     "absolute",
     12,
     2044,
-    1360,
-    operationOptions
+    1360
   );
 ```
 
@@ -153,7 +152,7 @@ The response will contain the traffic flow tile based on the request parameters.
 ```javascript
   const credential = new DefaultAzureCredential();
   const client = new TrafficClient(credential, { xMsClientId: '<maps-client-id>' }).traffic;
-  const response = await client.getTrafficIncidentTile("png", "night", 10, 175, 408, operationOptions);
+  const response = await client.getTrafficIncidentTile("png", "night", 10, 175, 408);
 ```
 
 The response will contain the traffic incident tile based on the request parameters.

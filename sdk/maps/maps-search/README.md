@@ -97,8 +97,7 @@ You can use an authenticated client to convert an address into latitude and long
   const client = new SearchClient(credential, { xMsClientId: '<maps-client-id>' }).search;
   const response = await client.getSearchAddress(
     "json",
-    "400 Broad, Seattle",
-    operationOptions
+    "400 Broad, Seattle"
   );
 ```
 

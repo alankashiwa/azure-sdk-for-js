@@ -94,7 +94,8 @@ The following sections provide several code snippets covering some of the most c
 ```javascript
   const credential = new DefaultAzureCredential();
   const client = new RenderClient(credential, { xMsClientId: '<maps-client-id>' }).renderV2;
-  const response = await client.getMapTilePreview("microsoft.base", 6, 10, 22);
+  const mapTileOptions = { tileSize: "512" };
+  const response = await client.getMapTilePreview("microsoft.base", 6, 10, 22, mapTileOptions);
 ```
 
 The response will contain the tile object based on the request parameters.
