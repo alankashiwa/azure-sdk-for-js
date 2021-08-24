@@ -36,7 +36,7 @@ async function main() {
     mapsClientId = process.env.MAPS_CLIENT_ID;
   }
 
-  const featureState = new CreatorClient(credential).featureState;
+  const featureState = new CreatorClient(credential, { xMsClientId: mapsClientId }).featureState;
 
   const filePathForCreate = "../../resources/featurestate_sample_create.json";
   const filePathForUpdate = "../../resources/featurestate_sample_put.json";

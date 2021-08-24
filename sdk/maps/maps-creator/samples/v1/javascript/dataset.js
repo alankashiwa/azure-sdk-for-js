@@ -68,7 +68,7 @@ async function main() {
     mapsClientId = process.env.MAPS_CLIENT_ID;
   }
 
-  const dataset = new CreatorClient(credential).dataset;
+  const dataset = new CreatorClient(credential, { xMsClientId: mapsClientId }).dataset;
 
   // TO USE need to have some DWG Conversion done already - please use env CREATOR_CONVERSION_ID
   const conversionId = process.env.CREATOR_CONVERSION_ID;

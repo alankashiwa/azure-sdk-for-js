@@ -71,7 +71,7 @@ async function main() {
     mapsClientId = process.env.MAPS_CLIENT_ID;
   }
 
-  const conversion = new CreatorClient(credential).conversion;
+  const conversion = new CreatorClient(credential, { xMsClientId: mapsClientId }).conversion;
 
   // TO USE need to have some DWG data uploaded already - please use env CREATOR_DWG_ZIP_UDID
   const udid = process.env.CREATOR_DWG_ZIP_UDID;

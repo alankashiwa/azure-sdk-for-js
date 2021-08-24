@@ -35,7 +35,7 @@ async function main() {
     mapsClientId = process.env.MAPS_CLIENT_ID;
   }
 
-  const wfs = new CreatorClient(credential).wfs;
+  const wfs = new CreatorClient(credential, { xMsClientId: mapsClientId }).wfs;
 
   // TO USE need to have some Dataset created already - please use env CREATOR_DATASET_ID
   const datasetId = process.env.CREATOR_DATASET_ID;

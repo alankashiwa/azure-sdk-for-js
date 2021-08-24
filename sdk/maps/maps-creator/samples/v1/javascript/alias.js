@@ -34,7 +34,7 @@ async function main() {
     mapsClientId = process.env.MAPS_CLIENT_ID;
   }
 
-  const alias = new CreatorClient(credential).alias;
+  const alias = new CreatorClient(credential, { xMsClientId: mapsClientId }).alias;
 
   console.log(" --- Create Alias:");
   const aliasCreateResponse = await alias.create();

@@ -71,7 +71,7 @@ async function main() {
     mapsClientId = process.env.MAPS_CLIENT_ID;
   }
 
-  const tileset = new CreatorClient(credential).tileset;
+  const tileset = new CreatorClient(credential, { xMsClientId: mapsClientId }).tileset;
 
   // TO USE need to have some Dataset created already - please use env CREATOR_DATASET_ID
   const datasetId = process.env.CREATOR_DATASET_ID;

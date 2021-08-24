@@ -36,7 +36,7 @@ async function main() {
     mapsClientId = process.env.MAPS_CLIENT_ID;
   }
 
-  const spatial = new CreatorClient(credential).spatial;
+  const spatial = new CreatorClient(credential, { xMsClientId: mapsClientId }).spatial;
 
   const filePathForPostSpatialBuffer = "../../resources/spatial_buffer_request_body.json";
   const filePathForPostSpatialClosestPoint =

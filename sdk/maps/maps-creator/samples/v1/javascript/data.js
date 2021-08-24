@@ -69,7 +69,7 @@ async function main() {
     mapsClientId = process.env.MAPS_CLIENT_ID;
   }
 
-  const data = new CreatorClient(credential).data;
+  const data = new CreatorClient(credential, { xMsClientId: mapsClientId }).data;
 
   const filePathForUpload = "../../resources/data_sample_upload.json";
   const filePathForZipUpload = "../../resources/data_sample_upload.zip";

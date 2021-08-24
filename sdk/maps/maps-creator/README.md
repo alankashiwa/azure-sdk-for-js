@@ -82,25 +82,19 @@ Use the code snippet below to upload a Drawing package using [Data Upload API](h
 import fs from "fs";
 
 const credential = new DefaultAzureCredential();
-const operationOptions = {
-  requestOptions: {
-    customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
-  }
-};
-const dataClient = new CreatorClient(credential).data;
+const dataClient = new CreatorClient(credential, { xMsClientId: '<maps-client-id>' }).data;
 
 // Perform the data upload
 const filePathForZipUpload = "<dwg-zip-package>";
 const response = await dataClient.beginUploadPreviewAndWait(
   "dwgzippackage",
   "application/octet-stream",
-  fs.readFileSync(filePathForZipUpload),
-  operationOptions
+  fs.readFileSync(filePathForZipUpload)
 );
 
 // Get the udid when the upload is complete
 const zipUdid = await pollUntilOperationIsDone(() =>
-  dataClient.getOperationPreview(uploadZipResult.operationId!, operationOptions)
+  dataClient.getOperationPreview(uploadZipResult.operationId!)
 );
 ```
 
@@ -145,25 +139,19 @@ The [Azure Maps Conversion service](https://docs.microsoft.com/en-us/rest/api/ma
 
 ```javascript
 const credential = new DefaultAzureCredential();
-const operationOptions = {
-  requestOptions: {
-    customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
-  }
-};
-const conversionClient = new CreatorClient(credential).conversion;
+const conversionClient = new CreatorClient(credential, { xMsClientId: '<maps-client-id>' }).conversion;
 
 // Perform the data conversion
 const udid = "<udid-from-data-upload-result>";
 const convertResult = await conversionClient.beginConvertAndWait(
   udid,
-  "facility-2.0",
-  operationOptions
+  "facility-2.0"
 );
 
 
 // Get the conversion id until when the conversion is complete
 const conversionId = await pollUntilOperationIsDone(() =>
-  conversionClient.getOperation(convertResult.operationId!, operationOptions)
+  conversionClient.getOperation(convertResult.operationId!)
 );
 ```
 
@@ -186,54 +174,39 @@ Azure Maps Creator provides the following services that support map creation:
 Dataset Creation
 ```javascript
 const credential = new DefaultAzureCredential();
-const operationOptions = {
-  requestOptions: {
-    customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
-  }
-};
-const datasetClient = new CreatorClient(credential).dataset;
+const datasetClient = new CreatorClient(credential, { xMsClientId: '<maps-client-id>' }).dataset;
 
 // Perform the dataset creation
 const conversionId = "<conversion-id-from-data-conversion>";
-const createResult = await datasetClient.beginCreateAndWait(conversionId, operationOptions);
+const createResult = await datasetClient.beginCreateAndWait(conversionId);
 
 
 // Get the dataset id until when the creation is complete
 const datasetId = await pollUntilOperationIsDone(() =>
-  datasetClient.getOperation(createResult.operationId!, operationOptions)
+  datasetClient.getOperation(createResult.operationId!)
 );
 ```
 
 Tileset Creation
 ```javascript
 const credential = new DefaultAzureCredential();
-const operationOptions = {
-  requestOptions: {
-    customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
-  }
-};
-const tilesetClient = new CreatorClient(credential).tileset;
+const tilesetClient = new CreatorClient(credential, { xMsClientId: '<maps-client-id>' }).tileset;
 
 // Perform the dataset creation
 const datasetId = "<dataset-id-from-dataset-creation>";
-const createResult = await tilesetClient.beginCreateAndWait(datasetId, operationOptions);
+const createResult = await tilesetClient.beginCreateAndWait(datasetId);
 
 
 // Get the dataset id until when the creation is complete
 const tilesetId = await pollUntilOperationIsDone(() =>
-  tilesetClient.getOperation(createResult.operationId!, operationOptions)
+  tilesetClient.getOperation(createResult.operationId!)
 );
 ```
 
 Feature State Creation and Retrieval
 ```javascript
 const credential = new DefaultAzureCredential();
-const operationOptions = {
-  requestOptions: {
-    customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
-  }
-};
-const featureStateClient = new CreatorClient(credential).featureState;
+const featureStateClient = new CreatorClient(credential, { xMsClientId: '<maps-client-id>' }).featureState;
 
 // Perform the feature state set creation
 const datasetId = "<dataset-id-from-dataset-creation>";
@@ -252,14 +225,13 @@ const createResult = await featureStateClient.createStateset(
         ]
       }
     ]
-  },
-  operationOptions
+  }
 );;
 
 
 // Retrieve the current states of the feature
 const statesetId = createResult.statesetId;
-const currentFeatureState = await featureStateClient.getStateset(statesetId!, operationOptions);
+const currentFeatureState = await featureStateClient.getStateset(statesetId!);
 ```
 
 ### Using indoor maps
