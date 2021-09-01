@@ -3,17 +3,10 @@
   "compilerOptions": {
     "outDir": "./dist-esm",
     "declarationDir": "./types",
+    "baseUrl": "./",
     "paths": {
-      "@azure/maps-elevation": [
-        "./src/generated/index"
-      ]
-    },
-    "noUnusedLocals": false,
-    "noUnusedParameters": false
+      "@azure/maps-elevation": ["./src/index"]
+    }
   },
-  "include": [
-    "src/**/*.ts",
-    "test/**/*.ts",
-    "samples-dev/**/*.ts"
-  ]
+  "include": ["src/**/*.ts", "test/**/*.ts", "samples-dev/**/*.ts"]
 }
