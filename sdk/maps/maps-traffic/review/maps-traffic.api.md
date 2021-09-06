@@ -34,27 +34,7 @@ export interface ErrorResponse {
 }
 
 // @public
-export type GeographicResourceLocation = string;
-
-// @public
-export type Geography = string;
-
-// @public
 export type IncidentGeometryType = string;
-
-// @public
-export enum KnownGeographicResourceLocation {
-    Eu = "eu",
-    Us = "us"
-}
-
-// @public
-export enum KnownGeography {
-    // (undocumented)
-    Eu = "eu",
-    // (undocumented)
-    Us = "us"
-}
 
 // @public
 export enum KnownIncidentGeometryType {
@@ -150,20 +130,20 @@ export class TrafficClient extends TrafficClientContext {
 
 // @public (undocumented)
 export class TrafficClientContext extends coreClient.ServiceClient {
+    // (undocumented)
+    $host: string;
     constructor(credentials: coreAuth.TokenCredential, options?: TrafficClientOptionalParams);
     // (undocumented)
     apiVersion: string;
-    // (undocumented)
-    geography: Geography;
     // (undocumented)
     xMsClientId?: string;
 }
 
 // @public
 export interface TrafficClientOptionalParams extends coreClient.ServiceClientOptions {
+    $host?: string;
     apiVersion?: string;
     endpoint?: string;
-    geography?: Geography;
     xMsClientId?: string;
 }
 

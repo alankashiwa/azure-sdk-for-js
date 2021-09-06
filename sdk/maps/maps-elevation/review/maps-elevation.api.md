@@ -42,20 +42,20 @@ export class ElevationClient extends ElevationClientContext {
 
 // @public (undocumented)
 export class ElevationClientContext extends coreClient.ServiceClient {
+    // (undocumented)
+    $host: string;
     constructor(credentials: coreAuth.TokenCredential, options?: ElevationClientOptionalParams);
     // (undocumented)
     apiVersion: string;
-    // (undocumented)
-    geography: Geography;
     // (undocumented)
     xMsClientId?: string;
 }
 
 // @public
 export interface ElevationClientOptionalParams extends coreClient.ServiceClientOptions {
+    $host?: string;
     apiVersion?: string;
     endpoint?: string;
-    geography?: Geography;
     xMsClientId?: string;
 }
 
@@ -114,26 +114,6 @@ export interface ErrorDetail {
 // @public
 export interface ErrorResponse {
     error?: ErrorDetail;
-}
-
-// @public
-export type GeographicResourceLocation = string;
-
-// @public
-export type Geography = string;
-
-// @public
-export enum KnownGeographicResourceLocation {
-    Eu = "eu",
-    Us = "us"
-}
-
-// @public
-export enum KnownGeography {
-    // (undocumented)
-    Eu = "eu",
-    // (undocumented)
-    Us = "us"
 }
 
 // @public

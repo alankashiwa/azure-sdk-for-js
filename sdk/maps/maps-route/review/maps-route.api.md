@@ -71,12 +71,6 @@ export interface ErrorResponse {
 }
 
 // @public
-export type GeographicResourceLocation = string;
-
-// @public
-export type Geography = string;
-
-// @public
 export type GeoJsonFeature = GeoJsonObject & GeoJsonFeatureData & {
     type: "Feature";
 };
@@ -209,20 +203,6 @@ export enum KnownComputeTravelTimeFor {
 export enum KnownDrivingSide {
     Left = "LEFT",
     Right = "RIGHT"
-}
-
-// @public
-export enum KnownGeographicResourceLocation {
-    Eu = "eu",
-    Us = "us"
-}
-
-// @public
-export enum KnownGeography {
-    // (undocumented)
-    Eu = "eu",
-    // (undocumented)
-    Us = "us"
 }
 
 // @public
@@ -452,20 +432,20 @@ export class RouteClient extends RouteClientContext {
 
 // @public (undocumented)
 export class RouteClientContext extends coreClient.ServiceClient {
+    // (undocumented)
+    $host: string;
     constructor(credentials: coreAuth.TokenCredential, options?: RouteClientOptionalParams);
     // (undocumented)
     apiVersion: string;
-    // (undocumented)
-    geography: Geography;
     // (undocumented)
     xMsClientId?: string;
 }
 
 // @public
 export interface RouteClientOptionalParams extends coreClient.ServiceClientOptions {
+    $host?: string;
     apiVersion?: string;
     endpoint?: string;
-    geography?: Geography;
     xMsClientId?: string;
 }
 

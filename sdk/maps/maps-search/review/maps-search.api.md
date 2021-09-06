@@ -81,12 +81,6 @@ export interface ErrorResponse {
 }
 
 // @public
-export type GeographicResourceLocation = string;
-
-// @public
-export type Geography = string;
-
-// @public
 export type GeoJsonFeature = GeoJsonObject & GeoJsonFeatureData & {
     type: "Feature";
 };
@@ -217,20 +211,6 @@ export enum KnownEntryPointType {
     Main = "main",
     // (undocumented)
     Minor = "minor"
-}
-
-// @public
-export enum KnownGeographicResourceLocation {
-    Eu = "eu",
-    Us = "us"
-}
-
-// @public
-export enum KnownGeography {
-    // (undocumented)
-    Eu = "eu",
-    // (undocumented)
-    Us = "us"
 }
 
 // @public
@@ -376,20 +356,20 @@ export class SearchClient extends SearchClientContext {
 
 // @public (undocumented)
 export class SearchClientContext extends coreClient.ServiceClient {
+    // (undocumented)
+    $host: string;
     constructor(credentials: coreAuth.TokenCredential, options?: SearchClientOptionalParams);
     // (undocumented)
     apiVersion: string;
-    // (undocumented)
-    geography: Geography;
     // (undocumented)
     xMsClientId?: string;
 }
 
 // @public
 export interface SearchClientOptionalParams extends coreClient.ServiceClientOptions {
+    $host?: string;
     apiVersion?: string;
     endpoint?: string;
-    geography?: Geography;
     xMsClientId?: string;
 }
 

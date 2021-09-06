@@ -187,12 +187,6 @@ export interface ForecastInterval {
     threshold?: string;
 }
 
-// @public
-export type GeographicResourceLocation = string;
-
-// @public
-export type Geography = string;
-
 // @public (undocumented)
 export interface HazardDetail {
     hazardCode?: string;
@@ -251,20 +245,6 @@ export enum KnownDayQuarter {
     Three = 3,
     Two = 2,
     Zero = 0
-}
-
-// @public
-export enum KnownGeographicResourceLocation {
-    Eu = "eu",
-    Us = "us"
-}
-
-// @public
-export enum KnownGeography {
-    // (undocumented)
-    Eu = "eu",
-    // (undocumented)
-    Us = "us"
 }
 
 // @public
@@ -470,20 +450,20 @@ export class WeatherClient extends WeatherClientContext {
 
 // @public (undocumented)
 export class WeatherClientContext extends coreClient.ServiceClient {
+    // (undocumented)
+    $host: string;
     constructor(credentials: coreAuth.TokenCredential, options?: WeatherClientOptionalParams);
     // (undocumented)
     apiVersion: string;
-    // (undocumented)
-    geography: Geography;
     // (undocumented)
     xMsClientId?: string;
 }
 
 // @public
 export interface WeatherClientOptionalParams extends coreClient.ServiceClientOptions {
+    $host?: string;
     apiVersion?: string;
     endpoint?: string;
-    geography?: Geography;
     xMsClientId?: string;
 }
 
