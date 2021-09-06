@@ -21,7 +21,7 @@ import {
   RenderV2GetMapAttributionResponse
 } from "../models";
 
-/** Class representing a RenderV2. */
+/** Class containing RenderV2 operations. */
 export class RenderV2Impl implements RenderV2 {
   private readonly client: RenderClientContext;
 

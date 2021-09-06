@@ -29,7 +29,7 @@ import {
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
-/** Class representing a Alias. */
+/** Class containing Alias operations. */
 export class AliasImpl implements Alias {
   private readonly client: CreatorClientContext;
 

@@ -36,7 +36,7 @@ import {
   RenderGetCopyrightForWorldResponse
 } from "../models";
 
-/** Class representing a Render. */
+/** Class containing Render operations. */
 export class RenderImpl implements Render {
   private readonly client: RenderClientContext;
 
@@ -400,7 +400,7 @@ const getMapStaticImageOperationSpec: coreClient.OperationSpec = {
     Parameters.pins,
     Parameters.path
   ],
-  urlParameters: [Parameters.geography, Parameters.format],
+  urlParameters: [Parameters.$host, Parameters.format],
   headerParameters: [Parameters.accept, Parameters.xMsClientId],
   serializer
 };
@@ -430,7 +430,7 @@ const getMapTileOperationSpec: coreClient.OperationSpec = {
     Parameters.yTileIndex,
     Parameters.tileSize
   ],
-  urlParameters: [Parameters.geography, Parameters.format1],
+  urlParameters: [Parameters.$host, Parameters.format1],
   headerParameters: [Parameters.accept, Parameters.xMsClientId],
   serializer
 };
@@ -456,7 +456,7 @@ const getMapStateTilePreviewOperationSpec: coreClient.OperationSpec = {
     Parameters.yTileIndex,
     Parameters.statesetId
   ],
-  urlParameters: [Parameters.geography],
+  urlParameters: [Parameters.$host],
   headerParameters: [Parameters.xMsClientId, Parameters.accept1],
   serializer
 };
@@ -472,7 +472,7 @@ const getCopyrightCaptionOperationSpec: coreClient.OperationSpec = {
     }
   },
   queryParameters: [Parameters.apiVersion],
-  urlParameters: [Parameters.geography, Parameters.format2],
+  urlParameters: [Parameters.$host, Parameters.format2],
   headerParameters: [Parameters.xMsClientId, Parameters.accept2],
   serializer
 };
@@ -498,7 +498,7 @@ const getMapImageryTileOperationSpec: coreClient.OperationSpec = {
     Parameters.yTileIndex,
     Parameters.style2
   ],
-  urlParameters: [Parameters.geography, Parameters.format],
+  urlParameters: [Parameters.$host, Parameters.format],
   headerParameters: [Parameters.xMsClientId, Parameters.accept3],
   serializer
 };
@@ -519,7 +519,7 @@ const getCopyrightFromBoundingBoxOperationSpec: coreClient.OperationSpec = {
     Parameters.maxcoordinates,
     Parameters.text
   ],
-  urlParameters: [Parameters.geography, Parameters.format2],
+  urlParameters: [Parameters.$host, Parameters.format2],
   headerParameters: [Parameters.xMsClientId, Parameters.accept2],
   serializer
 };
@@ -541,7 +541,7 @@ const getCopyrightForTileOperationSpec: coreClient.OperationSpec = {
     Parameters.yTileIndex,
     Parameters.text
   ],
-  urlParameters: [Parameters.geography, Parameters.format2],
+  urlParameters: [Parameters.$host, Parameters.format2],
   headerParameters: [Parameters.xMsClientId, Parameters.accept2],
   serializer
 };
@@ -557,7 +557,7 @@ const getCopyrightForWorldOperationSpec: coreClient.OperationSpec = {
     }
   },
   queryParameters: [Parameters.apiVersion, Parameters.text],
-  urlParameters: [Parameters.geography, Parameters.format2],
+  urlParameters: [Parameters.$host, Parameters.format2],
   headerParameters: [Parameters.xMsClientId, Parameters.accept2],
   serializer
 };

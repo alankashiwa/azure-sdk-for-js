@@ -27,7 +27,7 @@ import {
   TimezoneGetTimezoneWindowsToIanaResponse
 } from "../models";
 
-/** Class representing a Timezone. */
+/** Class containing Timezone operations. */
 export class TimezoneImpl implements Timezone {
   private readonly client: TimezoneClientContext;
 
@@ -199,7 +199,7 @@ const getTimezoneByIDOperationSpec: coreClient.OperationSpec = {
     Parameters.transitionsYears,
     Parameters.query
   ],
-  urlParameters: [Parameters.geography, Parameters.format],
+  urlParameters: [Parameters.$host, Parameters.format],
   headerParameters: [
     Parameters.accept,
     Parameters.xMsClientId,
@@ -226,7 +226,7 @@ const getTimezoneByCoordinatesOperationSpec: coreClient.OperationSpec = {
     Parameters.transitionsYears,
     Parameters.query
   ],
-  urlParameters: [Parameters.geography, Parameters.format],
+  urlParameters: [Parameters.$host, Parameters.format],
   headerParameters: [
     Parameters.accept,
     Parameters.xMsClientId,
@@ -253,7 +253,7 @@ const getTimezoneEnumWindowsOperationSpec: coreClient.OperationSpec = {
     }
   },
   queryParameters: [Parameters.apiVersion],
-  urlParameters: [Parameters.geography, Parameters.format],
+  urlParameters: [Parameters.$host, Parameters.format],
   headerParameters: [Parameters.accept, Parameters.xMsClientId],
   serializer
 };
@@ -274,7 +274,7 @@ const getTimezoneEnumIanaOperationSpec: coreClient.OperationSpec = {
     }
   },
   queryParameters: [Parameters.apiVersion],
-  urlParameters: [Parameters.geography, Parameters.format],
+  urlParameters: [Parameters.$host, Parameters.format],
   headerParameters: [Parameters.accept, Parameters.xMsClientId],
   serializer
 };
@@ -290,7 +290,7 @@ const getTimezoneIanaVersionOperationSpec: coreClient.OperationSpec = {
     }
   },
   queryParameters: [Parameters.apiVersion],
-  urlParameters: [Parameters.geography, Parameters.format],
+  urlParameters: [Parameters.$host, Parameters.format],
   headerParameters: [Parameters.accept, Parameters.xMsClientId],
   serializer
 };
@@ -315,7 +315,7 @@ const getTimezoneWindowsToIanaOperationSpec: coreClient.OperationSpec = {
     Parameters.query,
     Parameters.territory
   ],
-  urlParameters: [Parameters.geography, Parameters.format],
+  urlParameters: [Parameters.$host, Parameters.format],
   headerParameters: [Parameters.accept, Parameters.xMsClientId],
   serializer
 };

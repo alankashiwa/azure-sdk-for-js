@@ -1732,25 +1732,25 @@ export const RangeObject: coreClient.CompositeMapper = {
       minimum: {
         serializedName: "minimum",
         type: {
-          name: "Number"
+          name: "String"
         }
       },
       maximum: {
         serializedName: "maximum",
         type: {
-          name: "Number"
+          name: "String"
         }
       },
       exclusiveMinimum: {
         serializedName: "exclusiveMinimum",
         type: {
-          name: "Number"
+          name: "String"
         }
       },
       exclusiveMaximum: {
         serializedName: "exclusiveMaximum",
         type: {
-          name: "Number"
+          name: "String"
         }
       }
     }

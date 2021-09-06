@@ -8,10 +8,10 @@
 
 import * as coreClient from "@azure/core-client";
 import * as coreAuth from "@azure/core-auth";
-import { Geography, SearchClientOptionalParams } from "./models";
+import { SearchClientOptionalParams } from "./models";
 
 export class SearchClientContext extends coreClient.ServiceClient {
-  geography: Geography;
+  $host: string;
   xMsClientId?: string;
   apiVersion: string;
 
@@ -52,12 +52,12 @@ export class SearchClientContext extends coreClient.ServiceClient {
       userAgentOptions: {
         userAgentPrefix
       },
-      baseUri: options.endpoint || "https://{geography}.atlas.microsoft.com"
+      baseUri: options.endpoint || "https://atlas.microsoft.com"
     };
     super(optionsWithDefaults);
 
     // Assigning values to Constant parameters
-    this.geography = options.geography || "us";
+    this.$host = options.$host || "https://atlas.microsoft.com";
     this.apiVersion = options.apiVersion || "1.0";
   }
 }

@@ -798,22 +798,6 @@ export interface RoutePostRouteDirectionsBatchHeaders {
   location?: string;
 }
 
-/** Known values of {@link Geography} that the service accepts. */
-export enum KnownGeography {
-  Us = "us",
-  Eu = "eu"
-}
-
-/**
- * Defines values for Geography. \
- * {@link KnownGeography} can be used interchangeably with Geography,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **us** \
- * **eu**
- */
-export type Geography = string;
-
 /** Known values of {@link ResponseFormat} that the service accepts. */
 export enum KnownResponseFormat {
   /** [The JavaScript Object Notation Data Interchange Format](https://tools.ietf.org/html/rfc8259) */
@@ -1429,24 +1413,6 @@ export enum KnownGuidanceManeuver {
  * **WAYPOINT_REACHED**: You have reached the waypoint.
  */
 export type GuidanceManeuver = string;
-
-/** Known values of {@link GeographicResourceLocation} that the service accepts. */
-export enum KnownGeographicResourceLocation {
-  /** Used to access an Azure Maps Creator resource in the United States */
-  Us = "us",
-  /** Used to access an Azure Maps Creator resource in Europe */
-  Eu = "eu"
-}
-
-/**
- * Defines values for GeographicResourceLocation. \
- * {@link KnownGeographicResourceLocation} can be used interchangeably with GeographicResourceLocation,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **us**: Used to access an Azure Maps Creator resource in the United States \
- * **eu**: Used to access an Azure Maps Creator resource in Europe
- */
-export type GeographicResourceLocation = string;
 
 /** Optional parameters. */
 export interface RoutePostRouteMatrixOptionalParams
@@ -2276,8 +2242,8 @@ export type RoutePostRouteDirectionsBatchSyncResponse = RouteDirectionsBatchResp
 /** Optional parameters. */
 export interface RouteClientOptionalParams
   extends coreClient.ServiceClientOptions {
-  /** This parameter specifies where the Azure Maps Creator resource is located.  Valid values are us and eu. */
-  geography?: Geography;
+  /** server parameter */
+  $host?: string;
   /** Specifies which account is intended for usage in conjunction with the Azure AD security model.  It represents a unique ID for the Azure Maps account and can be retrieved from the Azure Maps management  plane Account API. To use Azure AD security in Azure Maps see the following [articles](https://aka.ms/amauthdetails) for guidance. */
   xMsClientId?: string;
   /** Api Version */

@@ -14,7 +14,7 @@ import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
 import { CreatorClientContext } from "../creatorClientContext";
 import { PollerLike, PollOperationState, LroEngine } from "@azure/core-lro";
-import { LroImpl, shouldDeserializeLro } from "../lroImpl";
+import { LroImpl } from "../lroImpl";
 import {
   TilesetDetailInfo,
   TilesetListNextOptionalParams,
@@ -31,7 +31,7 @@ import {
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
-/** Class representing a Tileset. */
+/** Class containing Tileset operations. */
 export class TilesetImpl implements Tileset {
   private readonly client: CreatorClientContext;
 

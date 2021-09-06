@@ -30,7 +30,7 @@ import {
   TrafficGetTrafficIncidentViewportResponse
 } from "../models";
 
-/** Class representing a Traffic. */
+/** Class containing Traffic operations. */
 export class TrafficImpl implements Traffic {
   private readonly client: TrafficClientContext;
 
@@ -290,7 +290,7 @@ const getTrafficFlowTileOperationSpec: coreClient.OperationSpec = {
     Parameters.yTileIndex,
     Parameters.thickness
   ],
-  urlParameters: [Parameters.geography, Parameters.format],
+  urlParameters: [Parameters.$host, Parameters.format],
   headerParameters: [Parameters.accept, Parameters.xMsClientId],
   serializer
 };
@@ -314,7 +314,7 @@ const getTrafficFlowSegmentOperationSpec: coreClient.OperationSpec = {
     Parameters.unit,
     Parameters.openLr
   ],
-  urlParameters: [Parameters.geography, Parameters.format1],
+  urlParameters: [Parameters.$host, Parameters.format1],
   headerParameters: [Parameters.xMsClientId, Parameters.accept1],
   serializer
 };
@@ -341,7 +341,7 @@ const getTrafficIncidentTileOperationSpec: coreClient.OperationSpec = {
     Parameters.style2,
     Parameters.trafficState
   ],
-  urlParameters: [Parameters.geography, Parameters.format],
+  urlParameters: [Parameters.$host, Parameters.format],
   headerParameters: [Parameters.accept, Parameters.xMsClientId],
   serializer
 };
@@ -368,7 +368,7 @@ const getTrafficIncidentDetailOperationSpec: coreClient.OperationSpec = {
     Parameters.expandCluster,
     Parameters.originalPosition
   ],
-  urlParameters: [Parameters.geography, Parameters.format1],
+  urlParameters: [Parameters.$host, Parameters.format1],
   headerParameters: [Parameters.xMsClientId, Parameters.accept1],
   serializer
 };
@@ -391,7 +391,7 @@ const getTrafficIncidentViewportOperationSpec: coreClient.OperationSpec = {
     Parameters.overviewzoom,
     Parameters.copyright
   ],
-  urlParameters: [Parameters.geography, Parameters.format1],
+  urlParameters: [Parameters.$host, Parameters.format1],
   headerParameters: [Parameters.xMsClientId, Parameters.accept1],
   serializer
 };

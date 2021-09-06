@@ -17,7 +17,7 @@ import {
   GeolocationGetIPToLocationPreviewResponse
 } from "../models";
 
-/** Class representing a Geolocation. */
+/** Class containing Geolocation operations. */
 export class GeolocationImpl implements Geolocation {
   private readonly client: GeolocationClientContext;
 
@@ -70,7 +70,7 @@ const getIPToLocationPreviewOperationSpec: coreClient.OperationSpec = {
     }
   },
   queryParameters: [Parameters.apiVersion, Parameters.ip],
-  urlParameters: [Parameters.geography, Parameters.format],
+  urlParameters: [Parameters.$host, Parameters.format],
   headerParameters: [Parameters.accept, Parameters.xMsClientId],
   serializer
 };

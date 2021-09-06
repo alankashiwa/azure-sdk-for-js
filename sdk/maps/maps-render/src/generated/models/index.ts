@@ -225,22 +225,6 @@ export interface RenderV2GetMapTilePreviewHeaders {
   contentType?: string;
 }
 
-/** Known values of {@link Geography} that the service accepts. */
-export enum KnownGeography {
-  Us = "us",
-  Eu = "eu"
-}
-
-/**
- * Defines values for Geography. \
- * {@link KnownGeography} can be used interchangeably with Geography,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **us** \
- * **eu**
- */
-export type Geography = string;
-
 /** Known values of {@link RasterTileFormat} that the service accepts. */
 export enum KnownRasterTileFormat {
   /** An image in the png format. Supports zoom levels 0 through 18. */
@@ -603,24 +587,6 @@ export enum KnownTileSize {
  * * microsoft.imagery
  */
 export type TileSize = string;
-
-/** Known values of {@link GeographicResourceLocation} that the service accepts. */
-export enum KnownGeographicResourceLocation {
-  /** Used to access an Azure Maps Creator resource in the United States */
-  Us = "us",
-  /** Used to access an Azure Maps Creator resource in Europe */
-  Eu = "eu"
-}
-
-/**
- * Defines values for GeographicResourceLocation. \
- * {@link KnownGeographicResourceLocation} can be used interchangeably with GeographicResourceLocation,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **us**: Used to access an Azure Maps Creator resource in the United States \
- * **eu**: Used to access an Azure Maps Creator resource in Europe
- */
-export type GeographicResourceLocation = string;
 
 /** Optional parameters. */
 export interface RenderGetMapStaticImageOptionalParams
@@ -1095,12 +1061,10 @@ export type RenderV2GetMapAttributionResponse = MapAttributionResultV2;
 /** Optional parameters. */
 export interface RenderClientOptionalParams
   extends coreClient.ServiceClientOptions {
-  /** This parameter specifies where the Azure Maps Creator resource is located.  Valid values are us and eu. */
-  geography?: Geography;
-  /** Specifies which account is intended for usage in conjunction with the Azure AD security model.  It represents a unique ID for the Azure Maps account and can be retrieved from the Azure Maps management  plane Account API. To use Azure AD security in Azure Maps see the following [articles](https://aka.ms/amauthdetails) for guidance. */
-  xMsClientId?: string;
   /** server parameter */
   $host?: string;
+  /** Specifies which account is intended for usage in conjunction with the Azure AD security model.  It represents a unique ID for the Azure Maps account and can be retrieved from the Azure Maps management  plane Account API. To use Azure AD security in Azure Maps see the following [articles](https://aka.ms/amauthdetails) for guidance. */
+  xMsClientId?: string;
   /** Overrides client endpoint. */
   endpoint?: string;
 }

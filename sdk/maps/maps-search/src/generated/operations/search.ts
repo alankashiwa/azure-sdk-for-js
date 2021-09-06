@@ -12,7 +12,7 @@ import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
 import { SearchClientContext } from "../searchClientContext";
 import { PollerLike, PollOperationState, LroEngine } from "@azure/core-lro";
-import { LroImpl, shouldDeserializeLro } from "../lroImpl";
+import { LroImpl } from "../lroImpl";
 import {
   ResponseFormat,
   SearchGetSearchPolygonOptionalParams,
@@ -57,7 +57,7 @@ import {
   SearchPostSearchAddressReverseBatchResponse
 } from "../models";
 
-/** Class representing a Search. */
+/** Class containing Search operations. */
 export class SearchImpl implements Search {
   private readonly client: SearchClientContext;
 
@@ -2416,7 +2416,7 @@ const getSearchPolygonOperationSpec: coreClient.OperationSpec = {
     }
   },
   queryParameters: [Parameters.apiVersion, Parameters.geometries],
-  urlParameters: [Parameters.geography, Parameters.format],
+  urlParameters: [Parameters.$host, Parameters.format],
   headerParameters: [Parameters.accept, Parameters.xMsClientId],
   serializer
 };
@@ -2454,7 +2454,7 @@ const getSearchFuzzyOperationSpec: coreClient.OperationSpec = {
     Parameters.view,
     Parameters.openingHours
   ],
-  urlParameters: [Parameters.geography, Parameters.format1],
+  urlParameters: [Parameters.$host, Parameters.format1],
   headerParameters: [Parameters.accept, Parameters.xMsClientId],
   serializer
 };
@@ -2489,7 +2489,7 @@ const getSearchPOIOperationSpec: coreClient.OperationSpec = {
     Parameters.view,
     Parameters.openingHours
   ],
-  urlParameters: [Parameters.geography, Parameters.format1],
+  urlParameters: [Parameters.$host, Parameters.format1],
   headerParameters: [Parameters.accept, Parameters.xMsClientId],
   serializer
 };
@@ -2519,7 +2519,7 @@ const getSearchNearbyOperationSpec: coreClient.OperationSpec = {
     Parameters.lat1,
     Parameters.lon1
   ],
-  urlParameters: [Parameters.geography, Parameters.format1],
+  urlParameters: [Parameters.$host, Parameters.format1],
   headerParameters: [Parameters.accept, Parameters.xMsClientId],
   serializer
 };
@@ -2554,7 +2554,7 @@ const getSearchPOICategoryOperationSpec: coreClient.OperationSpec = {
     Parameters.view,
     Parameters.openingHours
   ],
-  urlParameters: [Parameters.geography, Parameters.format1],
+  urlParameters: [Parameters.$host, Parameters.format1],
   headerParameters: [Parameters.accept, Parameters.xMsClientId],
   serializer
 };
@@ -2570,7 +2570,7 @@ const getSearchPOICategoryTreePreviewOperationSpec: coreClient.OperationSpec = {
     }
   },
   queryParameters: [Parameters.apiVersion, Parameters.language],
-  urlParameters: [Parameters.geography, Parameters.format],
+  urlParameters: [Parameters.$host, Parameters.format],
   headerParameters: [Parameters.accept, Parameters.xMsClientId],
   serializer
 };
@@ -2601,7 +2601,7 @@ const getSearchAddressOperationSpec: coreClient.OperationSpec = {
     Parameters.extendedPostalCodesFor,
     Parameters.view
   ],
-  urlParameters: [Parameters.geography, Parameters.format1],
+  urlParameters: [Parameters.$host, Parameters.format1],
   headerParameters: [Parameters.accept, Parameters.xMsClientId],
   serializer
 };
@@ -2631,7 +2631,7 @@ const getSearchAddressReverseOperationSpec: coreClient.OperationSpec = {
     Parameters.returnMatchType,
     Parameters.entityType
   ],
-  urlParameters: [Parameters.geography, Parameters.format1],
+  urlParameters: [Parameters.$host, Parameters.format1],
   headerParameters: [Parameters.accept, Parameters.xMsClientId],
   serializer
 };
@@ -2655,7 +2655,7 @@ const getSearchAddressReverseCrossStreetOperationSpec: coreClient.OperationSpec 
     Parameters.view,
     Parameters.heading
   ],
-  urlParameters: [Parameters.geography, Parameters.format1],
+  urlParameters: [Parameters.$host, Parameters.format1],
   headerParameters: [Parameters.accept, Parameters.xMsClientId],
   serializer
 };
@@ -2688,7 +2688,7 @@ const getSearchAddressStructuredOperationSpec: coreClient.OperationSpec = {
     Parameters.countrySubdivision,
     Parameters.postalCode
   ],
-  urlParameters: [Parameters.geography, Parameters.format1],
+  urlParameters: [Parameters.$host, Parameters.format1],
   headerParameters: [Parameters.accept, Parameters.xMsClientId],
   serializer
 };
@@ -2715,7 +2715,7 @@ const postSearchInsideGeometryOperationSpec: coreClient.OperationSpec = {
     Parameters.view,
     Parameters.openingHours
   ],
-  urlParameters: [Parameters.geography, Parameters.format1],
+  urlParameters: [Parameters.$host, Parameters.format1],
   headerParameters: [
     Parameters.accept,
     Parameters.xMsClientId,
@@ -2747,7 +2747,7 @@ const postSearchAlongRouteOperationSpec: coreClient.OperationSpec = {
     Parameters.maxDetourTime,
     Parameters.limit1
   ],
-  urlParameters: [Parameters.geography, Parameters.format1],
+  urlParameters: [Parameters.$host, Parameters.format1],
   headerParameters: [
     Parameters.accept,
     Parameters.xMsClientId,
@@ -2773,7 +2773,7 @@ const postSearchFuzzyBatchSyncOperationSpec: coreClient.OperationSpec = {
   },
   requestBody: Parameters.searchFuzzyBatchRequestBody,
   queryParameters: [Parameters.apiVersion],
-  urlParameters: [Parameters.geography, Parameters.format],
+  urlParameters: [Parameters.$host, Parameters.format],
   headerParameters: [
     Parameters.accept,
     Parameters.xMsClientId,
@@ -2804,7 +2804,7 @@ const postSearchFuzzyBatchOperationSpec: coreClient.OperationSpec = {
   },
   requestBody: Parameters.searchFuzzyBatchRequestBody,
   queryParameters: [Parameters.apiVersion],
-  urlParameters: [Parameters.geography, Parameters.format],
+  urlParameters: [Parameters.$host, Parameters.format],
   headerParameters: [
     Parameters.accept,
     Parameters.xMsClientId,
@@ -2830,7 +2830,7 @@ const postSearchAddressBatchSyncOperationSpec: coreClient.OperationSpec = {
   },
   requestBody: Parameters.searchAddressBatchRequestBody,
   queryParameters: [Parameters.apiVersion],
-  urlParameters: [Parameters.geography, Parameters.format],
+  urlParameters: [Parameters.$host, Parameters.format],
   headerParameters: [
     Parameters.accept,
     Parameters.xMsClientId,
@@ -2861,7 +2861,7 @@ const postSearchAddressBatchOperationSpec: coreClient.OperationSpec = {
   },
   requestBody: Parameters.searchAddressBatchRequestBody,
   queryParameters: [Parameters.apiVersion],
-  urlParameters: [Parameters.geography, Parameters.format],
+  urlParameters: [Parameters.$host, Parameters.format],
   headerParameters: [
     Parameters.accept,
     Parameters.xMsClientId,
@@ -2887,7 +2887,7 @@ const postSearchAddressReverseBatchSyncOperationSpec: coreClient.OperationSpec =
   },
   requestBody: Parameters.searchAddressReverseBatchRequestBody,
   queryParameters: [Parameters.apiVersion],
-  urlParameters: [Parameters.geography, Parameters.format],
+  urlParameters: [Parameters.$host, Parameters.format],
   headerParameters: [
     Parameters.accept,
     Parameters.xMsClientId,
@@ -2918,7 +2918,7 @@ const postSearchAddressReverseBatchOperationSpec: coreClient.OperationSpec = {
   },
   requestBody: Parameters.searchAddressReverseBatchRequestBody,
   queryParameters: [Parameters.apiVersion],
-  urlParameters: [Parameters.geography, Parameters.format],
+  urlParameters: [Parameters.$host, Parameters.format],
   headerParameters: [
     Parameters.accept,
     Parameters.xMsClientId,
