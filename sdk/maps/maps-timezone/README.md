@@ -1,15 +1,14 @@
 # Azure Maps Timezone client library for JavaScript/TypeScript
 
-The Azure Maps Timezone Service is a set of RESTful APIs designed to make it easy for users to see what time it is anywhere in the world.  Users can select a location to find the time zone, its offset to Coordinated Universal Time (UTC), and daylight saving time updates.
+The Azure Maps Timezone Service is a set of RESTful APIs designed to make it easy for users to see what time it is anywhere in the world. Users can select a location to find the time zone, its offset to Coordinated Universal Time (UTC), and daylight saving time updates.
 
 This package contains an isomorphic SDK (runs both in Node.js and in browsers) for Azure Maps Timezone client.
-
 
 [Source code](https://github.com/Azure/azure-sdk-for-js/tree/main/sdk/maps/maps-timezone) |
 [Package (NPM)](https://www.npmjs.com/package/@azure/maps-timezone) |
 [API reference documentation](https://docs.microsoft.com/javascript/api/@azure/maps-timezone) |
 [Samples](https://github.com/Azure/azure-sdk-for-js/tree/main/sdk/maps/maps-timezone/samples) |
-[Product Information](https://docs.microsoft.com/en-us/rest/api/maps/timezone)
+[Product Information](https://docs.microsoft.com/rest/api/maps/timezone)
 
 ## Getting started
 
@@ -21,9 +20,9 @@ This package contains an isomorphic SDK (runs both in Node.js and in browsers) f
 ### Prerequisites
 
 - An [Azure subscription][azure_sub].
-- An [Azure Maps account](https://docs.microsoft.com/en-us/azure/azure-maps/how-to-manage-account-keys). You can create the resource via [Azure Portal][azure_portal] or [Azure CLI][azure_cli].
+- An [Azure Maps account](https://docs.microsoft.com/azure/azure-maps/how-to-manage-account-keys). You can create the resource via [Azure Portal][azure_portal] or [Azure CLI][azure_cli].
 
-If you use Azure CLI, replace `<resource-group-name>` and `<account-name>` of your choice, and select a proper [pricing tier](https://docs.microsoft.com/en-us/azure/azure-maps/choose-pricing-tier) based on your needs via the `<sku-name>` parameter. Please refer to [this page](https://docs.microsoft.com/en-us/cli/azure/maps/account?view=azure-cli-latest#az_maps_account_create) for more details.
+If you use Azure CLI, replace `<resource-group-name>` and `<account-name>` of your choice, and select a proper [pricing tier](https://docs.microsoft.com/azure/azure-maps/choose-pricing-tier) based on your needs via the `<sku-name>` parameter. Please refer to [this page](https://docs.microsoft.com/cli/azure/maps/account?view=azure-cli-latest#az_maps_account_create) for more details.
 
 ```bash
 az maps account create --resource-group <resource-group-name> --account-name <account-name> --sku <sku-name>
@@ -49,7 +48,7 @@ You can authenticate with Azure Active Directory using the [Azure Identity libra
 npm install @azure/identity
 ```
 
-You will also need to register a new AAD application and grant access to Azure Maps by assigning the suitable role to your service principal. Please refer to the [Manage authentication](https://docs.microsoft.com/en-us/azure/azure-maps/how-to-manage-authentication) page.
+You will also need to register a new AAD application and grant access to Azure Maps by assigning the suitable role to your service principal. Please refer to the [Manage authentication](https://docs.microsoft.com/azure/azure-maps/how-to-manage-authentication) page.
 
 Set the values of the client ID, tenant ID, and client secret of the AAD application as environment variables: `AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, `AZURE_CLIENT_SECRET`.
 
@@ -65,82 +64,90 @@ const client = new TimezoneClient(new DefaultAzureCredential());
 
 `TimezoneClient` is the primary interface for developers using the Azure Maps Timezone client library. Explore the methods on this client object to understand the different features of the Azure Timezone service that you can access.
 
-
 ## Examples
+
 The following sections provide several code snippets covering some of the most common Azure Maps Timezone tasks, including:
+
 - [Request timezone information by coordinates](#request-timezone-information-by-coordinates)
 - [Request IANA timezone IDs](#request-IANA-timezone-IDs)
 - [Request timezone information by ID](#request-timezone-information-by-ID)
+
 ### Request timezone information by coordinates
 
 The service provides current, historical, and future time zone information for a specified latitude-longitude pair. In addition, it also provides sunset and sunrise times for a given location.
 
 ```javascript
-  const credential = new DefaultAzureCredential();
-  const operationOptions = {
-    requestOptions: {
-      customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
-    }
-  };
+const credential = new DefaultAzureCredential();
+const operationOptions = {
+  requestOptions: {
+    customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
+  }
+};
 
-  const client = new TimezoneClient(credential).timezone;
-  const response = await client.getTimezoneByCoordinates("json", "47.0,-122", {
-    ...timezoneByCoordinatesOptions,
-    ...operationOptions
-  })
+const client = new TimezoneClient(credential).timezone;
+const response = await client.getTimezoneByCoordinates("json", "47.0,-122", {
+  ...timezoneByCoordinatesOptions,
+  ...operationOptions
+});
 ```
+
 Response
+
 ```yaml
 {
   "version": "2021a",
   "referenceUtcTimestamp": "2021-08-19T01:49:53.262Z",
-  "timeZones": [
-    {
-      "id": "America/Los_Angeles",
-      "aliases": ["US/Pacific"],
-      "countries": [{ "name": "United States", "code": "US" }],
-      "names": {
-        "iSO6391LanguageCode": "en",
-        "generic": "Pacific Time",
-        "standard": "Pacific Standard Time",
-        "daylight": "Pacific Daylight Time"
+  "timeZones":
+    [
+      {
+        "id": "America/Los_Angeles",
+        "aliases": ["US/Pacific"],
+        "countries": [{ "name": "United States", "code": "US" }],
+        "names":
+          {
+            "iSO6391LanguageCode": "en",
+            "generic": "Pacific Time",
+            "standard": "Pacific Standard Time",
+            "daylight": "Pacific Daylight Time",
+          },
+        "referenceTime":
+          {
+            "tag": "PDT",
+            "standardOffset": "-08:00:00",
+            "daylightSavings": "01:00:00",
+            "wallTime": "2021-08-18T18:49:53.262733-07:00",
+            "posixTzValidYear": 2021,
+            "posixTz": "PST+8PDT,M3.2.0,M11.1.0",
+            "sunrise": "2021-08-18T06:09:20.4971445-07:00",
+            "sunset": "2021-08-18T20:14:22.3270802-07:00",
+          },
+        "representativePoint": { "latitude": 34.05222222222222, "longitude": -118.24277777777777 },
+        "timeTransitions":
+          [
+            {
+              "tag": "PDT",
+              "standardOffset": "-08:00:00",
+              "daylightSavings": "01:00:00",
+              "utcStart": "2021-03-14T10:00:00.000Z",
+              "utcEnd": "2021-11-07T09:00:00.000Z",
+            },
+            {
+              "tag": "PST",
+              "standardOffset": "-08:00:00",
+              "daylightSavings": "00:00:00",
+              "utcStart": "2021-11-07T09:00:00.000Z",
+              "utcEnd": "2022-03-13T10:00:00.000Z",
+            },
+            {
+              "tag": "PDT",
+              "standardOffset": "-08:00:00",
+              "daylightSavings": "01:00:00",
+              "utcStart": "2022-03-13T10:00:00.000Z",
+              "utcEnd": "2022-11-06T09:00:00.000Z",
+            },
+          ],
       },
-      "referenceTime": {
-        "tag": "PDT",
-        "standardOffset": "-08:00:00",
-        "daylightSavings": "01:00:00",
-        "wallTime": "2021-08-18T18:49:53.262733-07:00",
-        "posixTzValidYear": 2021,
-        "posixTz": "PST+8PDT,M3.2.0,M11.1.0",
-        "sunrise": "2021-08-18T06:09:20.4971445-07:00",
-        "sunset": "2021-08-18T20:14:22.3270802-07:00"
-      },
-      "representativePoint": { "latitude": 34.05222222222222, "longitude": -118.24277777777777 },
-      "timeTransitions": [
-        {
-          "tag": "PDT",
-          "standardOffset": "-08:00:00",
-          "daylightSavings": "01:00:00",
-          "utcStart": "2021-03-14T10:00:00.000Z",
-          "utcEnd": "2021-11-07T09:00:00.000Z"
-        },
-        {
-          "tag": "PST",
-          "standardOffset": "-08:00:00",
-          "daylightSavings": "00:00:00",
-          "utcStart": "2021-11-07T09:00:00.000Z",
-          "utcEnd": "2022-03-13T10:00:00.000Z"
-        },
-        {
-          "tag": "PDT",
-          "standardOffset": "-08:00:00",
-          "daylightSavings": "01:00:00",
-          "utcStart": "2022-03-13T10:00:00.000Z",
-          "utcEnd": "2022-11-06T09:00:00.000Z"
-        }
-      ]
-    }
-  ]
+    ],
 }
 ```
 
@@ -149,91 +156,87 @@ Response
 This service provides a full list of IANA time zone IDs. Updates to the IANA service will be reflected in the system within one day.
 
 ```javascript
-  const credential = new DefaultAzureCredential();
-  const operationOptions = {
-    requestOptions: {
-      customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
-    }
-  };
+const credential = new DefaultAzureCredential();
+const operationOptions = {
+  requestOptions: {
+    customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
+  }
+};
 
-  const client = new TimezoneClient(credential).timezone;
-  const response = await client.getTimezoneEnumIana("json", operationOptions)
+const client = new TimezoneClient(credential).timezone;
+const response = await client.getTimezoneEnumIana("json", operationOptions);
 ```
+
 Response
+
 ```yaml
 [
-  {
-    Id: 'Africa/Bamako',
-    IsAlias: true,
-    AliasOf: 'Africa/Abidjan',
-    HasZone1970Location: true
-  },
-  {
-    Id: 'Africa/Banjul',
-    IsAlias: true,
-    AliasOf: 'Africa/Abidjan',
-    HasZone1970Location: true
-  },
-  ...
+  { Id: "Africa/Bamako", IsAlias: true, AliasOf: "Africa/Abidjan", HasZone1970Location: true },
+  { Id: "Africa/Banjul", IsAlias: true, AliasOf: "Africa/Abidjan", HasZone1970Location: true },
+  ...,
 ]
 ```
+
 ### Request timezone information by ID
 
 This service provides current, historical, and future time zone information for the specified IANA time zone ID.
 
 ```javascript
-  const credential = new DefaultAzureCredential();
-  const operationOptions = {
-    requestOptions: {
-      customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
-    }
-  };
+const credential = new DefaultAzureCredential();
+const operationOptions = {
+  requestOptions: {
+    customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
+  }
+};
 
-  const client = new TimezoneClient(credential).timezone;
-  const response = await client.getTimezoneByID("json", "Asia/Bahrain", {
-    ...timezoneByIdOptions,
-    ...operationOptions
-  })
+const client = new TimezoneClient(credential).timezone;
+const response = await client.getTimezoneByID("json", "Asia/Bahrain", {
+  ...timezoneByIdOptions,
+  ...operationOptions
+});
 ```
+
 Response
+
 ```yaml
 {
   "version": "2021a",
   "referenceUtcTimestamp": "2021-08-19T01:52:33.293Z",
-  "timeZones": [
-    {
-      "id": "Asia/Qatar",
-      "aliases": ["Asia/Bahrain"],
-      "countries": [
-        { "name": "Qatar", "code": "QA" },
-        { "name": "Bahrain", "code": "BH" }
-      ],
-      "names": {
-        "iSO6391LanguageCode": "en",
-        "generic": "Arabian Time",
-        "standard": "Arabian Standard Time",
-        "daylight": "Arabian Daylight Time"
+  "timeZones":
+    [
+      {
+        "id": "Asia/Qatar",
+        "aliases": ["Asia/Bahrain"],
+        "countries": [{ "name": "Qatar", "code": "QA" }, { "name": "Bahrain", "code": "BH" }],
+        "names":
+          {
+            "iSO6391LanguageCode": "en",
+            "generic": "Arabian Time",
+            "standard": "Arabian Standard Time",
+            "daylight": "Arabian Daylight Time",
+          },
+        "referenceTime":
+          {
+            "tag": "+03",
+            "standardOffset": "03:00:00",
+            "daylightSavings": "00:00:00",
+            "wallTime": "2021-08-19T04:52:33.2933702+03:00",
+            "posixTzValidYear": 2021,
+            "posixTz": "<+03>-3",
+          },
+        "representativePoint": { "latitude": 25.283333333333335, "longitude": 51.53333333333333 },
+        "timeTransitions":
+          [
+            {
+              "tag": "+03",
+              "standardOffset": "03:00:00",
+              "daylightSavings": "00:00:00",
+              "utcStart": "1972-05-31T20:00:00.000Z",
+              "utcEnd": "9999-12-31T23:59:59.999Z",
+            },
+          ],
       },
-      "referenceTime": {
-        "tag": "+03",
-        "standardOffset": "03:00:00",
-        "daylightSavings": "00:00:00",
-        "wallTime": "2021-08-19T04:52:33.2933702+03:00",
-        "posixTzValidYear": 2021,
-        "posixTz": "<+03>-3"
-      },
-      "representativePoint": { "latitude": 25.283333333333335, "longitude": 51.53333333333333 },
-      "timeTransitions": [
-        {
-          "tag": "+03",
-          "standardOffset": "03:00:00",
-          "daylightSavings": "00:00:00",
-          "utcStart": "1972-05-31T20:00:00.000Z",
-          "utcEnd": "9999-12-31T23:59:59.999Z"
-        }
-      ]
-    }
-  ]
+    ],
 }
 ```
 

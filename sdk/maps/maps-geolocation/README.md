@@ -8,7 +8,7 @@ This package contains an isomorphic SDK (runs both in Node.js and in browsers) f
 [Package (NPM)](https://www.npmjs.com/package/@azure/maps-geolocation) |
 [API reference documentation](https://docs.microsoft.com/javascript/api/@azure/maps-geolocation) |
 [Samples](https://github.com/Azure/azure-sdk-for-js/tree/main/sdk/maps/maps-geolocation/samples) |
-[Product Information](https://docs.microsoft.com/en-us/rest/api/maps/geolocation)
+[Product Information](https://docs.microsoft.com/rest/api/maps/geolocation)
 
 ## Getting started
 
@@ -20,9 +20,9 @@ This package contains an isomorphic SDK (runs both in Node.js and in browsers) f
 ### Prerequisites
 
 - An [Azure subscription][azure_sub].
-- An [Azure Maps account](https://docs.microsoft.com/en-us/azure/azure-maps/how-to-manage-account-keys). You can create the resource via [Azure Portal][azure_portal] or [Azure CLI][azure_cli].
+- An [Azure Maps account](https://docs.microsoft.com/azure/azure-maps/how-to-manage-account-keys). You can create the resource via [Azure Portal][azure_portal] or [Azure CLI][azure_cli].
 
-If you use Azure CLI, replace `<resource-group-name>` and `<account-name>` of your choice, and select a proper [pricing tier](https://docs.microsoft.com/en-us/azure/azure-maps/choose-pricing-tier) based on your needs via the `<sku-name>` parameter. Please refer to [this page](https://docs.microsoft.com/en-us/cli/azure/maps/account?view=azure-cli-latest#az_maps_account_create) for more details.
+If you use Azure CLI, replace `<resource-group-name>` and `<account-name>` of your choice, and select a proper [pricing tier](https://docs.microsoft.com/azure/azure-maps/choose-pricing-tier) based on your needs via the `<sku-name>` parameter. Please refer to [this page](https://docs.microsoft.com/cli/azure/maps/account?view=azure-cli-latest#az_maps_account_create) for more details.
 
 ```bash
 az maps account create --resource-group <resource-group-name> --account-name <account-name> --sku <sku-name>
@@ -48,7 +48,7 @@ You can authenticate with Azure Active Directory using the [Azure Identity libra
 npm install @azure/identity
 ```
 
-You will also need to register a new AAD application and grant access to Azure Maps by assigning the suitable role to your service principal. Please refer to the [Manage authentication](https://docs.microsoft.com/en-us/azure/azure-maps/how-to-manage-authentication) page.
+You will also need to register a new AAD application and grant access to Azure Maps by assigning the suitable role to your service principal. Please refer to the [Manage authentication](https://docs.microsoft.com/azure/azure-maps/how-to-manage-authentication) page.
 
 Set the values of the client ID, tenant ID, and client secret of the AAD application as environment variables: `AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, `AZURE_CLIENT_SECRET`.
 
@@ -65,25 +65,29 @@ const client = new GeolocationClient(new DefaultAzureCredential());
 `GeolocationClient` is the primary interface for developers using the Azure Maps Geolocation client library. Explore the methods on this client object to understand the different features of the Azure Geolocation service that you can access.
 
 ## Examples
+
 The following sections provide several code snippets covering some of the most common Azure Maps Geolocation tasks, including:
 
 - [Retrieve the ISO country code for the provided IP address](#retrieve-the-ISO-country-code-for-the-provided-IP-address)
+
 ### Retrieve the ISO country code for the provided IP address
 
 ```javascript
-  const credential = new DefaultAzureCredential();
-  const operationOptions = {
-    requestOptions: {
-      customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
-    }
-  };
+const credential = new DefaultAzureCredential();
+const operationOptions = {
+  requestOptions: {
+    customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
+  }
+};
 
-  const client = new GeolocationClient(credential).geolocation;
-  const response = await client.getIPToLocationPreview("json", ipAddressToTest, operationOptions);
+const client = new GeolocationClient(credential).geolocation;
+const response = await client.getIPToLocationPreview("json", ipAddressToTest, operationOptions);
 ```
+
 Response
+
 ```yaml
-{ countryRegion: { isoCode: 'US' }, ipAddress: '8.8.8.8' }
+{ countryRegion: { isoCode: "US" }, ipAddress: "8.8.8.8" }
 ```
 
 ## Troubleshooting

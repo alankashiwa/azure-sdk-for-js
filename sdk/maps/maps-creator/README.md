@@ -10,7 +10,7 @@ APIs for managing aliases in Azure Maps.
 [Package (NPM)](https://www.npmjs.com/package/@azure/maps-creator) |
 [API reference documentation](https://docs.microsoft.com/javascript/api/@azure/maps-creator) |
 [Samples](https://github.com/Azure/azure-sdk-for-js/tree/main/sdk/maps/maps-creator/samples) |
-[Product Information](https://docs.microsoft.com/en-us/azure/azure-maps/creator-indoor-maps)
+[Product Information](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps)
 
 ## Getting started
 
@@ -24,7 +24,7 @@ APIs for managing aliases in Azure Maps.
 - An [Azure subscription][azure_sub].
 - An [Azure Maps account](https://docs.microsoft.com/en-us/azure/azure-maps/how-to-manage-account-keys). You can create the resource via [Azure Portal][azure_portal] or [Azure CLI][azure_cli].
 
-If you use Azure CLI, replace `<resource-group-name>` and `<account-name>` of your choice, and select a proper [pricing tier](https://docs.microsoft.com/en-us/azure/azure-maps/choose-pricing-tier) based on your needs via the `<sku-name>` parameter. Please refer to [this page](https://docs.microsoft.com/en-us/cli/azure/maps/account?view=azure-cli-latest#az_maps_account_create) for more details.
+If you use Azure CLI, replace `<resource-group-name>` and `<account-name>` of your choice, and select a proper [pricing tier](https://docs.microsoft.com/azure/azure-maps/choose-pricing-tier) based on your needs via the `<sku-name>` parameter. Please refer to [this page](https://docs.microsoft.com/cli/azure/maps/account?view=azure-cli-latest#az_maps_account_create) for more details.
 
 ```bash
 az maps account create --resource-group <resource-group-name> --account-name <account-name> --sku <sku-name>
@@ -50,7 +50,7 @@ You can authenticate with Azure Active Directory using the [Azure Identity libra
 npm install @azure/identity
 ```
 
-You will also need to register a new AAD application and grant access to Azure Maps by assigning the suitable role to your service principal. Please refer to the [Manage authentication](https://docs.microsoft.com/en-us/azure/azure-maps/how-to-manage-authentication) page.
+You will also need to register a new AAD application and grant access to Azure Maps by assigning the suitable role to your service principal. Please refer to the [Manage authentication](https://docs.microsoft.com/azure/azure-maps/how-to-manage-authentication) page.
 
 Set the values of the client ID, tenant ID, and client secret of the AAD application as environment variables: `AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, `AZURE_CLIENT_SECRET`.
 
@@ -67,16 +67,19 @@ const client = new CreatorClient(new DefaultAzureCredential());
 `CreatorClient` is the primary interface for developers using the Azure Maps Creator client library. Explore the methods on this client object to understand the different features of the Azure Maps Creator service that you can access.
 
 ## Examples
+
 The following sections provide several code snippets covering some of the most common Azure Maps Creator tasks, including:
+
 - [Upload a Drawing package](#upload-a-drawing-package)
 - [Convert a Drawing package](#convert-a-drawing-package)
 - [Create indoor map data](#create-indoor-map-data)
 - [Using indoor maps](#using-indoor-maps)
+
 ### Upload a Drawing package
 
-Creator collects indoor map data by converting an uploaded Drawing package. The Drawing package represents a constructed or remodeled facility. For information about Drawing package requirements, see [Drawing package requirements](https://docs.microsoft.com/en-us/azure/azure-maps/drawing-requirements).
+Creator collects indoor map data by converting an uploaded Drawing package. The Drawing package represents a constructed or remodeled facility. For information about Drawing package requirements, see [Drawing package requirements](https://docs.microsoft.com/azure/azure-maps/drawing-requirements).
 
-Use the code snippet below to upload a Drawing package using [Data Upload API](https://docs.microsoft.com/en-us/rest/api/maps/data-v2/update-preview). After the Drawing packing is uploaded, the Data Upload API returns a user data identifier (`udid`). The `udid` can then be used to convert the uploaded package into indoor map data.
+Use the code snippet below to upload a Drawing package using [Data Upload API](https://docs.microsoft.com/rest/api/maps/data-v2/update-preview). After the Drawing packing is uploaded, the Data Upload API returns a user data identifier (`udid`). The `udid` can then be used to convert the uploaded package into indoor map data.
 
 ```javascript
 import fs from "fs";
@@ -138,10 +141,10 @@ export async function pollUntilOperationIsDone(
 
 ### Convert a Drawing package
 
-The [Azure Maps Conversion service](https://docs.microsoft.com/en-us/rest/api/maps/v2/conversion) converts an uploaded Drawing package into indoor map data. The Conversion service also validates the package. Validation issues are classified into two types:
+The [Azure Maps Conversion service](https://docs.microsoft.com/rest/api/maps/v2/conversion) converts an uploaded Drawing package into indoor map data. The Conversion service also validates the package. Validation issues are classified into two types:
 
-- `Errors`: If any errors are detected, the conversion process fails. When an error occurs, the Conversion service provides a link to the [Azure Maps Drawing Error Visualizer](https://docs.microsoft.com/en-us/azure/azure-maps/drawing-error-visualizer) stand-alone web application. You can use the Drawing Error Visualizer to inspect [Drawing package warnings and errors](https://docs.microsoft.com/en-us/azure/azure-maps/drawing-conversion-error-codes) that occurred during the conversion process. After you fix the errors, you can attempt to upload and convert the package.
-- `Warnings`: If any warnings are detected, the conversion succeeds. However, we recommend that you review and resolve all warnings. A warning means that part of the conversion was ignored or automatically fixed. Failing to resolve the warnings could result in errors in later processes. For more information, see [Drawing package warnings and errors]((https://docs.microsoft.com/en-us/azure/azure-maps/drawing-conversion-error-codes).
+- `Errors`: If any errors are detected, the conversion process fails. When an error occurs, the Conversion service provides a link to the [Azure Maps Drawing Error Visualizer](https://docs.microsoft.com/azure/azure-maps/drawing-error-visualizer) stand-alone web application. You can use the Drawing Error Visualizer to inspect [Drawing package warnings and errors](https://docs.microsoft.com/azure/azure-maps/drawing-conversion-error-codes) that occurred during the conversion process. After you fix the errors, you can attempt to upload and convert the package.
+- `Warnings`: If any warnings are detected, the conversion succeeds. However, we recommend that you review and resolve all warnings. A warning means that part of the conversion was ignored or automatically fixed. Failing to resolve the warnings could result in errors in later processes. For more information, see [Drawing package warnings and errors](https://docs.microsoft.com/azure/azure-maps/drawing-conversion-error-codes).
 
 ```javascript
 const credential = new DefaultAzureCredential();
@@ -167,23 +170,23 @@ const conversionId = await pollUntilOperationIsDone(() =>
 );
 ```
 
-
 ### Create indoor map data
 
 Azure Maps Creator provides the following services that support map creation:
 
-- [Dataset service](https://docs.microsoft.com/en-us/rest/api/maps/v2/dataset)
-  - A dataset is a collection of indoor map features. The indoor map features represent facilities that are defined in a converted Drawing package. After you create a dataset with the Dataset service, you can create any number of [tilesets](https://docs.microsoft.com/en-us/azure/azure-maps/creator-indoor-maps#tilesets) or [feature statesets](https://docs.microsoft.com/en-us/azure/azure-maps/creator-indoor-maps#feature-statesets).
+- [Dataset service](https://docs.microsoft.com/rest/api/maps/v2/dataset)
+  - A dataset is a collection of indoor map features. The indoor map features represent facilities that are defined in a converted Drawing package. After you create a dataset with the Dataset service, you can create any number of [tilesets](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps#tilesets) or [feature statesets](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps#feature-statesets).
   - At any time, developers can use the Dataset service to add or remove facilities to an existing dataset.
-- [Tileset service](https://docs.microsoft.com/en-us/rest/api/maps/v2/tileset)
+- [Tileset service](https://docs.microsoft.com/rest/api/maps/v2/tileset)
   - A tileset is a collection of vector data that represents a set of uniform grid tiles. Developers can use the Tileset service to create tilesets from a dataset.
   - To reflect different content stages, you can create multiple tilesets from the same dataset. For example, you can make one tileset with furniture and equipment, and another tileset without furniture and equipment. You might choose to generate one tileset with the most recent data updates, and another tileset without the most recent data updates.
-  - After a tileset is created, it can be retrieved by the [Render V2 service](https://docs.microsoft.com/en-us/azure/azure-maps/creator-indoor-maps#render-v2-get-map-tile-api).
-- [Feature State service](https://docs.microsoft.com/en-us/rest/api/maps/v2/feature-state)
+  - After a tileset is created, it can be retrieved by the [Render V2 service](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps#render-v2-get-map-tile-api).
+- [Feature State service](https://docs.microsoft.com/rest/api/maps/v2/feature-state)
   - Feature statesets are collections of dynamic properties (states) that are assigned to dataset features, such as rooms or equipment. An example of a state can be temperature or occupancy. Each state is a key/value pair that contains the name of the property, the value, and the timestamp of the last update.
   - You can use the Feature State service to create and manage a feature stateset for a dataset. The stateset is defined by one or more states. Each feature, such as a room, can have one state attached to it.
 
 Dataset Creation
+
 ```javascript
 const credential = new DefaultAzureCredential();
 const operationOptions = {
@@ -205,6 +208,7 @@ const datasetId = await pollUntilOperationIsDone(() =>
 ```
 
 Tileset Creation
+
 ```javascript
 const credential = new DefaultAzureCredential();
 const operationOptions = {
@@ -226,6 +230,7 @@ const tilesetId = await pollUntilOperationIsDone(() =>
 ```
 
 Feature State Creation and Retrieval
+
 ```javascript
 const credential = new DefaultAzureCredential();
 const operationOptions = {
@@ -264,12 +269,12 @@ const currentFeatureState = await featureStateClient.getStateset(statesetId!, op
 
 ### Using indoor maps
 
-The Azure Maps [Render V2-Get Map Tile API](https://docs.microsoft.com/en-us/rest/api/maps/render-v2/get-map-tile) has been extended to support Creator tilesets.
+The Azure Maps [Render V2-Get Map Tile API](https://docs.microsoft.com/rest/api/maps/render-v2/get-map-tile) has been extended to support Creator tilesets.
 
-Applications can use the Render V2-Get Map Tile API to request tilesets. The tilesets can then be integrated into a map control or SDK. 
-- For an example of a map control that uses the Render V2 service, see [Indoor Maps Module](https://docs.microsoft.com/en-us/azure/azure-maps/creator-indoor-maps#indoor-maps-module).
+Applications can use the Render V2-Get Map Tile API to request tilesets. The tilesets can then be integrated into a map control or SDK.
+
+- For an example of a map control that uses the Render V2 service, see [Indoor Maps Module](https://docs.microsoft.com/azure/azure-maps/creator-indoor-maps#indoor-maps-module).
 - To use the Azure Maps Render SDK to request indoor maps tilesets, please refer to the [Render SDK Readme](https://github.com/Azure/azure-sdk-for-js/tree/main/sdk/maps/maps-render/README.md).
-
 
 ## Troubleshooting
 

@@ -10,7 +10,7 @@ Azure Maps Render REST APIs
 [Package (NPM)](https://www.npmjs.com/package/@azure/maps-render) |
 [API reference documentation](https://docs.microsoft.com/javascript/api/@azure/maps-render) |
 [Samples](https://github.com/Azure/azure-sdk-for-js/tree/main/sdk/maps/maps-render/samples) |
-[Product Information](https://docs.microsoft.com/en-us/rest/api/maps/render-v2)
+[Product Information](https://docs.microsoft.com/rest/api/maps/render-v2)
 
 ## Getting started
 
@@ -22,9 +22,9 @@ Azure Maps Render REST APIs
 ### Prerequisites
 
 - An [Azure subscription][azure_sub].
-- An [Azure Maps account](https://docs.microsoft.com/en-us/azure/azure-maps/how-to-manage-account-keys). You can create the resource via [Azure Portal][azure_portal] or [Azure CLI][azure_cli].
+- An [Azure Maps account](https://docs.microsoft.com/azure/azure-maps/how-to-manage-account-keys). You can create the resource via [Azure Portal][azure_portal] or [Azure CLI][azure_cli].
 
-If you use Azure CLI, replace `<resource-group-name>` and `<account-name>` of your choice, and select a proper [pricing tier](https://docs.microsoft.com/en-us/azure/azure-maps/choose-pricing-tier) based on your needs via the `<sku-name>` parameter. Please refer to [this page](https://docs.microsoft.com/en-us/cli/azure/maps/account?view=azure-cli-latest#az_maps_account_create) for more details.
+If you use Azure CLI, replace `<resource-group-name>` and `<account-name>` of your choice, and select a proper [pricing tier](https://docs.microsoft.com/azure/azure-maps/choose-pricing-tier) based on your needs via the `<sku-name>` parameter. Please refer to [this page](https://docs.microsoft.com/cli/azure/maps/account?view=azure-cli-latest#az_maps_account_create) for more details.
 
 ```bash
 az maps account create --resource-group <resource-group-name> --account-name <account-name> --sku <sku-name>
@@ -50,7 +50,7 @@ You can authenticate with Azure Active Directory using the [Azure Identity libra
 npm install @azure/identity
 ```
 
-You will also need to register a new AAD application and grant access to Azure Maps by assigning the suitable role to your service principal. Please refer to the [Manage authentication](https://docs.microsoft.com/en-us/azure/azure-maps/how-to-manage-authentication) page.
+You will also need to register a new AAD application and grant access to Azure Maps by assigning the suitable role to your service principal. Please refer to the [Manage authentication](https://docs.microsoft.com/azure/azure-maps/how-to-manage-authentication) page.
 
 Set the values of the client ID, tenant ID, and client secret of the AAD application as environment variables: `AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, `AZURE_CLIENT_SECRET`.
 
@@ -76,21 +76,20 @@ The following sections provide several code snippets covering some of the most c
 
 ### Request map tiles in vector or raster formats
 
-
 ```javascript
-  const credential = new DefaultAzureCredential();
-  const operationOptions = {
-    requestOptions: {
-      customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
-    }
-  };
+const credential = new DefaultAzureCredential();
+const operationOptions = {
+  requestOptions: {
+    customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
+  }
+};
 
-  const client = new RenderClient(credential).renderV2;
-  const mapTileOptions = { tileSize: "512" };
-  const response = await client.getMapTilePreview("microsoft.base", 6, 10, 22,  {
-    ...mapTileOptions,
-    ...operationOptions
-  });
+const client = new RenderClient(credential).renderV2;
+const mapTileOptions = { tileSize: "512" };
+const response = await client.getMapTilePreview("microsoft.base", 6, 10, 22, {
+  ...mapTileOptions,
+  ...operationOptions
+});
 ```
 
 The response will contain the tile object based on the request parameters.
@@ -98,60 +97,60 @@ The response will contain the tile object based on the request parameters.
 ### Request map copyright attribution information
 
 ```javascript
-  const credential = new DefaultAzureCredential();
-  const operationOptions = {
-    requestOptions: {
-      customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
-    }
-  };
+const credential = new DefaultAzureCredential();
+const operationOptions = {
+  requestOptions: {
+    customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
+  }
+};
 
-  const client = new RenderClient(credential).renderV2;
-  const attribution = await client.getMapAttribution(
-    "microsoft.base",
-    6,
-    ["-122.414162", "47.579490", "-122.247157", "47.668372"],
-    operationOptions
-  );
+const client = new RenderClient(credential).renderV2;
+const attribution = await client.getMapAttribution(
+  "microsoft.base",
+  6,
+  ["-122.414162", "47.579490", "-122.247157", "47.668372"],
+  operationOptions
+);
 ```
 
 Response
+
 ```yaml
-{
-  copyrights: [
-    '<a data-azure-maps-attribution-tileset="microsoft.base">&copy;2021 TomTom</a>'
-  ]
-}
+{ copyrights: ['<a data-azure-maps-attribution-tileset="microsoft.base">&copy;2021 TomTom</a>'] }
 ```
 
 ### Request metadata for a tileset
 
 ```javascript
-  const credential = new DefaultAzureCredential();
-  const operationOptions = {
-    requestOptions: {
-      customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
-    }
-  };
-  
-  const client = new RenderClient(credential).renderV2;
-  const metadata = await client.getMapTileset("microsoft.base", operationOptions);
+const credential = new DefaultAzureCredential();
+const operationOptions = {
+  requestOptions: {
+    customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
+  }
+};
+
+const client = new RenderClient(credential).renderV2;
+const metadata = await client.getMapTileset("microsoft.base", operationOptions);
 ```
+
 Response
+
 ```yaml
 {
-  tilejson: '2.2.0',
-  name: 'microsoft.base',
-  version: '1.0.0',
+  tilejson: "2.2.0",
+  name: "microsoft.base",
+  version: "1.0.0",
   attribution: '<a data-azure-maps-attribution-tileset="microsoft.base">&copy;2021 TomTom</a>',
-  scheme: 'xyz',
-  tiles: [
-    'https://atlas.microsoft.com/map/tile?api-version=2.1&tilesetId=microsoft.base&zoom={z}&x={x}&y={y}'
-  ],
+  scheme: "xyz",
+  tiles:
+    [
+      "https://atlas.microsoft.com/map/tile?api-version=2.1&tilesetId=microsoft.base&zoom={z}&x={x}&y={y}",
+    ],
   grids: [],
   data: [],
   minzoom: 0,
   maxzoom: 22,
-  bounds: [ -180, -90, 180, 90 ]
+  bounds: [-180, -90, 180, 90],
 }
 ```
 
