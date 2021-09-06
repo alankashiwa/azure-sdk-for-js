@@ -46,15 +46,16 @@ export const accept: OperationParameter = {
   }
 };
 
-export const geography: OperationURLParameter = {
-  parameterPath: "geography",
+export const $host: OperationURLParameter = {
+  parameterPath: "$host",
   mapper: {
-    serializedName: "geography",
+    serializedName: "$host",
     required: true,
     type: {
       name: "String"
     }
-  }
+  },
+  skipEncoding: true
 };
 
 export const xMsClientId: OperationParameter = {

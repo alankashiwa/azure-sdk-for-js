@@ -14,7 +14,7 @@ import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
 import { CreatorClientContext } from "../creatorClientContext";
 import { PollerLike, PollOperationState, LroEngine } from "@azure/core-lro";
-import { LroImpl, shouldDeserializeLro } from "../lroImpl";
+import { LroImpl } from "../lroImpl";
 import {
   ConversionListDetailInfo,
   ConversionListNextOptionalParams,
@@ -31,7 +31,7 @@ import {
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
-/** Class representing a Conversion. */
+/** Class containing Conversion operations. */
 export class ConversionImpl implements Conversion {
   private readonly client: CreatorClientContext;
 

@@ -34,7 +34,7 @@ import {
   SpatialGetGreatCircleDistanceResponse
 } from "../models";
 
-/** Class representing a Spatial. */
+/** Class containing Spatial operations. */
 export class SpatialImpl implements Spatial {
   private readonly client: CreatorClientContext;
 

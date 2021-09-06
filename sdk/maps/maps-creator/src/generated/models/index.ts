@@ -827,13 +827,13 @@ export interface NumberRuleObject {
 /** The numeric value range for this style rule. If the value is in the range, all the conditions must hold true. */
 export interface RangeObject {
   /** All the number x that x ≥ minimum. */
-  minimum?: number;
+  minimum?: string;
   /** All the number x that x ≤ maximum. */
-  maximum?: number;
+  maximum?: string;
   /** All the number x that x > exclusiveMinimum. */
-  exclusiveMinimum?: number;
+  exclusiveMinimum?: string;
   /** All the number x that x < exclusiveMaximum. */
-  exclusiveMaximum?: number;
+  exclusiveMaximum?: string;
 }
 
 /** The boolean rule. The color is selected based on the logic value of the key. */

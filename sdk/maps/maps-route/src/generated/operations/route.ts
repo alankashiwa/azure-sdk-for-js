@@ -12,7 +12,7 @@ import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
 import { RouteClientContext } from "../routeClientContext";
 import { PollerLike, PollOperationState, LroEngine } from "@azure/core-lro";
-import { LroImpl, shouldDeserializeLro } from "../lroImpl";
+import { LroImpl } from "../lroImpl";
 import {
   PostRouteMatrixRequestBody,
   ResponseFormat,
@@ -35,7 +35,7 @@ import {
   RoutePostRouteDirectionsBatchSyncResponse
 } from "../models";
 
-/** Class representing a Route. */
+/** Class containing Route operations. */
 export class RouteImpl implements Route {
   private readonly client: RouteClientContext;
 
@@ -1324,7 +1324,7 @@ const postRouteMatrixOperationSpec: coreClient.OperationSpec = {
     Parameters.routeType,
     Parameters.vehicleLoadType
   ],
-  urlParameters: [Parameters.geography, Parameters.format],
+  urlParameters: [Parameters.$host, Parameters.format],
   headerParameters: [
     Parameters.contentType,
     Parameters.accept,
@@ -1370,7 +1370,7 @@ const postRouteMatrixSyncOperationSpec: coreClient.OperationSpec = {
     Parameters.routeType,
     Parameters.vehicleLoadType
   ],
-  urlParameters: [Parameters.geography, Parameters.format],
+  urlParameters: [Parameters.$host, Parameters.format],
   headerParameters: [
     Parameters.contentType,
     Parameters.accept,
@@ -1435,7 +1435,7 @@ const getRouteDirectionsOperationSpec: coreClient.OperationSpec = {
     Parameters.maxChargeInkWh,
     Parameters.auxiliaryPowerInkW
   ],
-  urlParameters: [Parameters.geography, Parameters.format1],
+  urlParameters: [Parameters.$host, Parameters.format1],
   headerParameters: [Parameters.accept, Parameters.xMsClientId],
   serializer
 };
@@ -1496,7 +1496,7 @@ const postRouteDirectionsOperationSpec: coreClient.OperationSpec = {
     Parameters.maxChargeInkWh,
     Parameters.auxiliaryPowerInkW
   ],
-  urlParameters: [Parameters.geography, Parameters.format1],
+  urlParameters: [Parameters.$host, Parameters.format1],
   headerParameters: [
     Parameters.contentType,
     Parameters.accept,
@@ -1552,7 +1552,7 @@ const getRouteRangeOperationSpec: coreClient.OperationSpec = {
     Parameters.timeBudgetInSec,
     Parameters.distanceBudgetInMeters
   ],
-  urlParameters: [Parameters.geography, Parameters.format1],
+  urlParameters: [Parameters.$host, Parameters.format1],
   headerParameters: [Parameters.accept, Parameters.xMsClientId],
   serializer
 };
@@ -1578,7 +1578,7 @@ const postRouteDirectionsBatchOperationSpec: coreClient.OperationSpec = {
   },
   requestBody: Parameters.postRouteDirectionsBatchRequestBody,
   queryParameters: [Parameters.apiVersion],
-  urlParameters: [Parameters.geography, Parameters.format],
+  urlParameters: [Parameters.$host, Parameters.format],
   headerParameters: [
     Parameters.contentType,
     Parameters.accept,
@@ -1604,7 +1604,7 @@ const postRouteDirectionsBatchSyncOperationSpec: coreClient.OperationSpec = {
   },
   requestBody: Parameters.postRouteDirectionsBatchRequestBody,
   queryParameters: [Parameters.apiVersion],
-  urlParameters: [Parameters.geography, Parameters.format],
+  urlParameters: [Parameters.$host, Parameters.format],
   headerParameters: [
     Parameters.contentType,
     Parameters.accept,

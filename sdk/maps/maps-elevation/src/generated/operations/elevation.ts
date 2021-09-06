@@ -26,7 +26,7 @@ import {
   ElevationGetDataForBoundingBoxResponse
 } from "../models";
 
-/** Class representing a Elevation. */
+/** Class containing Elevation operations. */
 export class ElevationImpl implements Elevation {
   private readonly client: ElevationClientContext;
 
@@ -213,7 +213,7 @@ const getDataForPointsOperationSpec: coreClient.OperationSpec = {
     }
   },
   queryParameters: [Parameters.apiVersion, Parameters.points],
-  urlParameters: [Parameters.geography, Parameters.format],
+  urlParameters: [Parameters.$host, Parameters.format],
   headerParameters: [Parameters.accept, Parameters.xMsClientId],
   serializer
 };
@@ -230,7 +230,7 @@ const postDataForPointsOperationSpec: coreClient.OperationSpec = {
   },
   requestBody: Parameters.pointsRequestBody,
   queryParameters: [Parameters.apiVersion],
-  urlParameters: [Parameters.geography, Parameters.format],
+  urlParameters: [Parameters.$host, Parameters.format],
   headerParameters: [
     Parameters.accept,
     Parameters.xMsClientId,
@@ -255,7 +255,7 @@ const getDataForPolylineOperationSpec: coreClient.OperationSpec = {
     Parameters.lines,
     Parameters.samples
   ],
-  urlParameters: [Parameters.geography, Parameters.format],
+  urlParameters: [Parameters.$host, Parameters.format],
   headerParameters: [Parameters.accept, Parameters.xMsClientId],
   serializer
 };
@@ -272,7 +272,7 @@ const postDataForPolylineOperationSpec: coreClient.OperationSpec = {
   },
   requestBody: Parameters.linesRequestBody,
   queryParameters: [Parameters.apiVersion, Parameters.samples],
-  urlParameters: [Parameters.geography, Parameters.format],
+  urlParameters: [Parameters.$host, Parameters.format],
   headerParameters: [
     Parameters.accept,
     Parameters.xMsClientId,
@@ -298,7 +298,7 @@ const getDataForBoundingBoxOperationSpec: coreClient.OperationSpec = {
     Parameters.rows,
     Parameters.columns
   ],
-  urlParameters: [Parameters.geography, Parameters.format],
+  urlParameters: [Parameters.$host, Parameters.format],
   headerParameters: [Parameters.accept, Parameters.xMsClientId],
   serializer
 };

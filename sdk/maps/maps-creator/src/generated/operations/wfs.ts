@@ -29,7 +29,7 @@ import {
   WfsDeleteFeatureOptionalParams
 } from "../models";
 
-/** Class representing a Wfs. */
+/** Class containing Wfs operations. */
 export class WfsImpl implements Wfs {
   private readonly client: CreatorClientContext;
 

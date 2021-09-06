@@ -31,7 +31,7 @@ import {
   WeatherGetDailyIndicesResponse
 } from "../models";
 
-/** Class representing a Weather. */
+/** Class containing Weather operations. */
 export class WeatherImpl implements Weather {
   private readonly client: WeatherClientContext;
 
@@ -328,7 +328,7 @@ const getHourlyForecastOperationSpec: coreClient.OperationSpec = {
     Parameters.duration,
     Parameters.language
   ],
-  urlParameters: [Parameters.geography, Parameters.format],
+  urlParameters: [Parameters.$host, Parameters.format],
   headerParameters: [Parameters.accept, Parameters.xMsClientId],
   serializer
 };
@@ -349,7 +349,7 @@ const getMinuteForecastOperationSpec: coreClient.OperationSpec = {
     Parameters.language,
     Parameters.interval
   ],
-  urlParameters: [Parameters.geography, Parameters.format],
+  urlParameters: [Parameters.$host, Parameters.format],
   headerParameters: [Parameters.accept, Parameters.xMsClientId],
   serializer
 };
@@ -371,7 +371,7 @@ const getQuarterDayForecastOperationSpec: coreClient.OperationSpec = {
     Parameters.duration,
     Parameters.language
   ],
-  urlParameters: [Parameters.geography, Parameters.format],
+  urlParameters: [Parameters.$host, Parameters.format],
   headerParameters: [Parameters.accept, Parameters.xMsClientId],
   serializer
 };
@@ -394,7 +394,7 @@ const getCurrentConditionsOperationSpec: coreClient.OperationSpec = {
     Parameters.language,
     Parameters.details
   ],
-  urlParameters: [Parameters.geography, Parameters.format],
+  urlParameters: [Parameters.$host, Parameters.format],
   headerParameters: [Parameters.accept, Parameters.xMsClientId],
   serializer
 };
@@ -416,7 +416,7 @@ const getDailyForecastOperationSpec: coreClient.OperationSpec = {
     Parameters.duration,
     Parameters.language
   ],
-  urlParameters: [Parameters.geography, Parameters.format],
+  urlParameters: [Parameters.$host, Parameters.format],
   headerParameters: [Parameters.accept, Parameters.xMsClientId],
   serializer
 };
@@ -436,7 +436,7 @@ const getWeatherAlongRouteOperationSpec: coreClient.OperationSpec = {
     Parameters.query,
     Parameters.language
   ],
-  urlParameters: [Parameters.geography, Parameters.format],
+  urlParameters: [Parameters.$host, Parameters.format],
   headerParameters: [Parameters.accept, Parameters.xMsClientId],
   serializer
 };
@@ -457,7 +457,7 @@ const getSevereWeatherAlertsOperationSpec: coreClient.OperationSpec = {
     Parameters.language,
     Parameters.details
   ],
-  urlParameters: [Parameters.geography, Parameters.format],
+  urlParameters: [Parameters.$host, Parameters.format],
   headerParameters: [Parameters.accept, Parameters.xMsClientId],
   serializer
 };
@@ -480,7 +480,7 @@ const getDailyIndicesOperationSpec: coreClient.OperationSpec = {
     Parameters.indexId,
     Parameters.indexGroupId
   ],
-  urlParameters: [Parameters.geography, Parameters.format],
+  urlParameters: [Parameters.$host, Parameters.format],
   headerParameters: [Parameters.accept, Parameters.xMsClientId],
   serializer
 };

@@ -13,7 +13,7 @@ import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
 import { CreatorClientContext } from "../creatorClientContext";
 import { PollerLike, PollOperationState, LroEngine } from "@azure/core-lro";
-import { LroImpl, shouldDeserializeLro } from "../lroImpl";
+import { LroImpl } from "../lroImpl";
 import {
   UploadDataFormat,
   DataUploadPreview$binaryOptionalParams,
@@ -30,7 +30,7 @@ import {
   DataGetOperationPreviewResponse
 } from "../models";
 
-/** Class representing a Data. */
+/** Class containing Data operations. */
 export class DataImpl implements Data {
   private readonly client: CreatorClientContext;
 
@@ -308,7 +308,7 @@ export class DataImpl implements Data {
         `"contentType" must be a valid value but instead was "${args[1]}".`
       );
     }
-    operationArguments.options = this.getOperationOptions(options, "location");
+    operationArguments.options = this.getOperationOptions(options);
     const directSendOperation = async (
       args: coreClient.OperationArguments,
       spec: coreClient.OperationSpec
@@ -858,14 +858,9 @@ export class DataImpl implements Data {
   }
 
   private getOperationOptions<TOptions extends coreClient.OperationOptions>(
-    options: TOptions | undefined,
-    lroResourceLocationConfig?: string
+    options: TOptions | undefined
   ): coreClient.OperationOptions {
     const operationOptions: coreClient.OperationOptions = options || {};
-    operationOptions.requestOptions = {
-      ...operationOptions.requestOptions,
-      shouldDeserialize: shouldDeserializeLro(lroResourceLocationConfig)
-    };
     return operationOptions;
   }
 }

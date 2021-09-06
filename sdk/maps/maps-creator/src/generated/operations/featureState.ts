@@ -34,7 +34,7 @@ import {
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
-/** Class representing a FeatureState. */
+/** Class containing FeatureState operations. */
 export class FeatureStateImpl implements FeatureState {
   private readonly client: CreatorClientContext;
 

@@ -8,12 +8,11 @@
 
 import * as coreClient from "@azure/core-client";
 import * as coreAuth from "@azure/core-auth";
-import { Geography, RenderClientOptionalParams } from "./models";
+import { RenderClientOptionalParams } from "./models";
 
 export class RenderClientContext extends coreClient.ServiceClient {
-  geography: Geography;
-  xMsClientId?: string;
   $host: string;
+  xMsClientId?: string;
 
   /**
    * Initializes a new instance of the RenderClientContext class.
@@ -57,7 +56,6 @@ export class RenderClientContext extends coreClient.ServiceClient {
     super(optionsWithDefaults);
 
     // Assigning values to Constant parameters
-    this.geography = options.geography || "us";
     this.$host = options.$host || "https://atlas.microsoft.com";
   }
 }
