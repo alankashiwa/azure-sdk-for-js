@@ -33,32 +33,12 @@ export interface ErrorResponse {
     error?: ErrorDetail;
 }
 
-// @public
-export type GeographicResourceLocation = string;
-
-// @public
-export type Geography = string;
-
 // @public (undocumented)
 export interface IanaId {
     readonly aliasOf?: string;
     readonly hasZone1970Location?: boolean;
     readonly id?: string;
     readonly isAlias?: boolean;
-}
-
-// @public
-export enum KnownGeographicResourceLocation {
-    Eu = "eu",
-    Us = "us"
-}
-
-// @public
-export enum KnownGeography {
-    // (undocumented)
-    Eu = "eu",
-    // (undocumented)
-    Us = "us"
 }
 
 // @public
@@ -169,20 +149,20 @@ export class TimezoneClient extends TimezoneClientContext {
 
 // @public (undocumented)
 export class TimezoneClientContext extends coreClient.ServiceClient {
+    // (undocumented)
+    $host: string;
     constructor(credentials: coreAuth.TokenCredential, options?: TimezoneClientOptionalParams);
     // (undocumented)
     apiVersion: string;
-    // (undocumented)
-    geography: Geography;
     // (undocumented)
     xMsClientId?: string;
 }
 
 // @public
 export interface TimezoneClientOptionalParams extends coreClient.ServiceClientOptions {
+    $host?: string;
     apiVersion?: string;
     endpoint?: string;
-    geography?: Geography;
     xMsClientId?: string;
 }
 

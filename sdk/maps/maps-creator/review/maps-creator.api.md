@@ -884,10 +884,10 @@ export interface PointInPolygonSummary {
 
 // @public
 export interface RangeObject {
-    exclusiveMaximum?: number;
-    exclusiveMinimum?: number;
-    maximum?: number;
-    minimum?: number;
+    exclusiveMaximum?: string;
+    exclusiveMinimum?: string;
+    maximum?: string;
+    minimum?: string;
 }
 
 // @public

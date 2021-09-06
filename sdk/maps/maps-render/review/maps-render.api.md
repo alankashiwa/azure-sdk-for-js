@@ -28,12 +28,6 @@ export interface ErrorResponse {
 }
 
 // @public
-export type GeographicResourceLocation = string;
-
-// @public
-export type Geography = string;
-
-// @public
 export interface GetCopyrightCaptionResult {
     readonly copyrightsCaption?: string;
     readonly formatVersion?: string;
@@ -62,20 +56,6 @@ export interface GetCopyrightFromBoundingBoxResult {
 
 // @public
 export type IncludeText = string;
-
-// @public
-export enum KnownGeographicResourceLocation {
-    Eu = "eu",
-    Us = "us"
-}
-
-// @public
-export enum KnownGeography {
-    // (undocumented)
-    Eu = "eu",
-    // (undocumented)
-    Us = "us"
-}
 
 // @public
 export enum KnownIncludeText {
@@ -243,8 +223,6 @@ export class RenderClientContext extends coreClient.ServiceClient {
     $host: string;
     constructor(credentials: coreAuth.TokenCredential, options?: RenderClientOptionalParams);
     // (undocumented)
-    geography: Geography;
-    // (undocumented)
     xMsClientId?: string;
 }
 
@@ -252,7 +230,6 @@ export class RenderClientContext extends coreClient.ServiceClient {
 export interface RenderClientOptionalParams extends coreClient.ServiceClientOptions {
     $host?: string;
     endpoint?: string;
-    geography?: Geography;
     xMsClientId?: string;
 }
 

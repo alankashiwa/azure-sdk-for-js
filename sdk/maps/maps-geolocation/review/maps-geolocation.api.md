@@ -33,12 +33,6 @@ export interface ErrorResponse {
 }
 
 // @public
-export type GeographicResourceLocation = string;
-
-// @public
-export type Geography = string;
-
-// @public
 export interface Geolocation {
     getIPToLocationPreview(format: ResponseFormat, ip: string, options?: GeolocationGetIPToLocationPreviewOptionalParams): Promise<GeolocationGetIPToLocationPreviewResponse>;
 }
@@ -52,20 +46,20 @@ export class GeolocationClient extends GeolocationClientContext {
 
 // @public (undocumented)
 export class GeolocationClientContext extends coreClient.ServiceClient {
+    // (undocumented)
+    $host: string;
     constructor(credentials: coreAuth.TokenCredential, options?: GeolocationClientOptionalParams);
     // (undocumented)
     apiVersion: string;
-    // (undocumented)
-    geography: Geography;
     // (undocumented)
     xMsClientId?: string;
 }
 
 // @public
 export interface GeolocationClientOptionalParams extends coreClient.ServiceClientOptions {
+    $host?: string;
     apiVersion?: string;
     endpoint?: string;
-    geography?: Geography;
     xMsClientId?: string;
 }
 
@@ -80,20 +74,6 @@ export type GeolocationGetIPToLocationPreviewResponse = IpAddressToLocationResul
 export interface IpAddressToLocationResult {
     readonly countryRegion?: CountryRegion;
     readonly ipAddress?: string;
-}
-
-// @public
-export enum KnownGeographicResourceLocation {
-    Eu = "eu",
-    Us = "us"
-}
-
-// @public
-export enum KnownGeography {
-    // (undocumented)
-    Eu = "eu",
-    // (undocumented)
-    Us = "us"
 }
 
 // @public
