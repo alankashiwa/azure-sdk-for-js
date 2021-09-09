@@ -7,6 +7,6 @@
  */
 
 export * from "./models";
-export { RenderClient } from "./renderClient";
-export { RenderClientContext } from "./renderClientContext";
+export { GeneratedClient } from "./generatedClient";
+export { GeneratedClientContext } from "./generatedClientContext";
 export * from "./operationsInterfaces";

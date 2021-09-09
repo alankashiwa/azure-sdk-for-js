@@ -4,7 +4,6 @@
 
 ```ts
 
-import * as coreAuth from '@azure/core-auth';
 import * as coreClient from '@azure/core-client';
 import { PollerLike } from '@azure/core-lro';
 import { PollOperationState } from '@azure/core-lro';
@@ -68,6 +67,14 @@ export interface ErrorDetail {
 // @public
 export interface ErrorResponse {
     error?: ErrorDetail;
+}
+
+// @public
+export interface GeneratedClientOptionalParams extends coreClient.ServiceClientOptions {
+    $host?: string;
+    apiVersion?: string;
+    endpoint?: string;
+    xMsClientId?: string;
 }
 
 // @public
@@ -423,30 +430,13 @@ export interface Route {
 // @public
 export type RouteAvoidType = string;
 
+// Warning: (ae-forgotten-export) The symbol "GeneratedClientContext" needs to be exported by the entry point index.d.ts
+//
 // @public (undocumented)
-export class RouteClient extends RouteClientContext {
-    constructor(credentials: coreAuth.TokenCredential, options?: RouteClientOptionalParams);
+export class RouteClient extends GeneratedClientContext {
+    constructor(options?: GeneratedClientOptionalParams);
     // (undocumented)
     route: Route;
-}
-
-// @public (undocumented)
-export class RouteClientContext extends coreClient.ServiceClient {
-    // (undocumented)
-    $host: string;
-    constructor(credentials: coreAuth.TokenCredential, options?: RouteClientOptionalParams);
-    // (undocumented)
-    apiVersion: string;
-    // (undocumented)
-    xMsClientId?: string;
-}
-
-// @public
-export interface RouteClientOptionalParams extends coreClient.ServiceClientOptions {
-    $host?: string;
-    apiVersion?: string;
-    endpoint?: string;
-    xMsClientId?: string;
 }
 
 // @public

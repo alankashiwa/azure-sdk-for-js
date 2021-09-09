@@ -10,7 +10,7 @@ import { Weather } from "../operationsInterfaces";
 import * as coreClient from "@azure/core-client";
 import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
-import { WeatherClientContext } from "../weatherClientContext";
+import { GeneratedClientContext } from "../generatedClientContext";
 import {
   ResponseFormat,
   WeatherGetHourlyForecastOptionalParams,
@@ -33,13 +33,13 @@ import {
 
 /** Class containing Weather operations. */
 export class WeatherImpl implements Weather {
-  private readonly client: WeatherClientContext;
+  private readonly client: GeneratedClientContext;
 
   /**
    * Initialize a new instance of the class Weather class.
    * @param client Reference to the service client
    */
-  constructor(client: WeatherClientContext) {
+  constructor(client: GeneratedClientContext) {
     this.client = client;
   }
 

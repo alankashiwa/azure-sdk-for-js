@@ -11,7 +11,7 @@ import * as coreClient from "@azure/core-client";
 import * as coreRestPipeline from "@azure/core-rest-pipeline";
 import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
-import { CreatorClientContext } from "../creatorClientContext";
+import { GeneratedClientContext } from "../generatedClientContext";
 import { PollerLike, PollOperationState, LroEngine } from "@azure/core-lro";
 import { LroImpl } from "../lroImpl";
 import {
@@ -32,13 +32,13 @@ import {
 
 /** Class containing Data operations. */
 export class DataImpl implements Data {
-  private readonly client: CreatorClientContext;
+  private readonly client: GeneratedClientContext;
 
   /**
    * Initialize a new instance of the class Data class.
    * @param client Reference to the service client
    */
-  constructor(client: CreatorClientContext) {
+  constructor(client: GeneratedClientContext) {
     this.client = client;
   }
 

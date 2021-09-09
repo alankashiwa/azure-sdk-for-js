@@ -1731,7 +1731,7 @@ export interface WfsDeleteFeatureOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Optional parameters. */
-export interface CreatorClientOptionalParams
+export interface GeneratedClientOptionalParams
   extends coreClient.ServiceClientOptions {
   /** This parameter specifies where the Azure Maps Creator resource is located.  Valid values are us and eu. */
   geography?: Geography;

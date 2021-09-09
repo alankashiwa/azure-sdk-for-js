@@ -7,33 +7,23 @@
  */
 
 import * as coreClient from "@azure/core-client";
-import * as coreAuth from "@azure/core-auth";
-import { Geography, CreatorClientOptionalParams } from "./models";
+import { Geography, GeneratedClientOptionalParams } from "./models";
 
-export class CreatorClientContext extends coreClient.ServiceClient {
+export class GeneratedClientContext extends coreClient.ServiceClient {
   geography: Geography;
   xMsClientId?: string;
 
   /**
-   * Initializes a new instance of the CreatorClientContext class.
-   * @param credentials Subscription credentials which uniquely identify client subscription.
+   * Initializes a new instance of the GeneratedClientContext class.
    * @param options The parameter options
    */
-  constructor(
-    credentials: coreAuth.TokenCredential,
-    options?: CreatorClientOptionalParams
-  ) {
-    if (credentials === undefined) {
-      throw new Error("'credentials' cannot be null");
-    }
-
+  constructor(options?: GeneratedClientOptionalParams) {
     // Initializing default values for options
     if (!options) {
       options = {};
     }
-    const defaults: CreatorClientOptionalParams = {
-      requestContentType: "application/json; charset=utf-8",
-      credential: credentials
+    const defaults: GeneratedClientOptionalParams = {
+      requestContentType: "application/json; charset=utf-8"
     };
 
     const packageDetails = `azsdk-js-maps-creator/1.0.0-beta.1`;
@@ -43,7 +33,7 @@ export class CreatorClientContext extends coreClient.ServiceClient {
         : `${packageDetails}`;
 
     if (!options.credentialScopes) {
-      options.credentialScopes = ["https://atlas.microsoft.com/.default"];
+      options.credentialScopes = [""];
     }
     const optionsWithDefaults = {
       ...defaults,

@@ -7,6 +7,6 @@
  */
 
 export * from "./models";
-export { ElevationClient } from "./elevationClient";
-export { ElevationClientContext } from "./elevationClientContext";
+export { GeneratedClient } from "./generatedClient";
+export { GeneratedClientContext } from "./generatedClientContext";
 export * from "./operationsInterfaces";

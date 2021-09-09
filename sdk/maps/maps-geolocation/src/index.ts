@@ -2,6 +2,5 @@
 // Licensed under the MIT license.
 
 export * from "./generated/models";
-export { GeolocationClient } from "./generated/geolocationClient";
-export { GeolocationClientContext } from "./generated/geolocationClientContext";
+export { GeneratedClient as GeolocationClient } from "./generated/generatedClient";
 export * from "./generated/operationsInterfaces";

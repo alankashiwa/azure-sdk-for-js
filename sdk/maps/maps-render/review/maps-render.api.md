@@ -4,7 +4,6 @@
 
 ```ts
 
-import * as coreAuth from '@azure/core-auth';
 import * as coreClient from '@azure/core-client';
 
 // @public
@@ -25,6 +24,13 @@ export interface ErrorDetail {
 // @public
 export interface ErrorResponse {
     error?: ErrorDetail;
+}
+
+// @public
+export interface GeneratedClientOptionalParams extends coreClient.ServiceClientOptions {
+    $host?: string;
+    endpoint?: string;
+    xMsClientId?: string;
 }
 
 // @public
@@ -208,29 +214,15 @@ export interface Render {
     getMapTile(format: TileFormat, layer: MapTileLayer, style: MapTileStyle, zoom: number, xTileIndex: number, yTileIndex: number, options?: RenderGetMapTileOptionalParams): Promise<RenderGetMapTileResponse>;
 }
 
+// Warning: (ae-forgotten-export) The symbol "GeneratedClientContext" needs to be exported by the entry point index.d.ts
+//
 // @public (undocumented)
-export class RenderClient extends RenderClientContext {
-    constructor(credentials: coreAuth.TokenCredential, options?: RenderClientOptionalParams);
+export class RenderClient extends GeneratedClientContext {
+    constructor(options?: GeneratedClientOptionalParams);
     // (undocumented)
     render: Render;
     // (undocumented)
     renderV2: RenderV2;
-}
-
-// @public (undocumented)
-export class RenderClientContext extends coreClient.ServiceClient {
-    // (undocumented)
-    $host: string;
-    constructor(credentials: coreAuth.TokenCredential, options?: RenderClientOptionalParams);
-    // (undocumented)
-    xMsClientId?: string;
-}
-
-// @public
-export interface RenderClientOptionalParams extends coreClient.ServiceClientOptions {
-    $host?: string;
-    endpoint?: string;
-    xMsClientId?: string;
 }
 
 // @public

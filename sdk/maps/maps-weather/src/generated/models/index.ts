@@ -1022,7 +1022,7 @@ export interface WeatherGetDailyIndicesOptionalParams
 export type WeatherGetDailyIndicesResponse = DailyIndicesResponse;
 
 /** Optional parameters. */
-export interface WeatherClientOptionalParams
+export interface GeneratedClientOptionalParams
   extends coreClient.ServiceClientOptions {
   /** server parameter */
   $host?: string;

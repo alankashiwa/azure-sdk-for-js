@@ -10,7 +10,7 @@ import { RenderV2 } from "../operationsInterfaces";
 import * as coreClient from "@azure/core-client";
 import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
-import { RenderClientContext } from "../renderClientContext";
+import { GeneratedClientContext } from "../generatedClientContext";
 import {
   TilesetID,
   RenderV2GetMapTilePreviewOptionalParams,
@@ -23,13 +23,13 @@ import {
 
 /** Class containing RenderV2 operations. */
 export class RenderV2Impl implements RenderV2 {
-  private readonly client: RenderClientContext;
+  private readonly client: GeneratedClientContext;
 
   /**
    * Initialize a new instance of the class RenderV2 class.
    * @param client Reference to the service client
    */
-  constructor(client: RenderClientContext) {
+  constructor(client: GeneratedClientContext) {
     this.client = client;
   }
 

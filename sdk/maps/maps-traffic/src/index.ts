@@ -2,6 +2,5 @@
 // Licensed under the MIT license.
 
 export * from "./generated/models";
-export { TrafficClient } from "./generated/trafficClient";
-export { TrafficClientContext } from "./generated/trafficClientContext";
+export { GeneratedClient as TrafficClient } from "./generated/generatedClient";
 export * from "./generated/operationsInterfaces";

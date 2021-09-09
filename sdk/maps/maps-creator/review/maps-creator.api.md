@@ -4,7 +4,6 @@
 
 ```ts
 
-import * as coreAuth from '@azure/core-auth';
 import * as coreClient from '@azure/core-client';
 import * as coreRestPipeline from '@azure/core-rest-pipeline';
 import { PagedAsyncIterableIterator } from '@azure/core-paging';
@@ -249,9 +248,11 @@ export interface ConversionListResponse {
     readonly nextLink?: string;
 }
 
+// Warning: (ae-forgotten-export) The symbol "GeneratedClientContext" needs to be exported by the entry point index.d.ts
+//
 // @public (undocumented)
-export class CreatorClient extends CreatorClientContext {
-    constructor(credentials: coreAuth.TokenCredential, options?: CreatorClientOptionalParams);
+export class CreatorClient extends GeneratedClientContext {
+    constructor(options?: GeneratedClientOptionalParams);
     // (undocumented)
     alias: Alias;
     // (undocumented)
@@ -268,22 +269,6 @@ export class CreatorClient extends CreatorClientContext {
     tileset: Tileset;
     // (undocumented)
     wfs: Wfs;
-}
-
-// @public (undocumented)
-export class CreatorClientContext extends coreClient.ServiceClient {
-    constructor(credentials: coreAuth.TokenCredential, options?: CreatorClientOptionalParams);
-    // (undocumented)
-    geography: Geography;
-    // (undocumented)
-    xMsClientId?: string;
-}
-
-// @public
-export interface CreatorClientOptionalParams extends coreClient.ServiceClientOptions {
-    endpoint?: string;
-    geography?: Geography;
-    xMsClientId?: string;
 }
 
 // @public
@@ -596,6 +581,13 @@ export interface FeatureStatesStructure {
 
 // @public
 export interface FeatureStateUpdateStatesOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export interface GeneratedClientOptionalParams extends coreClient.ServiceClientOptions {
+    endpoint?: string;
+    geography?: Geography;
+    xMsClientId?: string;
 }
 
 // @public

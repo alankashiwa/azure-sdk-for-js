@@ -3,6 +3,5 @@
 
 /// <reference lib="esnext.asynciterable" />
 export * from "./generated/models";
-export { CreatorClient } from "./generated/creatorClient";
-export { CreatorClientContext } from "./generated/creatorClientContext";
+export { GeneratedClient as CreatorClient } from "./generated/generatedClient";
 export * from "./generated/operationsInterfaces";

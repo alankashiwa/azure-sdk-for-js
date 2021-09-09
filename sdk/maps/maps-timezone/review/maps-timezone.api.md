@@ -4,7 +4,6 @@
 
 ```ts
 
-import * as coreAuth from '@azure/core-auth';
 import * as coreClient from '@azure/core-client';
 
 // @public
@@ -31,6 +30,14 @@ export interface ErrorDetail {
 // @public
 export interface ErrorResponse {
     error?: ErrorDetail;
+}
+
+// @public
+export interface GeneratedClientOptionalParams extends coreClient.ServiceClientOptions {
+    $host?: string;
+    apiVersion?: string;
+    endpoint?: string;
+    xMsClientId?: string;
 }
 
 // @public (undocumented)
@@ -140,30 +147,13 @@ export interface TimezoneByIdResult {
     readonly version?: string;
 }
 
+// Warning: (ae-forgotten-export) The symbol "GeneratedClientContext" needs to be exported by the entry point index.d.ts
+//
 // @public (undocumented)
-export class TimezoneClient extends TimezoneClientContext {
-    constructor(credentials: coreAuth.TokenCredential, options?: TimezoneClientOptionalParams);
+export class TimezoneClient extends GeneratedClientContext {
+    constructor(options?: GeneratedClientOptionalParams);
     // (undocumented)
     timezone: Timezone;
-}
-
-// @public (undocumented)
-export class TimezoneClientContext extends coreClient.ServiceClient {
-    // (undocumented)
-    $host: string;
-    constructor(credentials: coreAuth.TokenCredential, options?: TimezoneClientOptionalParams);
-    // (undocumented)
-    apiVersion: string;
-    // (undocumented)
-    xMsClientId?: string;
-}
-
-// @public
-export interface TimezoneClientOptionalParams extends coreClient.ServiceClientOptions {
-    $host?: string;
-    apiVersion?: string;
-    endpoint?: string;
-    xMsClientId?: string;
 }
 
 // @public (undocumented)

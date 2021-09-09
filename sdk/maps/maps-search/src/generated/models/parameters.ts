@@ -66,6 +66,7 @@ export const apiVersion: OperationQueryParameter = {
 export const format: OperationURLParameter = {
   parameterPath: "format",
   mapper: {
+    defaultValue: "json",
     serializedName: "format",
     required: true,
     type: {
@@ -94,6 +95,7 @@ export const geometries: OperationQueryParameter = {
 export const format1: OperationURLParameter = {
   parameterPath: "format",
   mapper: {
+    defaultValue: "json",
     serializedName: "format",
     required: true,
     type: {

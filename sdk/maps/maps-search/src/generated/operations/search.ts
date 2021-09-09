@@ -10,7 +10,7 @@ import { Search } from "../operationsInterfaces";
 import * as coreClient from "@azure/core-client";
 import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
-import { SearchClientContext } from "../searchClientContext";
+import { GeneratedClientContext } from "../generatedClientContext";
 import { PollerLike, PollOperationState, LroEngine } from "@azure/core-lro";
 import { LroImpl } from "../lroImpl";
 import {
@@ -59,13 +59,13 @@ import {
 
 /** Class containing Search operations. */
 export class SearchImpl implements Search {
-  private readonly client: SearchClientContext;
+  private readonly client: GeneratedClientContext;
 
   /**
    * Initialize a new instance of the class Search class.
    * @param client Reference to the service client
    */
-  constructor(client: SearchClientContext) {
+  constructor(client: GeneratedClientContext) {
     this.client = client;
   }
 

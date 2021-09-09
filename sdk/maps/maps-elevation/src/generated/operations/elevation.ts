@@ -10,7 +10,7 @@ import { Elevation } from "../operationsInterfaces";
 import * as coreClient from "@azure/core-client";
 import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
-import { ElevationClientContext } from "../elevationClientContext";
+import { GeneratedClientContext } from "../generatedClientContext";
 import {
   ResponseFormat,
   ElevationGetDataForPointsOptionalParams,
@@ -28,13 +28,13 @@ import {
 
 /** Class containing Elevation operations. */
 export class ElevationImpl implements Elevation {
-  private readonly client: ElevationClientContext;
+  private readonly client: GeneratedClientContext;
 
   /**
    * Initialize a new instance of the class Elevation class.
    * @param client Reference to the service client
    */
-  constructor(client: ElevationClientContext) {
+  constructor(client: GeneratedClientContext) {
     this.client = client;
   }
 

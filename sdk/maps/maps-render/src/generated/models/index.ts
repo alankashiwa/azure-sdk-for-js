@@ -1059,7 +1059,7 @@ export interface RenderV2GetMapAttributionOptionalParams
 export type RenderV2GetMapAttributionResponse = MapAttributionResultV2;
 
 /** Optional parameters. */
-export interface RenderClientOptionalParams
+export interface GeneratedClientOptionalParams
   extends coreClient.ServiceClientOptions {
   /** server parameter */
   $host?: string;

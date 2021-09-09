@@ -7,6 +7,6 @@
  */
 
 export * from "./models";
-export { SearchClient } from "./searchClient";
-export { SearchClientContext } from "./searchClientContext";
+export { GeneratedClient } from "./generatedClient";
+export { GeneratedClientContext } from "./generatedClientContext";
 export * from "./operationsInterfaces";

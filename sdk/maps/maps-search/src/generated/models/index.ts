@@ -2041,7 +2041,7 @@ export interface SearchPostSearchAddressReverseBatchOptionalParams
 export type SearchPostSearchAddressReverseBatchResponse = SearchAddressReverseBatchResponse;
 
 /** Optional parameters. */
-export interface SearchClientOptionalParams
+export interface GeneratedClientOptionalParams
   extends coreClient.ServiceClientOptions {
   /** server parameter */
   $host?: string;

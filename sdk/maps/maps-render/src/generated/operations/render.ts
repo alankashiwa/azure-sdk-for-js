@@ -10,7 +10,7 @@ import { Render } from "../operationsInterfaces";
 import * as coreClient from "@azure/core-client";
 import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
-import { RenderClientContext } from "../renderClientContext";
+import { GeneratedClientContext } from "../generatedClientContext";
 import {
   RasterTileFormat,
   RenderGetMapStaticImageOptionalParams,
@@ -38,13 +38,13 @@ import {
 
 /** Class containing Render operations. */
 export class RenderImpl implements Render {
-  private readonly client: RenderClientContext;
+  private readonly client: GeneratedClientContext;
 
   /**
    * Initialize a new instance of the class Render class.
    * @param client Reference to the service client
    */
-  constructor(client: RenderClientContext) {
+  constructor(client: GeneratedClientContext) {
     this.client = client;
   }
 

@@ -8,6 +8,6 @@
 
 /// <reference lib="esnext.asynciterable" />
 export * from "./models";
-export { CreatorClient } from "./creatorClient";
-export { CreatorClientContext } from "./creatorClientContext";
+export { GeneratedClient } from "./generatedClient";
+export { GeneratedClientContext } from "./generatedClientContext";
 export * from "./operationsInterfaces";

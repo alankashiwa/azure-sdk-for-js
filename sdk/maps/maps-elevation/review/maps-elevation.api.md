@@ -4,7 +4,6 @@
 
 ```ts
 
-import * as coreAuth from '@azure/core-auth';
 import * as coreClient from '@azure/core-client';
 
 // @public
@@ -33,30 +32,13 @@ export interface Elevation {
     postDataForPolyline(format: ResponseFormat, linesRequestBody: CoordinatesPairAbbreviated[], options?: ElevationPostDataForPolylineOptionalParams): Promise<ElevationPostDataForPolylineResponse>;
 }
 
+// Warning: (ae-forgotten-export) The symbol "GeneratedClientContext" needs to be exported by the entry point index.d.ts
+//
 // @public (undocumented)
-export class ElevationClient extends ElevationClientContext {
-    constructor(credentials: coreAuth.TokenCredential, options?: ElevationClientOptionalParams);
+export class ElevationClient extends GeneratedClientContext {
+    constructor(options?: GeneratedClientOptionalParams);
     // (undocumented)
     elevation: Elevation;
-}
-
-// @public (undocumented)
-export class ElevationClientContext extends coreClient.ServiceClient {
-    // (undocumented)
-    $host: string;
-    constructor(credentials: coreAuth.TokenCredential, options?: ElevationClientOptionalParams);
-    // (undocumented)
-    apiVersion: string;
-    // (undocumented)
-    xMsClientId?: string;
-}
-
-// @public
-export interface ElevationClientOptionalParams extends coreClient.ServiceClientOptions {
-    $host?: string;
-    apiVersion?: string;
-    endpoint?: string;
-    xMsClientId?: string;
 }
 
 // @public
@@ -114,6 +96,14 @@ export interface ErrorDetail {
 // @public
 export interface ErrorResponse {
     error?: ErrorDetail;
+}
+
+// @public
+export interface GeneratedClientOptionalParams extends coreClient.ServiceClientOptions {
+    $host?: string;
+    apiVersion?: string;
+    endpoint?: string;
+    xMsClientId?: string;
 }
 
 // @public

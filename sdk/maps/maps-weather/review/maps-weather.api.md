@@ -4,7 +4,6 @@
 
 ```ts
 
-import * as coreAuth from '@azure/core-auth';
 import * as coreClient from '@azure/core-client';
 
 // @public (undocumented)
@@ -185,6 +184,14 @@ export interface ForecastInterval {
     simplifiedColor?: ColorValue;
     startTime?: Date;
     threshold?: string;
+}
+
+// @public
+export interface GeneratedClientOptionalParams extends coreClient.ServiceClientOptions {
+    $host?: string;
+    apiVersion?: string;
+    endpoint?: string;
+    xMsClientId?: string;
 }
 
 // @public (undocumented)
@@ -441,30 +448,13 @@ export interface WeatherAlongRouteSummary {
     iconCode?: number;
 }
 
+// Warning: (ae-forgotten-export) The symbol "GeneratedClientContext" needs to be exported by the entry point index.d.ts
+//
 // @public (undocumented)
-export class WeatherClient extends WeatherClientContext {
-    constructor(credentials: coreAuth.TokenCredential, options?: WeatherClientOptionalParams);
+export class WeatherClient extends GeneratedClientContext {
+    constructor(options?: GeneratedClientOptionalParams);
     // (undocumented)
     weather: Weather;
-}
-
-// @public (undocumented)
-export class WeatherClientContext extends coreClient.ServiceClient {
-    // (undocumented)
-    $host: string;
-    constructor(credentials: coreAuth.TokenCredential, options?: WeatherClientOptionalParams);
-    // (undocumented)
-    apiVersion: string;
-    // (undocumented)
-    xMsClientId?: string;
-}
-
-// @public
-export interface WeatherClientOptionalParams extends coreClient.ServiceClientOptions {
-    $host?: string;
-    apiVersion?: string;
-    endpoint?: string;
-    xMsClientId?: string;
 }
 
 // @public

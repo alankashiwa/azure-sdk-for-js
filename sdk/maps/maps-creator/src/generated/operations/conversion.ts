@@ -12,7 +12,7 @@ import { Conversion } from "../operationsInterfaces";
 import * as coreClient from "@azure/core-client";
 import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
-import { CreatorClientContext } from "../creatorClientContext";
+import { GeneratedClientContext } from "../generatedClientContext";
 import { PollerLike, PollOperationState, LroEngine } from "@azure/core-lro";
 import { LroImpl } from "../lroImpl";
 import {
@@ -33,13 +33,13 @@ import {
 /// <reference lib="esnext.asynciterable" />
 /** Class containing Conversion operations. */
 export class ConversionImpl implements Conversion {
-  private readonly client: CreatorClientContext;
+  private readonly client: GeneratedClientContext;
 
   /**
    * Initialize a new instance of the class Conversion class.
    * @param client Reference to the service client
    */
-  constructor(client: CreatorClientContext) {
+  constructor(client: GeneratedClientContext) {
     this.client = client;
   }
 

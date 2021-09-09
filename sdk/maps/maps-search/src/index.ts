@@ -2,6 +2,5 @@
 // Licensed under the MIT license.
 
 export * from "./generated/models";
-export { SearchClient } from "./generated/searchClient";
-export { SearchClientContext } from "./generated/searchClientContext";
+export { GeneratedClient as SearchClient } from "./generated/generatedClient";
 export * from "./generated/operationsInterfaces";

@@ -10,7 +10,7 @@ import { Geolocation } from "../operationsInterfaces";
 import * as coreClient from "@azure/core-client";
 import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
-import { GeolocationClientContext } from "../geolocationClientContext";
+import { GeneratedClientContext } from "../generatedClientContext";
 import {
   ResponseFormat,
   GeolocationGetIPToLocationPreviewOptionalParams,
@@ -19,13 +19,13 @@ import {
 
 /** Class containing Geolocation operations. */
 export class GeolocationImpl implements Geolocation {
-  private readonly client: GeolocationClientContext;
+  private readonly client: GeneratedClientContext;
 
   /**
    * Initialize a new instance of the class Geolocation class.
    * @param client Reference to the service client
    */
-  constructor(client: GeolocationClientContext) {
+  constructor(client: GeneratedClientContext) {
     this.client = client;
   }
 

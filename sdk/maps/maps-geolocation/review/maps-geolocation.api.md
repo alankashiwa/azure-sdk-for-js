@@ -4,7 +4,6 @@
 
 ```ts
 
-import * as coreAuth from '@azure/core-auth';
 import * as coreClient from '@azure/core-client';
 
 // @public
@@ -33,34 +32,25 @@ export interface ErrorResponse {
 }
 
 // @public
-export interface Geolocation {
-    getIPToLocationPreview(format: ResponseFormat, ip: string, options?: GeolocationGetIPToLocationPreviewOptionalParams): Promise<GeolocationGetIPToLocationPreviewResponse>;
-}
-
-// @public (undocumented)
-export class GeolocationClient extends GeolocationClientContext {
-    constructor(credentials: coreAuth.TokenCredential, options?: GeolocationClientOptionalParams);
-    // (undocumented)
-    geolocation: Geolocation;
-}
-
-// @public (undocumented)
-export class GeolocationClientContext extends coreClient.ServiceClient {
-    // (undocumented)
-    $host: string;
-    constructor(credentials: coreAuth.TokenCredential, options?: GeolocationClientOptionalParams);
-    // (undocumented)
-    apiVersion: string;
-    // (undocumented)
-    xMsClientId?: string;
-}
-
-// @public
-export interface GeolocationClientOptionalParams extends coreClient.ServiceClientOptions {
+export interface GeneratedClientOptionalParams extends coreClient.ServiceClientOptions {
     $host?: string;
     apiVersion?: string;
     endpoint?: string;
     xMsClientId?: string;
+}
+
+// @public
+export interface Geolocation {
+    getIPToLocationPreview(format: ResponseFormat, ip: string, options?: GeolocationGetIPToLocationPreviewOptionalParams): Promise<GeolocationGetIPToLocationPreviewResponse>;
+}
+
+// Warning: (ae-forgotten-export) The symbol "GeneratedClientContext" needs to be exported by the entry point index.d.ts
+//
+// @public (undocumented)
+export class GeolocationClient extends GeneratedClientContext {
+    constructor(options?: GeneratedClientOptionalParams);
+    // (undocumented)
+    geolocation: Geolocation;
 }
 
 // @public

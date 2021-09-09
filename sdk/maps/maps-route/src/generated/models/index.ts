@@ -2240,7 +2240,7 @@ export interface RoutePostRouteDirectionsBatchSyncOptionalParams
 export type RoutePostRouteDirectionsBatchSyncResponse = RouteDirectionsBatchResponse;
 
 /** Optional parameters. */
-export interface RouteClientOptionalParams
+export interface GeneratedClientOptionalParams
   extends coreClient.ServiceClientOptions {
   /** server parameter */
   $host?: string;

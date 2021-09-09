@@ -7,43 +7,34 @@
  */
 
 import * as coreClient from "@azure/core-client";
-import * as coreAuth from "@azure/core-auth";
-import { RenderClientOptionalParams } from "./models";
+import { GeneratedClientOptionalParams } from "./models";
 
-export class RenderClientContext extends coreClient.ServiceClient {
+export class GeneratedClientContext extends coreClient.ServiceClient {
   $host: string;
   xMsClientId?: string;
+  apiVersion: string;
 
   /**
-   * Initializes a new instance of the RenderClientContext class.
-   * @param credentials Subscription credentials which uniquely identify client subscription.
+   * Initializes a new instance of the GeneratedClientContext class.
    * @param options The parameter options
    */
-  constructor(
-    credentials: coreAuth.TokenCredential,
-    options?: RenderClientOptionalParams
-  ) {
-    if (credentials === undefined) {
-      throw new Error("'credentials' cannot be null");
-    }
-
+  constructor(options?: GeneratedClientOptionalParams) {
     // Initializing default values for options
     if (!options) {
       options = {};
     }
-    const defaults: RenderClientOptionalParams = {
-      requestContentType: "application/json; charset=utf-8",
-      credential: credentials
+    const defaults: GeneratedClientOptionalParams = {
+      requestContentType: "application/json; charset=utf-8"
     };
 
-    const packageDetails = `azsdk-js-maps-render/1.0.0-beta.1`;
+    const packageDetails = `azsdk-js-maps-timezone/1.0.0-beta.1`;
     const userAgentPrefix =
       options.userAgentOptions && options.userAgentOptions.userAgentPrefix
         ? `${options.userAgentOptions.userAgentPrefix} ${packageDetails}`
         : `${packageDetails}`;
 
     if (!options.credentialScopes) {
-      options.credentialScopes = ["https://atlas.microsoft.com/.default"];
+      options.credentialScopes = [""];
     }
     const optionsWithDefaults = {
       ...defaults,
@@ -57,5 +48,6 @@ export class RenderClientContext extends coreClient.ServiceClient {
 
     // Assigning values to Constant parameters
     this.$host = options.$host || "https://atlas.microsoft.com";
+    this.apiVersion = options.apiVersion || "1.0";
   }
 }

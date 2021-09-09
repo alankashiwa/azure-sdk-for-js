@@ -2,6 +2,5 @@
 // Licensed under the MIT license.
 
 export * from "./generated/models";
-export { WeatherClient } from "./generated/weatherClient";
-export { WeatherClientContext } from "./generated/weatherClientContext";
+export { GeneratedClient as WeatherClient } from "./generated/generatedClient";
 export * from "./generated/operationsInterfaces";

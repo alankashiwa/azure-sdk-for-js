@@ -7,6 +7,6 @@
  */
 
 export * from "./models";
-export { RouteClient } from "./routeClient";
-export { RouteClientContext } from "./routeClientContext";
+export { GeneratedClient } from "./generatedClient";
+export { GeneratedClientContext } from "./generatedClientContext";
 export * from "./operationsInterfaces";

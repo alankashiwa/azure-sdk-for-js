@@ -4,7 +4,6 @@
 
 ```ts
 
-import * as coreAuth from '@azure/core-auth';
 import * as coreClient from '@azure/core-client';
 
 // @public
@@ -31,6 +30,14 @@ export interface ErrorDetail {
 // @public
 export interface ErrorResponse {
     error?: ErrorDetail;
+}
+
+// @public
+export interface GeneratedClientOptionalParams extends coreClient.ServiceClientOptions {
+    $host?: string;
+    apiVersion?: string;
+    endpoint?: string;
+    xMsClientId?: string;
 }
 
 // @public
@@ -121,30 +128,13 @@ export interface Traffic {
     getTrafficIncidentViewport(format: TextFormat, boundingbox: string, boundingzoom: number, overviewbox: string, overviewzoom: number, options?: TrafficGetTrafficIncidentViewportOptionalParams): Promise<TrafficGetTrafficIncidentViewportResponse>;
 }
 
+// Warning: (ae-forgotten-export) The symbol "GeneratedClientContext" needs to be exported by the entry point index.d.ts
+//
 // @public (undocumented)
-export class TrafficClient extends TrafficClientContext {
-    constructor(credentials: coreAuth.TokenCredential, options?: TrafficClientOptionalParams);
+export class TrafficClient extends GeneratedClientContext {
+    constructor(options?: GeneratedClientOptionalParams);
     // (undocumented)
     traffic: Traffic;
-}
-
-// @public (undocumented)
-export class TrafficClientContext extends coreClient.ServiceClient {
-    // (undocumented)
-    $host: string;
-    constructor(credentials: coreAuth.TokenCredential, options?: TrafficClientOptionalParams);
-    // (undocumented)
-    apiVersion: string;
-    // (undocumented)
-    xMsClientId?: string;
-}
-
-// @public
-export interface TrafficClientOptionalParams extends coreClient.ServiceClientOptions {
-    $host?: string;
-    apiVersion?: string;
-    endpoint?: string;
-    xMsClientId?: string;
 }
 
 // @public

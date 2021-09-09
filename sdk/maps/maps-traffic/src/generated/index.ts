@@ -7,6 +7,6 @@
  */
 
 export * from "./models";
-export { TrafficClient } from "./trafficClient";
-export { TrafficClientContext } from "./trafficClientContext";
+export { GeneratedClient } from "./generatedClient";
+export { GeneratedClientContext } from "./generatedClientContext";
 export * from "./operationsInterfaces";

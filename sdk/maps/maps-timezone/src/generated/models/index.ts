@@ -481,7 +481,7 @@ export interface TimezoneGetTimezoneWindowsToIanaOptionalParams
 export type TimezoneGetTimezoneWindowsToIanaResponse = IanaId[];
 
 /** Optional parameters. */
-export interface TimezoneClientOptionalParams
+export interface GeneratedClientOptionalParams
   extends coreClient.ServiceClientOptions {
   /** server parameter */
   $host?: string;

@@ -7,6 +7,6 @@
  */
 
 export * from "./models";
-export { GeolocationClient } from "./geolocationClient";
-export { GeolocationClientContext } from "./geolocationClientContext";
+export { GeneratedClient } from "./generatedClient";
+export { GeneratedClientContext } from "./generatedClientContext";
 export * from "./operationsInterfaces";

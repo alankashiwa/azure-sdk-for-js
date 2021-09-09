@@ -2,6 +2,5 @@
 // Licensed under the MIT license.
 
 export * from "./generated/models";
-export { RouteClient } from "./generated/routeClient";
-export { RouteClientContext } from "./generated/routeClientContext";
+export { GeneratedClient as RouteClient } from "./generated/generatedClient";
 export * from "./generated/operationsInterfaces";

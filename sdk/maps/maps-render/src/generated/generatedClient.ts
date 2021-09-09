@@ -6,23 +6,18 @@
  * Changes may cause incorrect behavior and will be lost if the code is regenerated.
  */
 
-import * as coreAuth from "@azure/core-auth";
 import { RenderImpl, RenderV2Impl } from "./operations";
 import { Render, RenderV2 } from "./operationsInterfaces";
-import { RenderClientContext } from "./renderClientContext";
-import { RenderClientOptionalParams } from "./models";
+import { GeneratedClientContext } from "./generatedClientContext";
+import { GeneratedClientOptionalParams } from "./models";
 
-export class RenderClient extends RenderClientContext {
+export class GeneratedClient extends GeneratedClientContext {
   /**
-   * Initializes a new instance of the RenderClient class.
-   * @param credentials Subscription credentials which uniquely identify client subscription.
+   * Initializes a new instance of the GeneratedClient class.
    * @param options The parameter options
    */
-  constructor(
-    credentials: coreAuth.TokenCredential,
-    options?: RenderClientOptionalParams
-  ) {
-    super(credentials, options);
+  constructor(options?: GeneratedClientOptionalParams) {
+    super(options);
     this.render = new RenderImpl(this);
     this.renderV2 = new RenderV2Impl(this);
   }

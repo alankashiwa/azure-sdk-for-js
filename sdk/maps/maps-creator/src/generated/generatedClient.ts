@@ -6,7 +6,6 @@
  * Changes may cause incorrect behavior and will be lost if the code is regenerated.
  */
 
-import * as coreAuth from "@azure/core-auth";
 import {
   AliasImpl,
   DataImpl,
@@ -27,20 +26,16 @@ import {
   Tileset,
   Wfs
 } from "./operationsInterfaces";
-import { CreatorClientContext } from "./creatorClientContext";
-import { CreatorClientOptionalParams } from "./models";
+import { GeneratedClientContext } from "./generatedClientContext";
+import { GeneratedClientOptionalParams } from "./models";
 
-export class CreatorClient extends CreatorClientContext {
+export class GeneratedClient extends GeneratedClientContext {
   /**
-   * Initializes a new instance of the CreatorClient class.
-   * @param credentials Subscription credentials which uniquely identify client subscription.
+   * Initializes a new instance of the GeneratedClient class.
    * @param options The parameter options
    */
-  constructor(
-    credentials: coreAuth.TokenCredential,
-    options?: CreatorClientOptionalParams
-  ) {
-    super(credentials, options);
+  constructor(options?: GeneratedClientOptionalParams) {
+    super(options);
     this.alias = new AliasImpl(this);
     this.data = new DataImpl(this);
     this.dataset = new DatasetImpl(this);

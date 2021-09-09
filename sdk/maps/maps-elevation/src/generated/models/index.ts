@@ -168,7 +168,7 @@ export interface ElevationGetDataForBoundingBoxOptionalParams
 export type ElevationGetDataForBoundingBoxResponse = BoundingBoxResult;
 
 /** Optional parameters. */
-export interface ElevationClientOptionalParams
+export interface GeneratedClientOptionalParams
   extends coreClient.ServiceClientOptions {
   /** server parameter */
   $host?: string;

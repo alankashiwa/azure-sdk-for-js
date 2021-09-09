@@ -404,6 +404,7 @@ export const apiVersion1: OperationQueryParameter = {
 export const format: OperationURLParameter = {
   parameterPath: "format",
   mapper: {
+    defaultValue: "json",
     serializedName: "format",
     required: true,
     type: {

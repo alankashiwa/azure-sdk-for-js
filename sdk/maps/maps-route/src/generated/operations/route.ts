@@ -10,7 +10,7 @@ import { Route } from "../operationsInterfaces";
 import * as coreClient from "@azure/core-client";
 import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
-import { RouteClientContext } from "../routeClientContext";
+import { GeneratedClientContext } from "../generatedClientContext";
 import { PollerLike, PollOperationState, LroEngine } from "@azure/core-lro";
 import { LroImpl } from "../lroImpl";
 import {
@@ -37,13 +37,13 @@ import {
 
 /** Class containing Route operations. */
 export class RouteImpl implements Route {
-  private readonly client: RouteClientContext;
+  private readonly client: GeneratedClientContext;
 
   /**
    * Initialize a new instance of the class Route class.
    * @param client Reference to the service client
    */
-  constructor(client: RouteClientContext) {
+  constructor(client: GeneratedClientContext) {
     this.client = client;
   }
 

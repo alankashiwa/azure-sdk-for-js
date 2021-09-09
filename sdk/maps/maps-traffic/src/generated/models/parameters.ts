@@ -143,6 +143,7 @@ export const accept1: OperationParameter = {
 export const format1: OperationURLParameter = {
   parameterPath: "format",
   mapper: {
+    defaultValue: "json",
     serializedName: "format",
     required: true,
     type: {

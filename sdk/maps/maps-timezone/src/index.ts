@@ -2,6 +2,5 @@
 // Licensed under the MIT license.
 
 export * from "./generated/models";
-export { TimezoneClient } from "./generated/timezoneClient";
-export { TimezoneClientContext } from "./generated/timezoneClientContext";
+export { GeneratedClient as TimezoneClient } from "./generated/generatedClient";
 export * from "./generated/operationsInterfaces";

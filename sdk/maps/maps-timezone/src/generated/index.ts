@@ -7,6 +7,6 @@
  */
 
 export * from "./models";
-export { TimezoneClient } from "./timezoneClient";
-export { TimezoneClientContext } from "./timezoneClientContext";
+export { GeneratedClient } from "./generatedClient";
+export { GeneratedClientContext } from "./generatedClientContext";
 export * from "./operationsInterfaces";

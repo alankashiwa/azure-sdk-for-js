@@ -103,7 +103,7 @@ export interface GeolocationGetIPToLocationPreviewOptionalParams
 export type GeolocationGetIPToLocationPreviewResponse = IpAddressToLocationResult;
 
 /** Optional parameters. */
-export interface GeolocationClientOptionalParams
+export interface GeneratedClientOptionalParams
   extends coreClient.ServiceClientOptions {
   /** server parameter */
   $host?: string;

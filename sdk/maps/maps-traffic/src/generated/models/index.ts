@@ -610,7 +610,7 @@ export interface TrafficGetTrafficIncidentViewportOptionalParams
 export type TrafficGetTrafficIncidentViewportResponse = TrafficIncidentViewportResult;
 
 /** Optional parameters. */
-export interface TrafficClientOptionalParams
+export interface GeneratedClientOptionalParams
   extends coreClient.ServiceClientOptions {
   /** server parameter */
   $host?: string;

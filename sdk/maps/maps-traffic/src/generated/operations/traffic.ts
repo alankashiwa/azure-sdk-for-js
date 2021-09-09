@@ -10,7 +10,7 @@ import { Traffic } from "../operationsInterfaces";
 import * as coreClient from "@azure/core-client";
 import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
-import { TrafficClientContext } from "../trafficClientContext";
+import { GeneratedClientContext } from "../generatedClientContext";
 import {
   TileFormat,
   TrafficFlowTileStyle,
@@ -32,13 +32,13 @@ import {
 
 /** Class containing Traffic operations. */
 export class TrafficImpl implements Traffic {
-  private readonly client: TrafficClientContext;
+  private readonly client: GeneratedClientContext;
 
   /**
    * Initialize a new instance of the class Traffic class.
    * @param client Reference to the service client
    */
-  constructor(client: TrafficClientContext) {
+  constructor(client: GeneratedClientContext) {
     this.client = client;
   }
 

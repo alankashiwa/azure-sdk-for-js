@@ -7,6 +7,6 @@
  */
 
 export * from "./models";
-export { WeatherClient } from "./weatherClient";
-export { WeatherClientContext } from "./weatherClientContext";
+export { GeneratedClient } from "./generatedClient";
+export { GeneratedClientContext } from "./generatedClientContext";
 export * from "./operationsInterfaces";

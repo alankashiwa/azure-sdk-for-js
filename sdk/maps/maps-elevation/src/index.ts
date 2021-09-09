@@ -2,6 +2,5 @@
 // Licensed under the MIT license.
 
 export * from "./generated/models";
-export { ElevationClient } from "./generated/elevationClient";
-export { ElevationClientContext } from "./generated/elevationClientContext";
+export { GeneratedClient as ElevationClient } from "./generated/generatedClient";
 export * from "./generated/operationsInterfaces";

@@ -10,7 +10,7 @@ import { Timezone } from "../operationsInterfaces";
 import * as coreClient from "@azure/core-client";
 import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
-import { TimezoneClientContext } from "../timezoneClientContext";
+import { GeneratedClientContext } from "../generatedClientContext";
 import {
   ResponseFormat,
   TimezoneGetTimezoneByIDOptionalParams,
@@ -29,13 +29,13 @@ import {
 
 /** Class containing Timezone operations. */
 export class TimezoneImpl implements Timezone {
-  private readonly client: TimezoneClientContext;
+  private readonly client: GeneratedClientContext;
 
   /**
    * Initialize a new instance of the class Timezone class.
    * @param client Reference to the service client
    */
-  constructor(client: TimezoneClientContext) {
+  constructor(client: GeneratedClientContext) {
     this.client = client;
   }
 

@@ -10,7 +10,7 @@ import { Spatial } from "../operationsInterfaces";
 import * as coreClient from "@azure/core-client";
 import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
-import { CreatorClientContext } from "../creatorClientContext";
+import { GeneratedClientContext } from "../generatedClientContext";
 import {
   ResponseFormat,
   SpatialGetGeofenceOptionalParams,
@@ -36,13 +36,13 @@ import {
 
 /** Class containing Spatial operations. */
 export class SpatialImpl implements Spatial {
-  private readonly client: CreatorClientContext;
+  private readonly client: GeneratedClientContext;
 
   /**
    * Initialize a new instance of the class Spatial class.
    * @param client Reference to the service client
    */
-  constructor(client: CreatorClientContext) {
+  constructor(client: GeneratedClientContext) {
     this.client = client;
   }
 
