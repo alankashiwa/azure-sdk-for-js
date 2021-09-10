@@ -161,6 +161,10 @@
       "path": "sdk/maps/maps-creator"
     },
     {
+      "name": "maps-common",
+      "path": "sdk/maps/maps-common"
+    },
+    {
       "name": "maps-elevation",
       "path": "sdk/maps/maps-elevation"
     },
