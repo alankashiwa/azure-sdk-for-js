@@ -2,12 +2,14 @@
 // Licensed under the MIT License.
 
 /**
- * @summary Demonstrates Geolocation API usage. Simple CRUD operations are performed.
+ * @summary Demonstrates Geolocation API usage. Simple queries are performed.
  */
 
 const { DefaultAzureCredential } = require("@azure/identity");
+const { AzureKeyCredential } = require("@azure/core-auth");
 const { GeolocationClient } = require("@azure/maps-geolocation");
-require("dotenv").config();
+const dotenv = require("dotenv");
+dotenv.config();
 
 /**
  * Azure Maps supports two ways to authenticate requests:
@@ -20,44 +22,25 @@ require("dotenv").config();
  * More info is available at https://docs.microsoft.com/en-us/azure/azure-maps/azure-maps-authentication.
  */
 
-/**
- * Empty token class definition. To be used with AzureKey credentials.
- */
-class EmptyTokenCredential {
-  async getToken(_scopes, _options) {
-    return {
-      token: "token",
-      expiresOnTimestamp: Date.now() + 60 * 60 * 1000
-    };
-  }
-}
-
 async function main() {
   let credential;
-  let operationOptions = {};
+  let mapsClientId;
 
   if (process.env.MAPS_SUBSCRIPTION_KEY) {
     // Use subscription key authentication
-    credential = new EmptyTokenCredential();
-    operationOptions.requestOptions = {
-      customHeaders: { "subscription-key": process.env.MAPS_SUBSCRIPTION_KEY }
-    };
+    credential = new AzureKeyCredential(process.env.MAPS_SUBSCRIPTION_KEY);
   } else {
     // Use Azure AD authentication
     credential = new DefaultAzureCredential();
-    if (process.env.MAPS_CLIENT_ID) {
-      operationOptions.requestOptions = {
-        customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
-      };
-    }
+    mapsClientId = process.env.MAPS_CLIENT_ID;
   }
 
-  const geolocation = new GeolocationClient(credential).geolocation;
+  const client = new GeolocationClient(credential, { xMsClientId: mapsClientId });
 
   const ipAddressToTest = "8.8.8.8";
 
   console.log(" --- Get IP to location:");
-  console.log(await geolocation.getIPToLocationPreview("json", ipAddressToTest, operationOptions));
+  console.log(await client.getIpAddressLocation(ipAddressToTest));
 }
 
 main();

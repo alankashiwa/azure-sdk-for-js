@@ -1,6 +1,6 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-export * from "./generated/models";
-export { GeneratedClient as GeolocationClient } from "./generated/generatedClient";
-export * from "./generated/operationsInterfaces";
+export { GeolocationClient, GeolocationClientOptions } from "./geolocationClient";
+export { MapsCommonClientOptions } from "./mapsCommonOptions";
+export * from "./models";

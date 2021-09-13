@@ -4,7 +4,9 @@
 
 ```ts
 
-import * as coreClient from '@azure/core-client';
+import { AzureKeyCredential } from '@azure/core-auth';
+import { CommonClientOptions } from '@azure/core-client';
+import { TokenCredential } from '@azure/core-auth';
 
 // @public
 export interface CountryRegion {
@@ -12,53 +14,14 @@ export interface CountryRegion {
 }
 
 // @public
-export interface ErrorAdditionalInfo {
-    readonly info?: Record<string, unknown>;
-    readonly type?: string;
+export class GeolocationClient {
+    constructor(credential: TokenCredential | AzureKeyCredential, options?: GeolocationClientOptions);
+    getIpAddressLocation(ip: string): Promise<IpAddressToLocationResult>;
 }
 
 // @public
-export interface ErrorDetail {
-    readonly additionalInfo?: ErrorAdditionalInfo[];
-    readonly code?: string;
-    readonly details?: ErrorDetail[];
-    readonly message?: string;
-    readonly target?: string;
+export interface GeolocationClientOptions extends MapsCommonClientOptions {
 }
-
-// @public
-export interface ErrorResponse {
-    error?: ErrorDetail;
-}
-
-// @public
-export interface GeneratedClientOptionalParams extends coreClient.ServiceClientOptions {
-    $host?: string;
-    apiVersion?: string;
-    endpoint?: string;
-    xMsClientId?: string;
-}
-
-// @public
-export interface Geolocation {
-    getIPToLocationPreview(format: ResponseFormat, ip: string, options?: GeolocationGetIPToLocationPreviewOptionalParams): Promise<GeolocationGetIPToLocationPreviewResponse>;
-}
-
-// Warning: (ae-forgotten-export) The symbol "GeneratedClientContext" needs to be exported by the entry point index.d.ts
-//
-// @public (undocumented)
-export class GeolocationClient extends GeneratedClientContext {
-    constructor(options?: GeneratedClientOptionalParams);
-    // (undocumented)
-    geolocation: Geolocation;
-}
-
-// @public
-export interface GeolocationGetIPToLocationPreviewOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type GeolocationGetIPToLocationPreviewResponse = IpAddressToLocationResult;
 
 // @public
 export interface IpAddressToLocationResult {
@@ -67,12 +30,9 @@ export interface IpAddressToLocationResult {
 }
 
 // @public
-export enum KnownResponseFormat {
-    Json = "json"
+export interface MapsCommonClientOptions extends CommonClientOptions {
+    xMsClientId?: string;
 }
-
-// @public
-export type ResponseFormat = string;
 
 
 // (No @packageDocumentation comment for this package)
