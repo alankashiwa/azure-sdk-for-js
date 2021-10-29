@@ -10,52 +10,100 @@ import { PollerLike } from '@azure/core-lro';
 import { PollOperationState } from '@azure/core-lro';
 
 // @public
-export interface BatchItem {
-    readonly statusCode?: number;
+export interface Address {
+    readonly boundingBox?: Record<string, unknown>;
+    readonly buildingNumber?: string;
+    readonly country?: string;
+    readonly countryCode?: string;
+    readonly countryCodeISO3?: string;
+    readonly countrySecondarySubdivision?: string;
+    readonly countrySubdivision?: string;
+    readonly countrySubdivisionName?: string;
+    readonly countryTertiarySubdivision?: string;
+    readonly crossStreet?: string;
+    readonly extendedPostalCode?: string;
+    readonly freeformAddress?: string;
+    readonly localName?: string;
+    readonly municipality?: string;
+    readonly municipalitySubdivision?: string;
+    readonly postalCode?: string;
+    readonly routeNumbers?: number[];
+    readonly street?: string;
+    readonly streetName?: string;
+    readonly streetNameAndNumber?: string;
+    readonly streetNumber?: string;
 }
 
 // @public
-export interface BatchRequestBody {
-    batchItems?: BatchRequestBodyBatchItemsItem[];
+export interface AddressRanges {
+    from?: LatLongPairAbbreviated;
+    rangeLeft?: string;
+    rangeRight?: string;
+    to?: LatLongPairAbbreviated;
 }
 
 // @public
-export interface BatchRequestBodyBatchItemsItem {
+export interface BatchRequest {
+    batchItems?: BatchRequestItem[];
+}
+
+// @public
+export interface BatchRequestItem {
     query?: string;
 }
 
 // @public
-export interface BatchResponse {
-    readonly summary?: BatchResponseSummary;
+export interface BatchResult {
+    readonly batchSummary?: BatchResultSummary;
 }
 
 // @public
-export interface BatchResponseSummary {
+export interface BatchResultItem {
+    readonly statusCode?: number;
+}
+
+// @public
+export interface BatchResultSummary {
     readonly successfulRequests?: number;
     readonly totalRequests?: number;
 }
 
 // @public
-export type ConnectorSet = string;
+export interface BoundingBox {
+    bottomRight?: LatLongPairAbbreviated;
+    topLeft?: LatLongPairAbbreviated;
+}
 
 // @public
-export interface CoordinatesPairAbbreviated {
-    lat?: number;
-    lon?: number;
+export interface BrandName {
+    readonly name?: string;
+}
+
+// @public
+export interface Classification {
+    readonly code?: string;
+    readonly names?: ClassificationName[];
+}
+
+// @public
+export interface ClassificationName {
+    readonly name?: string;
+    readonly nameLocale?: string;
 }
 
 // @public
 export interface DataSources {
-    geometry?: DataSourcesGeometry;
+    geometry?: Geometry;
 }
 
 // @public
-export interface DataSourcesGeometry {
-    readonly id?: string;
-}
+export type ElectricVehicleConnector = string;
 
 // @public
-export type EntityType = string;
+export interface EntryPoint {
+    position?: LatLongPairAbbreviated;
+    readonly type?: EntryPointType;
+}
 
 // @public
 export type EntryPointType = string;
@@ -79,6 +127,9 @@ export interface ErrorDetail {
 export interface ErrorResponse {
     error?: ErrorDetail;
 }
+
+// @public
+export type GeographicEntityType = string;
 
 // @public
 export type GeoJsonFeature = GeoJsonObject & GeoJsonFeatureData & {
@@ -157,7 +208,7 @@ export interface GeoJsonObject {
 }
 
 // @public
-export type GeoJsonObjectType = string;
+export type GeoJsonObjectType = "Point" | "MultiPoint" | "LineString" | "MultiLineString" | "Polygon" | "MultiPolygon" | "GeometryCollection" | "Feature" | "FeatureCollection";
 
 // @public (undocumented)
 export type GeoJsonObjectUnion = GeoJsonObject | GeoJsonGeometryUnion | GeoJsonFeature | GeoJsonFeatureCollection;
@@ -179,7 +230,15 @@ export interface GeoJsonPolygonData {
 }
 
 // @public
-export enum KnownConnectorSet {
+export interface Geometry {
+    readonly id?: string;
+}
+
+// @public
+export type JsonFormat = string;
+
+// @public
+export enum KnownElectricVehicleConnector {
     Chademo = "Chademo",
     IEC60309AC1PhaseBlue = "IEC60309AC1PhaseBlue",
     IEC60309DCWhite = "IEC60309DCWhite",
@@ -194,18 +253,6 @@ export enum KnownConnectorSet {
 }
 
 // @public
-export enum KnownEntityType {
-    Country = "Country",
-    CountrySecondarySubdivision = "CountrySecondarySubdivision",
-    CountrySubdivision = "CountrySubdivision",
-    CountryTertiarySubdivision = "CountryTertiarySubdivision",
-    Municipality = "Municipality",
-    MunicipalitySubdivision = "MunicipalitySubdivision",
-    Neighbourhood = "Neighbourhood",
-    PostalCodeArea = "PostalCodeArea"
-}
-
-// @public
 export enum KnownEntryPointType {
     // (undocumented)
     Main = "main",
@@ -214,136 +261,330 @@ export enum KnownEntryPointType {
 }
 
 // @public
-export enum KnownGeoJsonObjectType {
-    GeoJsonFeature = "Feature",
-    GeoJsonFeatureCollection = "FeatureCollection",
-    GeoJsonGeometryCollection = "GeometryCollection",
-    GeoJsonLineString = "LineString",
-    GeoJsonMultiLineString = "MultiLineString",
-    GeoJsonMultiPoint = "MultiPoint",
-    GeoJsonMultiPolygon = "MultiPolygon",
-    GeoJsonPoint = "Point",
-    GeoJsonPolygon = "Polygon"
+export enum KnownGeographicEntityType {
+    // (undocumented)
+    Country = "Country",
+    // (undocumented)
+    CountrySecondarySubdivision = "CountrySecondarySubdivision",
+    // (undocumented)
+    CountrySubdivision = "CountrySubdivision",
+    // (undocumented)
+    CountryTertiarySubdivision = "CountryTertiarySubdivision",
+    // (undocumented)
+    Municipality = "Municipality",
+    // (undocumented)
+    MunicipalitySubdivision = "MunicipalitySubdivision",
+    // (undocumented)
+    Neighbourhood = "Neighbourhood",
+    // (undocumented)
+    PostalCodeArea = "PostalCodeArea"
 }
 
 // @public
-export enum KnownOpeningHours {
-    NextSevenDays = "nextSevenDays"
-}
-
-// @public
-export enum KnownResponseFormat {
+export enum KnownJsonFormat {
     Json = "json"
 }
 
 // @public
-export enum KnownSearchIndexSet {
-    Addr = "Addr",
-    Geo = "Geo",
-    PAD = "PAD",
-    POI = "POI",
-    Str = "Str",
-    Xstr = "Xstr"
+export enum KnownLocalizedMapView {
+    AE = "AE",
+    AR = "AR",
+    Auto = "Auto",
+    BH = "BH",
+    IN = "IN",
+    IQ = "IQ",
+    JO = "JO",
+    KW = "KW",
+    LB = "LB",
+    MA = "MA",
+    OM = "OM",
+    PK = "PK",
+    PS = "PS",
+    QA = "QA",
+    SA = "SA",
+    SY = "SY",
+    Unified = "Unified",
+    YE = "YE"
 }
 
 // @public
-export enum KnownTextFormat {
+export enum KnownMatchType {
+    // (undocumented)
+    AddressPoint = "AddressPoint",
+    // (undocumented)
+    HouseNumberRange = "HouseNumberRange",
+    // (undocumented)
+    Street = "Street"
+}
+
+// @public
+export enum KnownOperatingHoursRange {
+    NextSevenDays = "nextSevenDays"
+}
+
+// @public
+export enum KnownPointOfInterestExtendedPostalCodes {
+    // (undocumented)
+    None = "None",
+    // (undocumented)
+    POI = "POI"
+}
+
+// @public
+export enum KnownQueryType {
+    Global = "NON_NEAR",
+    Nearby = "NEARBY"
+}
+
+// @public
+export enum KnownResponseFormat {
     Json = "json",
     Xml = "xml"
 }
 
 // @public
-export type OpeningHours = string;
+export enum KnownRoadUseType {
+    // (undocumented)
+    Arterial = "Arterial",
+    // (undocumented)
+    LimitedAccess = "LimitedAccess",
+    // (undocumented)
+    LocalStreet = "LocalStreet",
+    // (undocumented)
+    Ramp = "Ramp",
+    // (undocumented)
+    Rotary = "Rotary",
+    // (undocumented)
+    Terminal = "Terminal"
+}
 
 // @public
-export interface PoiCategoryResult {
-    readonly childCategoryIds?: number[];
+export enum KnownSearchAddressResultType {
+    // (undocumented)
+    AddressRange = "Address Range",
+    // (undocumented)
+    CrossStreet = "Cross Street",
+    // (undocumented)
+    Geography = "Geography",
+    // (undocumented)
+    POI = "POI",
+    // (undocumented)
+    PointAddress = "Point Address",
+    // (undocumented)
+    Street = "Street"
+}
+
+// @public
+export enum KnownSearchIndexes {
+    Address = "Addr",
+    CrossStreets = "Xstr",
+    Geographies = "Geo",
+    PointAddresses = "PAD",
+    PointsOfInterest = "POI",
+    Streets = "Str"
+}
+
+// @public
+export interface LatLongPairAbbreviated {
+    lat?: number;
+    lon?: number;
+}
+
+// @public
+export type LocalizedMapView = string;
+
+// @public
+export type MatchType = string;
+
+// @public
+export interface OperatingHours {
+    readonly mode?: string;
+    readonly timeRanges?: OperatingHoursTimeRange[];
+}
+
+// @public
+export type OperatingHoursRange = string;
+
+// @public
+export interface OperatingHoursTime {
+    readonly date?: string;
+    readonly hour?: number;
+    readonly minute?: number;
+}
+
+// @public
+export interface OperatingHoursTimeRange {
+    endTime?: OperatingHoursTime;
+    startTime?: OperatingHoursTime;
+}
+
+// @public
+export interface PointOfInterest {
+    readonly brands?: BrandName[];
+    readonly categorySet?: PointOfInterestCategorySet[];
+    readonly classifications?: Classification[];
+    readonly name?: string;
+    operatingHours?: OperatingHours;
+    readonly phone?: string;
+    readonly url?: string;
+}
+
+// @public
+export interface PointOfInterestCategory {
+    readonly childIds?: number[];
     readonly id?: number;
     readonly name?: string;
     readonly synonyms?: string[];
 }
 
 // @public
-export type ResponseFormat = string;
-
-// @public
-export interface Search {
-    beginPostSearchAddressBatch(format: ResponseFormat, searchAddressBatchRequestBody: BatchRequestBody, options?: SearchPostSearchAddressBatchOptionalParams): Promise<PollerLike<PollOperationState<SearchPostSearchAddressBatchResponse>, SearchPostSearchAddressBatchResponse>>;
-    beginPostSearchAddressBatchAndWait(format: ResponseFormat, searchAddressBatchRequestBody: BatchRequestBody, options?: SearchPostSearchAddressBatchOptionalParams): Promise<SearchPostSearchAddressBatchResponse>;
-    beginPostSearchAddressReverseBatch(format: ResponseFormat, searchAddressReverseBatchRequestBody: BatchRequestBody, options?: SearchPostSearchAddressReverseBatchOptionalParams): Promise<PollerLike<PollOperationState<SearchPostSearchAddressReverseBatchResponse>, SearchPostSearchAddressReverseBatchResponse>>;
-    beginPostSearchAddressReverseBatchAndWait(format: ResponseFormat, searchAddressReverseBatchRequestBody: BatchRequestBody, options?: SearchPostSearchAddressReverseBatchOptionalParams): Promise<SearchPostSearchAddressReverseBatchResponse>;
-    beginPostSearchFuzzyBatch(format: ResponseFormat, searchFuzzyBatchRequestBody: BatchRequestBody, options?: SearchPostSearchFuzzyBatchOptionalParams): Promise<PollerLike<PollOperationState<SearchPostSearchFuzzyBatchResponse>, SearchPostSearchFuzzyBatchResponse>>;
-    beginPostSearchFuzzyBatchAndWait(format: ResponseFormat, searchFuzzyBatchRequestBody: BatchRequestBody, options?: SearchPostSearchFuzzyBatchOptionalParams): Promise<SearchPostSearchFuzzyBatchResponse>;
-    getSearchAddress(format: TextFormat, query: string, options?: SearchGetSearchAddressOptionalParams): Promise<SearchGetSearchAddressResponse>;
-    getSearchAddressReverse(format: TextFormat, query: string, options?: SearchGetSearchAddressReverseOptionalParams): Promise<SearchGetSearchAddressReverseResponse>;
-    getSearchAddressReverseCrossStreet(format: TextFormat, query: string, options?: SearchGetSearchAddressReverseCrossStreetOptionalParams): Promise<SearchGetSearchAddressReverseCrossStreetResponse>;
-    getSearchAddressStructured(format: TextFormat, options?: SearchGetSearchAddressStructuredOptionalParams): Promise<SearchGetSearchAddressStructuredResponse>;
-    getSearchFuzzy(format: TextFormat, query: string, options?: SearchGetSearchFuzzyOptionalParams): Promise<SearchGetSearchFuzzyResponse>;
-    getSearchNearby(format: TextFormat, lat: number, lon: number, options?: SearchGetSearchNearbyOptionalParams): Promise<SearchGetSearchNearbyResponse>;
-    getSearchPOI(format: TextFormat, query: string, options?: SearchGetSearchPOIOptionalParams): Promise<SearchGetSearchPOIResponse>;
-    getSearchPOICategory(format: TextFormat, query: string, options?: SearchGetSearchPOICategoryOptionalParams): Promise<SearchGetSearchPOICategoryResponse>;
-    getSearchPOICategoryTreePreview(format: ResponseFormat, options?: SearchGetSearchPOICategoryTreePreviewOptionalParams): Promise<SearchGetSearchPOICategoryTreePreviewResponse>;
-    getSearchPolygon(format: ResponseFormat, geometries: string[], options?: SearchGetSearchPolygonOptionalParams): Promise<SearchGetSearchPolygonResponse>;
-    postSearchAddressBatchSync(format: ResponseFormat, searchAddressBatchRequestBody: BatchRequestBody, options?: SearchPostSearchAddressBatchSyncOptionalParams): Promise<SearchPostSearchAddressBatchSyncResponse>;
-    postSearchAddressReverseBatchSync(format: ResponseFormat, searchAddressReverseBatchRequestBody: BatchRequestBody, options?: SearchPostSearchAddressReverseBatchSyncOptionalParams): Promise<SearchPostSearchAddressReverseBatchSyncResponse>;
-    postSearchAlongRoute(format: TextFormat, query: string, maxDetourTime: number, searchAlongRouteRequestBody: SearchAlongRouteRequestBody, options?: SearchPostSearchAlongRouteOptionalParams): Promise<SearchPostSearchAlongRouteResponse>;
-    postSearchFuzzyBatchSync(format: ResponseFormat, searchFuzzyBatchRequestBody: BatchRequestBody, options?: SearchPostSearchFuzzyBatchSyncOptionalParams): Promise<SearchPostSearchFuzzyBatchSyncResponse>;
-    postSearchInsideGeometry(format: TextFormat, query: string, searchInsideGeometryRequestBody: SearchInsideGeometryRequestBody, options?: SearchPostSearchInsideGeometryOptionalParams): Promise<SearchPostSearchInsideGeometryResponse>;
+export interface PointOfInterestCategorySet {
+    readonly id?: number;
 }
 
 // @public
-export type SearchAddressBatchItem = BatchItem & {
+export interface PointOfInterestCategoryTreeResult {
+    readonly categories?: PointOfInterestCategory[];
+}
+
+// @public
+export type PointOfInterestExtendedPostalCodes = string;
+
+// @public (undocumented)
+export interface Polygon {
+    readonly error?: string;
+    geometryData?: GeoJsonObjectUnion;
+    readonly providerID?: string;
+}
+
+// @public
+export interface PolygonResult {
+    readonly polygons?: Polygon[];
+}
+
+// @public
+export type QueryType = string;
+
+// @public
+export type ResponseFormat = string;
+
+// @public
+export type ReverseSearchAddressBatchItem = BatchResultItem & {
+    readonly response?: ReverseSearchAddressBatchItemResponse;
+};
+
+// @public
+export type ReverseSearchAddressBatchItemResponse = ReverseSearchAddressResult & ErrorResponse & {};
+
+// @public
+export type ReverseSearchAddressBatchProcessResult = BatchResult & {
+    readonly batchItems?: ReverseSearchAddressBatchItem[];
+};
+
+// @public
+export interface ReverseSearchAddressResult {
+    readonly addresses?: ReverseSearchAddressResultItem[];
+    readonly summary?: SearchSummary;
+}
+
+// @public
+export interface ReverseSearchAddressResultItem {
+    readonly address?: Address;
+    readonly matchType?: MatchType;
+    readonly position?: string;
+    readonly roadUse?: RoadUseType[];
+}
+
+// @public
+export interface ReverseSearchCrossStreetAddressResult {
+    readonly addresses?: ReverseSearchCrossStreetAddressResultItem[];
+    readonly summary?: SearchSummary;
+}
+
+// @public
+export interface ReverseSearchCrossStreetAddressResultItem {
+    readonly address?: Address;
+    readonly position?: string;
+}
+
+// @public
+export type RoadUseType = string;
+
+// @public
+export interface Search {
+    beginFuzzySearchBatch(format: JsonFormat, searchFuzzyBatchRequestBody: BatchRequest, options?: SearchFuzzySearchBatchOptionalParams): Promise<PollerLike<PollOperationState<SearchFuzzySearchBatchResponse>, SearchFuzzySearchBatchResponse>>;
+    beginFuzzySearchBatchAndWait(format: JsonFormat, searchFuzzyBatchRequestBody: BatchRequest, options?: SearchFuzzySearchBatchOptionalParams): Promise<SearchFuzzySearchBatchResponse>;
+    beginGetFuzzySearchBatch(batchId: string, options?: SearchGetFuzzySearchBatchOptionalParams): Promise<PollerLike<PollOperationState<SearchGetFuzzySearchBatchResponse>, SearchGetFuzzySearchBatchResponse>>;
+    beginGetFuzzySearchBatchAndWait(batchId: string, options?: SearchGetFuzzySearchBatchOptionalParams): Promise<SearchGetFuzzySearchBatchResponse>;
+    beginGetReverseSearchAddressBatch(batchId: string, options?: SearchGetReverseSearchAddressBatchOptionalParams): Promise<PollerLike<PollOperationState<SearchGetReverseSearchAddressBatchResponse>, SearchGetReverseSearchAddressBatchResponse>>;
+    beginGetReverseSearchAddressBatchAndWait(batchId: string, options?: SearchGetReverseSearchAddressBatchOptionalParams): Promise<SearchGetReverseSearchAddressBatchResponse>;
+    beginGetSearchAddressBatch(batchId: string, options?: SearchGetSearchAddressBatchOptionalParams): Promise<PollerLike<PollOperationState<SearchGetSearchAddressBatchResponse>, SearchGetSearchAddressBatchResponse>>;
+    beginGetSearchAddressBatchAndWait(batchId: string, options?: SearchGetSearchAddressBatchOptionalParams): Promise<SearchGetSearchAddressBatchResponse>;
+    beginReverseSearchAddressBatch(format: JsonFormat, searchAddressReverseBatchRequestBody: BatchRequest, options?: SearchReverseSearchAddressBatchOptionalParams): Promise<PollerLike<PollOperationState<SearchReverseSearchAddressBatchResponse>, SearchReverseSearchAddressBatchResponse>>;
+    beginReverseSearchAddressBatchAndWait(format: JsonFormat, searchAddressReverseBatchRequestBody: BatchRequest, options?: SearchReverseSearchAddressBatchOptionalParams): Promise<SearchReverseSearchAddressBatchResponse>;
+    beginSearchAddressBatch(format: JsonFormat, searchAddressBatchRequestBody: BatchRequest, options?: SearchSearchAddressBatchOptionalParams): Promise<PollerLike<PollOperationState<SearchSearchAddressBatchResponse>, SearchSearchAddressBatchResponse>>;
+    beginSearchAddressBatchAndWait(format: JsonFormat, searchAddressBatchRequestBody: BatchRequest, options?: SearchSearchAddressBatchOptionalParams): Promise<SearchSearchAddressBatchResponse>;
+    fuzzySearch(format: ResponseFormat, query: string, options?: SearchFuzzySearchOptionalParams): Promise<SearchFuzzySearchResponse>;
+    fuzzySearchBatchSync(format: JsonFormat, searchFuzzyBatchRequestBody: BatchRequest, options?: SearchFuzzySearchBatchSyncOptionalParams): Promise<SearchFuzzySearchBatchSyncResponse>;
+    getPointOfInterestCategoryTree(format: JsonFormat, options?: SearchGetPointOfInterestCategoryTreeOptionalParams): Promise<SearchGetPointOfInterestCategoryTreeResponse>;
+    getPolygon(format: JsonFormat, geometryIds: string[], options?: SearchGetPolygonOptionalParams): Promise<SearchGetPolygonResponse>;
+    reverseSearchAddress(format: ResponseFormat, query: number[], options?: SearchReverseSearchAddressOptionalParams): Promise<SearchReverseSearchAddressResponse>;
+    reverseSearchAddressBatchSync(format: JsonFormat, searchAddressReverseBatchRequestBody: BatchRequest, options?: SearchReverseSearchAddressBatchSyncOptionalParams): Promise<SearchReverseSearchAddressBatchSyncResponse>;
+    reverseSearchCrossStreetAddress(format: ResponseFormat, query: number[], options?: SearchReverseSearchCrossStreetAddressOptionalParams): Promise<SearchReverseSearchCrossStreetAddressResponse>;
+    searchAddress(format: ResponseFormat, query: string, options?: SearchSearchAddressOptionalParams): Promise<SearchSearchAddressResponse>;
+    searchAddressBatchSync(format: JsonFormat, searchAddressBatchRequestBody: BatchRequest, options?: SearchSearchAddressBatchSyncOptionalParams): Promise<SearchSearchAddressBatchSyncResponse>;
+    searchAlongRoute(format: ResponseFormat, query: string, maxDetourTime: number, route: SearchAlongRouteRequest, options?: SearchSearchAlongRouteOptionalParams): Promise<SearchSearchAlongRouteResponse>;
+    searchInsideGeometry(format: ResponseFormat, query: string, geometry: SearchInsideGeometryRequest, options?: SearchSearchInsideGeometryOptionalParams): Promise<SearchSearchInsideGeometryResponse>;
+    searchNearbyPointOfInterest(format: ResponseFormat, lat: number, lon: number, options?: SearchSearchNearbyPointOfInterestOptionalParams): Promise<SearchSearchNearbyPointOfInterestResponse>;
+    searchPointOfInterest(format: ResponseFormat, query: string, options?: SearchSearchPointOfInterestOptionalParams): Promise<SearchSearchPointOfInterestResponse>;
+    searchPointOfInterestCategory(format: ResponseFormat, query: string, options?: SearchSearchPointOfInterestCategoryOptionalParams): Promise<SearchSearchPointOfInterestCategoryResponse>;
+    searchStructuredAddress(format: ResponseFormat, options?: SearchSearchStructuredAddressOptionalParams): Promise<SearchSearchStructuredAddressResponse>;
+}
+
+// @public
+export type SearchAddressBatchItem = BatchResultItem & {
     readonly response?: SearchAddressBatchItemResponse;
 };
 
 // @public
-export type SearchAddressBatchItemResponse = SearchCommonResponse & ErrorResponse & {};
+export type SearchAddressBatchItemResponse = SearchAddressResult & ErrorResponse & {};
 
 // @public
-export type SearchAddressBatchResponse = BatchResponse & {
+export type SearchAddressBatchProcessResult = BatchResult & {
     readonly batchItems?: SearchAddressBatchItem[];
 };
 
 // @public
-export type SearchAddressReverseBatchItem = BatchItem & {
-    readonly response?: SearchAddressReverseBatchItemResponse;
-};
-
-// @public
-export type SearchAddressReverseBatchItemResponse = SearchAddressReverseResponse & ErrorResponse & {};
-
-// @public
-export type SearchAddressReverseBatchResponse = BatchResponse & {
-    readonly batchItems?: SearchAddressReverseBatchItem[];
-};
-
-// @public
-export interface SearchAddressReverseCrossStreetResponse {
-    readonly addresses?: SearchAddressReverseCrossStreetResult[];
-    readonly summary?: SearchCommonSummary;
+export interface SearchAddressResult {
+    readonly results?: SearchAddressResultItem[];
+    readonly summary?: SearchSummary;
 }
 
 // @public
-export interface SearchAddressReverseCrossStreetResult {
-    readonly address?: SearchResultAddress;
-    readonly position?: string;
+export interface SearchAddressResultItem {
+    readonly address?: Address;
+    readonly addressRanges?: AddressRanges;
+    readonly dataSources?: DataSources;
+    readonly detourTime?: number;
+    readonly distanceInMeters?: number;
+    // (undocumented)
+    entityType?: GeographicEntityType;
+    readonly entryPoints?: EntryPoint[];
+    readonly id?: string;
+    readonly info?: string;
+    readonly matchType?: MatchType;
+    readonly pointOfInterest?: PointOfInterest;
+    position?: LatLongPairAbbreviated;
+    readonly score?: number;
+    readonly type?: SearchAddressResultType;
+    readonly viewport?: Viewport;
 }
 
 // @public
-export interface SearchAddressReverseResponse {
-    readonly addresses?: SearchAddressReverseResult[];
-    readonly summary?: SearchCommonSummary;
-}
+export type SearchAddressResultType = string;
 
 // @public
-export interface SearchAddressReverseResult {
-    readonly address?: SearchResultAddress;
-    readonly matchType?: string;
-    readonly position?: string;
-}
-
-// @public
-export interface SearchAlongRouteRequestBody {
+export interface SearchAlongRouteRequest {
     route?: GeoJsonLineString;
 }
 
@@ -362,467 +603,353 @@ export class SearchClientContext extends coreClient.ServiceClient {
     // (undocumented)
     apiVersion: string;
     // (undocumented)
-    xMsClientId?: string;
+    clientId?: string;
 }
 
 // @public
 export interface SearchClientOptionalParams extends coreClient.ServiceClientOptions {
     $host?: string;
     apiVersion?: string;
+    clientId?: string;
     endpoint?: string;
-    xMsClientId?: string;
 }
 
 // @public
-export interface SearchCommonResponse {
-    readonly results?: SearchCommonResult[];
-    readonly summary?: SearchCommonSummary;
+export interface SearchFuzzySearchBatchHeaders {
+    location?: string;
 }
 
 // @public
-export interface SearchCommonResult {
-    readonly address?: SearchResultAddress;
-    readonly addressRanges?: SearchResultAddressRanges;
-    readonly dataSources?: DataSources;
-    readonly detourTime?: number;
-    readonly dist?: number;
-    entityType?: EntityType;
-    readonly entryPoints?: SearchResultEntryPoint[];
-    readonly id?: string;
-    readonly info?: string;
-    readonly matchType?: string;
-    readonly poi?: SearchResultPoi;
-    position?: CoordinatesPairAbbreviated;
-    readonly score?: number;
-    readonly type?: string;
-    readonly viewport?: SearchResultViewport;
+export interface SearchFuzzySearchBatchOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
 }
 
 // @public
-export interface SearchCommonSummary {
-    readonly fuzzyLevel?: number;
-    readonly geoBias?: SearchCommonSummaryGeoBias;
-    readonly limit?: number;
-    readonly numResults?: number;
-    readonly offset?: number;
-    readonly query?: string;
-    readonly queryTime?: number;
-    readonly queryType?: string;
-    readonly totalResults?: number;
+export type SearchFuzzySearchBatchResponse = SearchAddressBatchProcessResult;
+
+// @public
+export interface SearchFuzzySearchBatchSyncOptionalParams extends coreClient.OperationOptions {
 }
 
 // @public
-export type SearchCommonSummaryGeoBias = CoordinatesPairAbbreviated & {};
+export type SearchFuzzySearchBatchSyncResponse = SearchAddressBatchProcessResult;
 
 // @public
-export type SearchFuzzyBatchItem = BatchItem & {
-    readonly response?: SearchFuzzyBatchItemResponse;
-};
-
-// @public
-export type SearchFuzzyBatchItemResponse = SearchCommonResponse & ErrorResponse & {};
-
-// @public
-export type SearchFuzzyBatchResponse = BatchResponse & {
-    readonly batchItems?: SearchFuzzyBatchItem[];
-};
-
-// @public
-export interface SearchGetSearchAddressOptionalParams extends coreClient.OperationOptions {
+export interface SearchFuzzySearchOptionalParams extends coreClient.OperationOptions {
+    brandFilter?: string[];
     btmRight?: string;
-    countrySet?: string[];
-    extendedPostalCodesFor?: string;
+    categoryFilter?: number[];
+    countryFilter?: string[];
+    electricVehicleConnectorFilter?: ElectricVehicleConnector[];
+    entityType?: GeographicEntityType;
+    extendedPostalCodesFor?: SearchIndexes[];
+    idxSet?: SearchIndexes[];
+    isTypeAhead?: boolean;
     language?: string;
     lat?: number;
-    limit?: number;
+    localizedMapView?: LocalizedMapView;
     lon?: number;
-    ofs?: number;
-    radius?: number;
+    maxFuzzyLevel?: number;
+    minFuzzyLevel?: number;
+    operatingHours?: OperatingHoursRange;
+    radiusInMeters?: number;
+    skip?: number;
+    top?: number;
     topLeft?: string;
-    typeahead?: boolean;
-    view?: string;
 }
 
 // @public
-export type SearchGetSearchAddressResponse = SearchCommonResponse;
+export type SearchFuzzySearchResponse = SearchAddressResult;
 
 // @public
-export interface SearchGetSearchAddressReverseCrossStreetOptionalParams extends coreClient.OperationOptions {
-    heading?: number;
+export interface SearchGetFuzzySearchBatchHeaders {
+    location?: string;
+}
+
+// @public
+export interface SearchGetFuzzySearchBatchOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
+}
+
+// @public
+export type SearchGetFuzzySearchBatchResponse = SearchAddressBatchProcessResult;
+
+// @public
+export interface SearchGetPointOfInterestCategoryTreeOptionalParams extends coreClient.OperationOptions {
     language?: string;
-    limit?: number;
-    radius?: number;
-    view?: string;
 }
 
 // @public
-export type SearchGetSearchAddressReverseCrossStreetResponse = SearchAddressReverseCrossStreetResponse;
+export type SearchGetPointOfInterestCategoryTreeResponse = PointOfInterestCategoryTreeResult;
 
 // @public
-export interface SearchGetSearchAddressReverseOptionalParams extends coreClient.OperationOptions {
+export interface SearchGetPolygonOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type SearchGetPolygonResponse = PolygonResult;
+
+// @public
+export interface SearchGetReverseSearchAddressBatchHeaders {
+    location?: string;
+}
+
+// @public
+export interface SearchGetReverseSearchAddressBatchOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
+}
+
+// @public
+export type SearchGetReverseSearchAddressBatchResponse = ReverseSearchAddressBatchProcessResult;
+
+// @public
+export interface SearchGetSearchAddressBatchHeaders {
+    location?: string;
+}
+
+// @public
+export interface SearchGetSearchAddressBatchOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
+}
+
+// @public
+export type SearchGetSearchAddressBatchResponse = SearchAddressBatchProcessResult;
+
+// @public
+export type SearchIndexes = string;
+
+// @public
+export interface SearchInsideGeometryRequest {
+    geometry?: GeoJsonObjectUnion;
+}
+
+// @public
+export interface SearchReverseSearchAddressBatchHeaders {
+    location?: string;
+}
+
+// @public
+export interface SearchReverseSearchAddressBatchOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
+}
+
+// @public
+export type SearchReverseSearchAddressBatchResponse = ReverseSearchAddressBatchProcessResult;
+
+// @public
+export interface SearchReverseSearchAddressBatchSyncOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type SearchReverseSearchAddressBatchSyncResponse = ReverseSearchAddressBatchProcessResult;
+
+// @public
+export interface SearchReverseSearchAddressOptionalParams extends coreClient.OperationOptions {
     allowFreeformNewline?: boolean;
-    entityType?: EntityType;
+    entityType?: GeographicEntityType;
     heading?: number;
+    includeMatchType?: boolean;
+    includeRoadUse?: boolean;
+    includeSpeedLimit?: boolean;
     language?: string;
+    localizedMapView?: LocalizedMapView;
     numberParam?: string;
-    radius?: number;
-    returnMatchType?: boolean;
-    returnRoadUse?: boolean;
-    returnSpeedLimit?: boolean;
-    roadUse?: string;
-    view?: string;
+    radiusInMeters?: number;
+    roadUse?: RoadUseType[];
 }
 
 // @public
-export type SearchGetSearchAddressReverseResponse = SearchAddressReverseResponse;
+export type SearchReverseSearchAddressResponse = ReverseSearchAddressResult;
 
 // @public
-export interface SearchGetSearchAddressStructuredOptionalParams extends coreClient.OperationOptions {
+export interface SearchReverseSearchCrossStreetAddressOptionalParams extends coreClient.OperationOptions {
+    heading?: number;
+    language?: string;
+    localizedMapView?: LocalizedMapView;
+    radiusInMeters?: number;
+    top?: number;
+}
+
+// @public
+export type SearchReverseSearchCrossStreetAddressResponse = ReverseSearchCrossStreetAddressResult;
+
+// @public
+export interface SearchSearchAddressBatchHeaders {
+    location?: string;
+}
+
+// @public
+export interface SearchSearchAddressBatchOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
+}
+
+// @public
+export type SearchSearchAddressBatchResponse = SearchAddressBatchProcessResult;
+
+// @public
+export interface SearchSearchAddressBatchSyncOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type SearchSearchAddressBatchSyncResponse = SearchAddressBatchProcessResult;
+
+// @public
+export interface SearchSearchAddressOptionalParams extends coreClient.OperationOptions {
+    btmRight?: string;
+    countryFilter?: string[];
+    entityType?: GeographicEntityType;
+    extendedPostalCodesFor?: SearchIndexes[];
+    isTypeAhead?: boolean;
+    language?: string;
+    lat?: number;
+    localizedMapView?: LocalizedMapView;
+    lon?: number;
+    radiusInMeters?: number;
+    skip?: number;
+    top?: number;
+    topLeft?: string;
+}
+
+// @public
+export type SearchSearchAddressResponse = SearchAddressResult;
+
+// @public
+export interface SearchSearchAlongRouteOptionalParams extends coreClient.OperationOptions {
+    brandFilter?: string[];
+    categoryFilter?: number[];
+    electricVehicleConnectorFilter?: ElectricVehicleConnector[];
+    localizedMapView?: LocalizedMapView;
+    operatingHours?: OperatingHoursRange;
+    top?: number;
+}
+
+// @public
+export type SearchSearchAlongRouteResponse = SearchAddressResult;
+
+// @public
+export interface SearchSearchInsideGeometryOptionalParams extends coreClient.OperationOptions {
+    categoryFilter?: number[];
+    extendedPostalCodesFor?: SearchIndexes[];
+    idxSet?: SearchIndexes[];
+    language?: string;
+    localizedMapView?: LocalizedMapView;
+    operatingHours?: OperatingHoursRange;
+    top?: number;
+}
+
+// @public
+export type SearchSearchInsideGeometryResponse = SearchAddressResult;
+
+// @public
+export interface SearchSearchNearbyPointOfInterestOptionalParams extends coreClient.OperationOptions {
+    brandFilter?: string[];
+    categoryFilter?: number[];
+    countryFilter?: string[];
+    electricVehicleConnectorFilter?: ElectricVehicleConnector[];
+    extendedPostalCodesFor?: SearchIndexes[];
+    language?: string;
+    localizedMapView?: LocalizedMapView;
+    radiusInMeters?: number;
+    skip?: number;
+    top?: number;
+}
+
+// @public
+export type SearchSearchNearbyPointOfInterestResponse = SearchAddressResult;
+
+// @public
+export interface SearchSearchPointOfInterestCategoryOptionalParams extends coreClient.OperationOptions {
+    brandFilter?: string[];
+    btmRight?: string;
+    categoryFilter?: number[];
+    countryFilter?: string[];
+    electricVehicleConnectorFilter?: ElectricVehicleConnector[];
+    extendedPostalCodesFor?: SearchIndexes[];
+    isTypeAhead?: boolean;
+    language?: string;
+    lat?: number;
+    localizedMapView?: LocalizedMapView;
+    lon?: number;
+    operatingHours?: OperatingHoursRange;
+    radiusInMeters?: number;
+    skip?: number;
+    top?: number;
+    topLeft?: string;
+}
+
+// @public
+export type SearchSearchPointOfInterestCategoryResponse = SearchAddressResult;
+
+// @public
+export interface SearchSearchPointOfInterestOptionalParams extends coreClient.OperationOptions {
+    brandFilter?: string[];
+    btmRight?: string;
+    categoryFilter?: number[];
+    countryFilter?: string[];
+    electricVehicleConnectorFilter?: ElectricVehicleConnector[];
+    extendedPostalCodesFor?: PointOfInterestExtendedPostalCodes[];
+    isTypeAhead?: boolean;
+    language?: string;
+    lat?: number;
+    localizedMapView?: LocalizedMapView;
+    lon?: number;
+    operatingHours?: OperatingHoursRange;
+    radiusInMeters?: number;
+    skip?: number;
+    top?: number;
+    topLeft?: string;
+}
+
+// @public
+export type SearchSearchPointOfInterestResponse = SearchAddressResult;
+
+// @public
+export interface SearchSearchStructuredAddressOptionalParams extends coreClient.OperationOptions {
     countryCode?: string;
     countrySecondarySubdivision?: string;
     countrySubdivision?: string;
     countryTertiarySubdivision?: string;
     crossStreet?: string;
-    extendedPostalCodesFor?: string;
+    entityType?: GeographicEntityType;
+    extendedPostalCodesFor?: SearchIndexes[];
     language?: string;
-    limit?: number;
+    localizedMapView?: LocalizedMapView;
     municipality?: string;
     municipalitySubdivision?: string;
-    ofs?: number;
     postalCode?: string;
+    skip?: number;
     streetName?: string;
     streetNumber?: string;
-    view?: string;
+    top?: number;
 }
 
 // @public
-export type SearchGetSearchAddressStructuredResponse = SearchCommonResponse;
+export type SearchSearchStructuredAddressResponse = SearchAddressResult;
 
 // @public
-export interface SearchGetSearchFuzzyOptionalParams extends coreClient.OperationOptions {
-    brandSet?: string[];
-    btmRight?: string;
-    categorySet?: number[];
-    connectorSet?: ConnectorSet[];
-    countrySet?: string[];
-    extendedPostalCodesFor?: string;
-    idxSet?: SearchIndexSet[];
-    language?: string;
-    lat?: number;
-    limit?: number;
-    lon?: number;
-    maxFuzzyLevel?: number;
-    minFuzzyLevel?: number;
-    ofs?: number;
-    openingHours?: OpeningHours;
-    radius?: number;
-    topLeft?: string;
-    typeahead?: boolean;
-    view?: string;
+export interface SearchSummary {
+    readonly fuzzyLevel?: number;
+    readonly geoBias?: LatLongPairAbbreviated;
+    readonly numResults?: number;
+    readonly query?: string;
+    readonly queryTime?: number;
+    readonly queryType?: QueryType;
+    readonly skip?: number;
+    readonly top?: number;
+    readonly totalResults?: number;
 }
 
 // @public
-export type SearchGetSearchFuzzyResponse = SearchCommonResponse;
-
-// @public
-export interface SearchGetSearchNearbyOptionalParams extends coreClient.OperationOptions {
-    brandSet?: string[];
-    categorySet?: number[];
-    connectorSet?: ConnectorSet[];
-    countrySet?: string[];
-    extendedPostalCodesFor?: string;
-    language?: string;
-    limit?: number;
-    ofs?: number;
-    radius?: number;
-    view?: string;
+export interface Viewport {
+    btmRightPoint?: LatLongPairAbbreviated;
+    topLeftPoint?: LatLongPairAbbreviated;
 }
-
-// @public
-export type SearchGetSearchNearbyResponse = SearchCommonResponse;
-
-// @public
-export interface SearchGetSearchPOICategoryOptionalParams extends coreClient.OperationOptions {
-    brandSet?: string[];
-    btmRight?: string;
-    categorySet?: number[];
-    connectorSet?: ConnectorSet[];
-    countrySet?: string[];
-    extendedPostalCodesFor?: string;
-    language?: string;
-    lat?: number;
-    limit?: number;
-    lon?: number;
-    ofs?: number;
-    openingHours?: OpeningHours;
-    radius?: number;
-    topLeft?: string;
-    typeahead?: boolean;
-    view?: string;
-}
-
-// @public
-export type SearchGetSearchPOICategoryResponse = SearchCommonResponse;
-
-// @public
-export interface SearchGetSearchPOICategoryTreePreviewOptionalParams extends coreClient.OperationOptions {
-    language?: string;
-}
-
-// @public
-export type SearchGetSearchPOICategoryTreePreviewResponse = SearchPoiCategoryTreeResponse;
-
-// @public
-export interface SearchGetSearchPOIOptionalParams extends coreClient.OperationOptions {
-    brandSet?: string[];
-    btmRight?: string;
-    categorySet?: number[];
-    connectorSet?: ConnectorSet[];
-    countrySet?: string[];
-    extendedPostalCodesFor?: string;
-    language?: string;
-    lat?: number;
-    limit?: number;
-    lon?: number;
-    ofs?: number;
-    openingHours?: OpeningHours;
-    radius?: number;
-    topLeft?: string;
-    typeahead?: boolean;
-    view?: string;
-}
-
-// @public
-export type SearchGetSearchPOIResponse = SearchCommonResponse;
-
-// @public
-export interface SearchGetSearchPolygonOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type SearchGetSearchPolygonResponse = SearchPolygonResponse;
-
-// @public
-export type SearchIndexSet = string;
-
-// @public
-export interface SearchInsideGeometryRequestBody {
-    geometry?: Record<string, unknown>;
-}
-
-// @public
-export interface SearchPoiCategoryTreeResponse {
-    readonly poiCategories?: PoiCategoryResult[];
-}
-
-// @public
-export interface SearchPolygonResponse {
-    readonly additionalData?: SearchPolygonResult[];
-}
-
-// @public (undocumented)
-export interface SearchPolygonResult {
-    readonly error?: string;
-    geometryData?: GeoJsonObjectUnion;
-    readonly providerID?: string;
-}
-
-// @public
-export interface SearchPostSearchAddressBatchHeaders {
-    location?: string;
-}
-
-// @public
-export interface SearchPostSearchAddressBatchOptionalParams extends coreClient.OperationOptions {
-    resumeFrom?: string;
-    updateIntervalInMs?: number;
-}
-
-// @public
-export type SearchPostSearchAddressBatchResponse = SearchAddressBatchResponse;
-
-// @public
-export interface SearchPostSearchAddressBatchSyncOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type SearchPostSearchAddressBatchSyncResponse = SearchAddressBatchResponse;
-
-// @public
-export interface SearchPostSearchAddressReverseBatchHeaders {
-    location?: string;
-}
-
-// @public
-export interface SearchPostSearchAddressReverseBatchOptionalParams extends coreClient.OperationOptions {
-    resumeFrom?: string;
-    updateIntervalInMs?: number;
-}
-
-// @public
-export type SearchPostSearchAddressReverseBatchResponse = SearchAddressReverseBatchResponse;
-
-// @public
-export interface SearchPostSearchAddressReverseBatchSyncOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type SearchPostSearchAddressReverseBatchSyncResponse = SearchAddressReverseBatchResponse;
-
-// @public
-export interface SearchPostSearchAlongRouteOptionalParams extends coreClient.OperationOptions {
-    brandSet?: string[];
-    categorySet?: number[];
-    connectorSet?: ConnectorSet[];
-    limit?: number;
-    openingHours?: OpeningHours;
-    view?: string;
-}
-
-// @public
-export type SearchPostSearchAlongRouteResponse = SearchCommonResponse;
-
-// @public
-export interface SearchPostSearchFuzzyBatchHeaders {
-    location?: string;
-}
-
-// @public
-export interface SearchPostSearchFuzzyBatchOptionalParams extends coreClient.OperationOptions {
-    resumeFrom?: string;
-    updateIntervalInMs?: number;
-}
-
-// @public
-export type SearchPostSearchFuzzyBatchResponse = SearchFuzzyBatchResponse;
-
-// @public
-export interface SearchPostSearchFuzzyBatchSyncOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type SearchPostSearchFuzzyBatchSyncResponse = SearchFuzzyBatchResponse;
-
-// @public
-export interface SearchPostSearchInsideGeometryOptionalParams extends coreClient.OperationOptions {
-    categorySet?: number[];
-    extendedPostalCodesFor?: string;
-    idxSet?: SearchIndexSet[];
-    language?: string;
-    limit?: number;
-    openingHours?: OpeningHours;
-    view?: string;
-}
-
-// @public
-export type SearchPostSearchInsideGeometryResponse = SearchCommonResponse;
-
-// @public
-export interface SearchResultAddress {
-    readonly boundingBox?: Record<string, unknown>;
-    readonly buildingNumber?: string;
-    readonly country?: string;
-    readonly countryCode?: string;
-    readonly countryCodeISO3?: string;
-    readonly countrySecondarySubdivision?: string;
-    readonly countrySubdivision?: string;
-    readonly countrySubdivisionName?: string;
-    readonly countryTertiarySubdivision?: string;
-    readonly crossStreet?: string;
-    readonly extendedPostalCode?: string;
-    readonly freeformAddress?: string;
-    readonly localName?: string;
-    readonly municipality?: string;
-    readonly municipalitySubdivision?: string;
-    readonly postalCode?: string;
-    readonly routeNumbers?: number[];
-    readonly street?: string;
-    readonly streetName?: string;
-    readonly streetNameAndNumber?: string;
-    readonly streetNumber?: string;
-}
-
-// @public
-export interface SearchResultAddressRanges {
-    from?: CoordinatesPairAbbreviated;
-    rangeLeft?: string;
-    rangeRight?: string;
-    to?: CoordinatesPairAbbreviated;
-}
-
-// @public
-export interface SearchResultEntryPoint {
-    position?: CoordinatesPairAbbreviated;
-    readonly type?: EntryPointType;
-}
-
-// @public
-export interface SearchResultPoi {
-    readonly brands?: SearchResultPoiBrand[];
-    readonly categories?: string[];
-    readonly categorySet?: SearchResultPoiCategorySet[];
-    readonly classifications?: SearchResultPoiClassification[];
-    readonly name?: string;
-    openingHours?: SearchResultPoiOpeningHours;
-    readonly phone?: string;
-    readonly url?: string;
-}
-
-// @public
-export interface SearchResultPoiBrand {
-    readonly name?: string;
-}
-
-// @public
-export interface SearchResultPoiCategorySet {
-    readonly id?: number;
-}
-
-// @public
-export interface SearchResultPoiClassification {
-    readonly code?: string;
-    readonly names?: SearchResultPoiClassificationName[];
-}
-
-// @public
-export interface SearchResultPoiClassificationName {
-    readonly name?: string;
-    readonly nameLocale?: string;
-}
-
-// @public
-export interface SearchResultPoiOpeningHours {
-    readonly mode?: string;
-    readonly timeRanges?: SearchResultPoiOpeningHoursTimeRange[];
-}
-
-// @public
-export interface SearchResultPoiOpeningHoursTimeRange {
-    endTime?: SearchResultPoiOpeningHoursTimeRangeTime;
-    startTime?: SearchResultPoiOpeningHoursTimeRangeTime;
-}
-
-// @public
-export interface SearchResultPoiOpeningHoursTimeRangeTime {
-    readonly date?: string;
-    readonly hour?: number;
-    readonly minute?: number;
-}
-
-// @public
-export interface SearchResultViewport {
-    btmRightPoint?: CoordinatesPairAbbreviated;
-    topLeftPoint?: CoordinatesPairAbbreviated;
-}
-
-// @public
-export interface SearchSummaryGeoBias {
-    readonly lat?: number;
-    readonly lon?: number;
-}
-
-// @public
-export type TextFormat = string;
 
 
 // (No @packageDocumentation comment for this package)

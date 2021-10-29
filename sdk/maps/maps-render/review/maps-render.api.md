@@ -8,6 +8,25 @@ import * as coreAuth from '@azure/core-auth';
 import * as coreClient from '@azure/core-client';
 
 // @public
+export interface BoundingBox {
+    northEast: number[];
+    southWest: number[];
+}
+
+// @public
+export interface Copyright {
+    readonly formatVersion?: string;
+    readonly generalCopyrights?: string[];
+    readonly regions?: RegionCopyrights[];
+}
+
+// @public
+export interface CopyrightCaption {
+    readonly copyrightsCaption?: string;
+    readonly formatVersion?: string;
+}
+
+// @public
 export interface ErrorAdditionalInfo {
     readonly info?: Record<string, unknown>;
     readonly type?: string;
@@ -28,33 +47,6 @@ export interface ErrorResponse {
 }
 
 // @public
-export interface GetCopyrightCaptionResult {
-    readonly copyrightsCaption?: string;
-    readonly formatVersion?: string;
-}
-
-// @public
-export interface GetCopyrightForTileResult {
-    readonly formatVersion?: string;
-    readonly generalCopyrights?: string[];
-    readonly regions?: RegionCopyrights[];
-}
-
-// @public
-export interface GetCopyrightForWorldResult {
-    readonly formatVersion?: string;
-    readonly generalCopyrights?: string[];
-    readonly regions?: RegionCopyrights[];
-}
-
-// @public
-export interface GetCopyrightFromBoundingBoxResult {
-    readonly formatVersion?: string;
-    readonly generalCopyrights?: string[];
-    readonly regions?: RegionCopyrights[];
-}
-
-// @public
 export type IncludeText = string;
 
 // @public
@@ -64,8 +56,25 @@ export enum KnownIncludeText {
 }
 
 // @public
-export enum KnownMapImageryStyle {
-    Satellite = "satellite"
+export enum KnownLocalizedMapView {
+    AE = "AE",
+    AR = "AR",
+    Auto = "Auto",
+    BH = "BH",
+    IN = "IN",
+    IQ = "IQ",
+    JO = "JO",
+    KW = "KW",
+    LB = "LB",
+    MA = "MA",
+    OM = "OM",
+    PK = "PK",
+    PS = "PS",
+    QA = "QA",
+    SA = "SA",
+    SY = "SY",
+    Unified = "Unified",
+    YE = "YE"
 }
 
 // @public
@@ -75,29 +84,20 @@ export enum KnownMapImageStyle {
 }
 
 // @public
-export enum KnownMapTileLayer {
-    Basic = "basic",
-    Hybrid = "hybrid",
-    Labels = "labels",
-    Terra = "terra"
-}
-
-// @public
 export enum KnownMapTileSize {
-    FiveHundredTwelve = "512",
-    TwoHundredFiftySix = "256"
-}
-
-// @public
-export enum KnownMapTileStyle {
-    Dark = "dark",
-    Main = "main",
-    ShadedRelief = "shaded_relief"
+    Size256 = "256",
+    Size512 = "512"
 }
 
 // @public
 export enum KnownRasterTileFormat {
     Png = "png"
+}
+
+// @public
+export enum KnownResponseFormat {
+    Json = "json",
+    Xml = "xml"
 }
 
 // @public
@@ -108,56 +108,46 @@ export enum KnownStaticMapLayer {
 }
 
 // @public
-export enum KnownTextFormat {
-    Json = "json",
-    Xml = "xml"
-}
-
-// @public
-export enum KnownTileFormat {
-    Pbf = "pbf",
-    Png = "png"
-}
-
-// @public
 export enum KnownTilesetID {
     MicrosoftBase = "microsoft.base",
     MicrosoftBaseDarkgrey = "microsoft.base.darkgrey",
     MicrosoftBaseHybrid = "microsoft.base.hybrid",
+    MicrosoftBaseHybridDarkgrey = "microsoft.base.hybrid.darkgrey",
     MicrosoftBaseHybridRoad = "microsoft.base.hybrid.road",
     MicrosoftBaseLabels = "microsoft.base.labels",
+    MicrosoftBaseLabelsDarkgrey = "microsoft.base.labels.darkgrey",
     MicrosoftBaseLabelsRoad = "microsoft.base.labels.road",
     MicrosoftBaseRoad = "microsoft.base.road",
     MicrosoftDem = "microsoft.dem",
     MicrosoftDemContours = "microsoft.dem.contours",
     MicrosoftImagery = "microsoft.imagery",
     MicrosoftTerraMain = "microsoft.terra.main",
+    MicrosoftTrafficAbsolute = "microsoft.traffic.absolute",
+    MicrosoftTrafficAbsoluteMain = "microsoft.traffic.absolute.main",
+    MicrosoftTrafficDelay = "microsoft.traffic.delay",
+    MicrosoftTrafficDelayMain = "microsoft.traffic.delay.main",
+    MicrosoftTrafficIncident = "microsoft.traffic.incident",
+    MicrosoftTrafficReducedMain = "microsoft.traffic.reduced.main",
+    MicrosoftTrafficRelative = "microsoft.traffic.relative",
+    MicrosoftTrafficRelativeDark = "microsoft.traffic.relative.dark",
+    MicrosoftTrafficRelativeMain = "microsoft.traffic.relative.main",
     MicrosoftWeatherInfraredMain = "microsoft.weather.infrared.main",
     MicrosoftWeatherRadarMain = "microsoft.weather.radar.main"
 }
 
 // @public
-export enum KnownTileSize {
-    FiveHundredTwelve = "512",
-    TwoHundredFiftySix = "256"
-}
+export type LocalizedMapView = string;
 
 // @public
-export interface MapAttributionResultV2 {
+export interface MapAttribution {
     copyrights?: string[];
 }
-
-// @public
-export type MapImageryStyle = string;
 
 // @public
 export type MapImageStyle = string;
 
 // @public
-export type MapTileLayer = string;
-
-// @public
-export interface MapTilesetResultV2 {
+export interface MapTileset {
     attribution?: string;
     bounds?: number[];
     center?: number[];
@@ -165,8 +155,8 @@ export interface MapTilesetResultV2 {
     description?: string;
     grids?: string[];
     legend?: string;
-    maxzoom?: number;
-    minzoom?: number;
+    maxZoom?: number;
+    minZoom?: number;
     name?: string;
     scheme?: string;
     template?: string;
@@ -177,9 +167,6 @@ export interface MapTilesetResultV2 {
 
 // @public
 export type MapTileSize = string;
-
-// @public
-export type MapTileStyle = string;
 
 // @public
 export type RasterTileFormat = string;
@@ -196,25 +183,18 @@ export interface RegionCopyrightsCountry {
     readonly label?: string;
 }
 
-// @public
-export interface Render {
-    getCopyrightCaption(format: TextFormat, options?: RenderGetCopyrightCaptionOptionalParams): Promise<RenderGetCopyrightCaptionResponse>;
-    getCopyrightForTile(format: TextFormat, zoom: number, xTileIndex: number, yTileIndex: number, options?: RenderGetCopyrightForTileOptionalParams): Promise<RenderGetCopyrightForTileResponse>;
-    getCopyrightForWorld(format: TextFormat, options?: RenderGetCopyrightForWorldOptionalParams): Promise<RenderGetCopyrightForWorldResponse>;
-    getCopyrightFromBoundingBox(format: TextFormat, mincoordinates: string, maxcoordinates: string, options?: RenderGetCopyrightFromBoundingBoxOptionalParams): Promise<RenderGetCopyrightFromBoundingBoxResponse>;
-    getMapImageryTile(format: RasterTileFormat, style: MapImageryStyle, zoom: number, xTileIndex: number, yTileIndex: number, options?: RenderGetMapImageryTileOptionalParams): Promise<RenderGetMapImageryTileResponse>;
-    getMapStateTilePreview(zoom: number, xTileIndex: number, yTileIndex: number, statesetId: string, options?: RenderGetMapStateTilePreviewOptionalParams): Promise<RenderGetMapStateTilePreviewResponse>;
-    getMapStaticImage(format: RasterTileFormat, options?: RenderGetMapStaticImageOptionalParams): Promise<RenderGetMapStaticImageResponse>;
-    getMapTile(format: TileFormat, layer: MapTileLayer, style: MapTileStyle, zoom: number, xTileIndex: number, yTileIndex: number, options?: RenderGetMapTileOptionalParams): Promise<RenderGetMapTileResponse>;
-}
-
 // @public (undocumented)
 export class RenderClient extends RenderClientContext {
     constructor(credentials: coreAuth.TokenCredential, options?: RenderClientOptionalParams);
-    // (undocumented)
-    render: Render;
-    // (undocumented)
-    renderV2: RenderV2;
+    getCopyrightCaption(format: ResponseFormat, options?: RenderClientGetCopyrightCaptionOptionalParams): Promise<RenderClientGetCopyrightCaptionResponse>;
+    getCopyrightForTile(format: ResponseFormat, tileIndex: TileIndex, options?: RenderClientGetCopyrightForTileOptionalParams): Promise<RenderClientGetCopyrightForTileResponse>;
+    getCopyrightForWorld(format: ResponseFormat, options?: RenderClientGetCopyrightForWorldOptionalParams): Promise<RenderClientGetCopyrightForWorldResponse>;
+    getCopyrightFromBoundingBox(format: ResponseFormat, boundingBox: BoundingBox, options?: RenderClientGetCopyrightFromBoundingBoxOptionalParams): Promise<RenderClientGetCopyrightFromBoundingBoxResponse>;
+    getMapAttribution(tilesetId: TilesetID, zoom: number, bounds: number[], options?: RenderClientGetMapAttributionOptionalParams): Promise<RenderClientGetMapAttributionResponse>;
+    getMapStateTile(statesetId: string, tileIndex: TileIndex, options?: RenderClientGetMapStateTileOptionalParams): Promise<RenderClientGetMapStateTileResponse>;
+    getMapStaticImage(format: RasterTileFormat, options?: RenderClientGetMapStaticImageOptionalParams): Promise<RenderClientGetMapStaticImageResponse>;
+    getMapTileset(tilesetId: TilesetID, options?: RenderClientGetMapTilesetOptionalParams): Promise<RenderClientGetMapTilesetResponse>;
+    getMapTileV2(tilesetId: TilesetID, tileIndex: TileIndex, options?: RenderClientGetMapTileV2OptionalParams): Promise<RenderClientGetMapTileV2Response>;
 }
 
 // @public (undocumented)
@@ -223,175 +203,139 @@ export class RenderClientContext extends coreClient.ServiceClient {
     $host: string;
     constructor(credentials: coreAuth.TokenCredential, options?: RenderClientOptionalParams);
     // (undocumented)
-    xMsClientId?: string;
+    apiVersion: string;
+    // (undocumented)
+    clientId?: string;
 }
 
 // @public
-export interface RenderClientOptionalParams extends coreClient.ServiceClientOptions {
-    $host?: string;
-    endpoint?: string;
-    xMsClientId?: string;
+export interface RenderClientGetCopyrightCaptionOptionalParams extends coreClient.OperationOptions {
 }
 
 // @public
-export interface RenderGetCopyrightCaptionOptionalParams extends coreClient.OperationOptions {
+export type RenderClientGetCopyrightCaptionResponse = CopyrightCaption;
+
+// @public
+export interface RenderClientGetCopyrightForTileOptionalParams extends coreClient.OperationOptions {
+    includeText?: IncludeText;
 }
 
 // @public
-export type RenderGetCopyrightCaptionResponse = GetCopyrightCaptionResult;
+export type RenderClientGetCopyrightForTileResponse = Copyright;
 
 // @public
-export interface RenderGetCopyrightForTileOptionalParams extends coreClient.OperationOptions {
-    text?: IncludeText;
+export interface RenderClientGetCopyrightForWorldOptionalParams extends coreClient.OperationOptions {
+    includeText?: IncludeText;
 }
 
 // @public
-export type RenderGetCopyrightForTileResponse = GetCopyrightForTileResult;
+export type RenderClientGetCopyrightForWorldResponse = Copyright;
 
 // @public
-export interface RenderGetCopyrightForWorldOptionalParams extends coreClient.OperationOptions {
-    text?: IncludeText;
+export interface RenderClientGetCopyrightFromBoundingBoxOptionalParams extends coreClient.OperationOptions {
+    includeText?: IncludeText;
 }
 
 // @public
-export type RenderGetCopyrightForWorldResponse = GetCopyrightForWorldResult;
+export type RenderClientGetCopyrightFromBoundingBoxResponse = Copyright;
 
 // @public
-export interface RenderGetCopyrightFromBoundingBoxOptionalParams extends coreClient.OperationOptions {
-    text?: IncludeText;
+export interface RenderClientGetMapAttributionOptionalParams extends coreClient.OperationOptions {
 }
 
 // @public
-export type RenderGetCopyrightFromBoundingBoxResponse = GetCopyrightFromBoundingBoxResult;
+export type RenderClientGetMapAttributionResponse = MapAttribution;
 
 // @public
-export interface RenderGetMapImageryTileHeaders {
+export interface RenderClientGetMapStateTileHeaders {
     contentType?: string;
 }
 
 // @public
-export interface RenderGetMapImageryTileOptionalParams extends coreClient.OperationOptions {
+export interface RenderClientGetMapStateTileOptionalParams extends coreClient.OperationOptions {
 }
 
 // @public
-export type RenderGetMapImageryTileResponse = RenderGetMapImageryTileHeaders & {
+export type RenderClientGetMapStateTileResponse = RenderClientGetMapStateTileHeaders & {
     blobBody?: Promise<Blob>;
     readableStreamBody?: NodeJS.ReadableStream;
 };
 
 // @public
-export interface RenderGetMapStateTilePreviewHeaders {
+export interface RenderClientGetMapStaticImageHeaders {
     contentType?: string;
 }
 
 // @public
-export interface RenderGetMapStateTilePreviewOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type RenderGetMapStateTilePreviewResponse = RenderGetMapStateTilePreviewHeaders & {
-    blobBody?: Promise<Blob>;
-    readableStreamBody?: NodeJS.ReadableStream;
-};
-
-// @public
-export interface RenderGetMapStaticImageHeaders {
-    contentType?: string;
-}
-
-// @public
-export interface RenderGetMapStaticImageOptionalParams extends coreClient.OperationOptions {
-    bbox?: string;
-    center?: string;
+export interface RenderClientGetMapStaticImageOptionalParams extends coreClient.OperationOptions {
+    boundingBox?: number[];
+    center?: number[];
     height?: number;
     language?: string;
     layer?: StaticMapLayer;
+    localizedMapView?: LocalizedMapView;
     path?: string[];
     pins?: string[];
     style?: MapImageStyle;
-    view?: string;
     width?: number;
     zoom?: number;
 }
 
 // @public
-export type RenderGetMapStaticImageResponse = RenderGetMapStaticImageHeaders & {
+export type RenderClientGetMapStaticImageResponse = RenderClientGetMapStaticImageHeaders & {
     blobBody?: Promise<Blob>;
     readableStreamBody?: NodeJS.ReadableStream;
 };
 
 // @public
-export interface RenderGetMapTileHeaders {
+export interface RenderClientGetMapTilesetOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type RenderClientGetMapTilesetResponse = MapTileset;
+
+// @public
+export interface RenderClientGetMapTileV2Headers {
     contentType?: string;
 }
 
 // @public
-export interface RenderGetMapTileOptionalParams extends coreClient.OperationOptions {
+export interface RenderClientGetMapTileV2OptionalParams extends coreClient.OperationOptions {
     language?: string;
+    localizedMapView?: LocalizedMapView;
     tileSize?: MapTileSize;
-    view?: string;
-}
-
-// @public
-export type RenderGetMapTileResponse = RenderGetMapTileHeaders & {
-    blobBody?: Promise<Blob>;
-    readableStreamBody?: NodeJS.ReadableStream;
-};
-
-// @public
-export interface RenderV2 {
-    getMapAttribution(tilesetId: TilesetID, zoom: number, bounds: string[], options?: RenderV2GetMapAttributionOptionalParams): Promise<RenderV2GetMapAttributionResponse>;
-    getMapTilePreview(tilesetId: TilesetID, zoom: number, xTileIndex: number, yTileIndex: number, options?: RenderV2GetMapTilePreviewOptionalParams): Promise<RenderV2GetMapTilePreviewResponse>;
-    getMapTileset(tilesetId: TilesetID, options?: RenderV2GetMapTilesetOptionalParams): Promise<RenderV2GetMapTilesetResponse>;
-}
-
-// @public
-export interface RenderV2GetMapAttributionOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type RenderV2GetMapAttributionResponse = MapAttributionResultV2;
-
-// @public
-export interface RenderV2GetMapTilePreviewHeaders {
-    contentType?: string;
-}
-
-// @public
-export interface RenderV2GetMapTilePreviewOptionalParams extends coreClient.OperationOptions {
-    language?: string;
-    tileSize?: TileSize;
     timeStamp?: Date;
-    view?: string;
 }
 
 // @public
-export type RenderV2GetMapTilePreviewResponse = RenderV2GetMapTilePreviewHeaders & {
+export type RenderClientGetMapTileV2Response = RenderClientGetMapTileV2Headers & {
     blobBody?: Promise<Blob>;
     readableStreamBody?: NodeJS.ReadableStream;
 };
 
 // @public
-export interface RenderV2GetMapTilesetOptionalParams extends coreClient.OperationOptions {
+export interface RenderClientOptionalParams extends coreClient.ServiceClientOptions {
+    $host?: string;
+    apiVersion?: string;
+    clientId?: string;
+    endpoint?: string;
 }
 
 // @public
-export type RenderV2GetMapTilesetResponse = MapTilesetResultV2;
+export type ResponseFormat = string;
 
 // @public
 export type StaticMapLayer = string;
 
 // @public
-export type TextFormat = string;
-
-// @public
-export type TileFormat = string;
+export interface TileIndex {
+    x: number;
+    y: number;
+    z: number;
+}
 
 // @public
 export type TilesetID = string;
-
-// @public
-export type TileSize = string;
 
 
 // (No @packageDocumentation comment for this package)

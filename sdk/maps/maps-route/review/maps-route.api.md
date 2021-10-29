@@ -13,42 +13,45 @@ import { PollOperationState } from '@azure/core-lro';
 export type AlternativeRouteType = string;
 
 // @public
-export interface BatchItem {
-    readonly statusCode?: number;
+export interface BatchRequest {
+    batchItems?: BatchRequestItem[];
 }
 
 // @public
-export interface BatchRequestBody {
-    batchItems?: BatchRequestBodyBatchItemsItem[];
-}
-
-// @public
-export interface BatchRequestBodyBatchItemsItem {
+export interface BatchRequestItem {
     query?: string;
 }
 
 // @public
-export interface BatchResponse {
-    readonly summary?: BatchResponseSummary;
+export interface BatchResult {
+    readonly batchSummary?: BatchResultSummary;
 }
 
 // @public
-export interface BatchResponseSummary {
+export interface BatchResultItem {
+    readonly statusCode?: number;
+}
+
+// @public
+export interface BatchResultSummary {
     readonly successfulRequests?: number;
     readonly totalRequests?: number;
 }
 
 // @public
-export type ComputeTravelTimeFor = string;
+export type ComputeTravelTime = string;
 
 // @public
-export interface CoordinatesPair {
-    latitude?: number;
-    longitude?: number;
-}
+export type DelayMagnitude = string;
 
 // @public
 export type DrivingSide = string;
+
+// @public
+export interface EffectiveSetting {
+    readonly key?: string;
+    readonly value?: string;
+}
 
 // @public
 export interface ErrorAdditionalInfo {
@@ -147,7 +150,7 @@ export interface GeoJsonObject {
 }
 
 // @public
-export type GeoJsonObjectType = string;
+export type GeoJsonObjectType = "Point" | "MultiPoint" | "LineString" | "MultiLineString" | "Polygon" | "MultiPolygon" | "GeometryCollection" | "Feature" | "FeatureCollection";
 
 // @public (undocumented)
 export type GeoJsonObjectUnion = GeoJsonObject | GeoJsonGeometryUnion | GeoJsonFeature | GeoJsonFeatureCollection;
@@ -169,20 +172,16 @@ export interface GeoJsonPolygonData {
 }
 
 // @public
-export interface GetRouteRangeResponse {
-    readonly formatVersion?: string;
-    reachableRange?: RouteRange;
-    report?: RouteResponseReport;
-}
-
-// @public
 export type GuidanceInstructionType = string;
 
 // @public
 export type GuidanceManeuver = string;
 
 // @public
-export type HillinessDegree = string;
+export type InclineLevel = string;
+
+// @public
+export type JsonFormat = string;
 
 // @public
 export type JunctionType = string;
@@ -194,28 +193,24 @@ export enum KnownAlternativeRouteType {
 }
 
 // @public
-export enum KnownComputeTravelTimeFor {
+export enum KnownComputeTravelTime {
     All = "all",
     None = "none"
+}
+
+// @public
+export enum KnownDelayMagnitude {
+    Major = "3",
+    Minor = "1",
+    Moderate = "2",
+    Undefined = "4",
+    Unknown = "0"
 }
 
 // @public
 export enum KnownDrivingSide {
     Left = "LEFT",
     Right = "RIGHT"
-}
-
-// @public
-export enum KnownGeoJsonObjectType {
-    GeoJsonFeature = "Feature",
-    GeoJsonFeatureCollection = "FeatureCollection",
-    GeoJsonGeometryCollection = "GeometryCollection",
-    GeoJsonLineString = "LineString",
-    GeoJsonMultiLineString = "MultiLineString",
-    GeoJsonMultiPoint = "MultiPoint",
-    GeoJsonMultiPolygon = "MultiPolygon",
-    GeoJsonPoint = "Point",
-    GeoJsonPolygon = "Polygon"
 }
 
 // @public
@@ -243,7 +238,7 @@ export enum KnownGuidanceManeuver {
     Follow = "FOLLOW",
     KeepLeft = "KEEP_LEFT",
     KeepRight = "KEEP_RIGHT",
-    MakeUturn = "MAKE_UTURN",
+    MakeUTurn = "MAKE_UTURN",
     MotorwayExitLeft = "MOTORWAY_EXIT_LEFT",
     MotorwayExitRight = "MOTORWAY_EXIT_RIGHT",
     RoundaboutBack = "ROUNDABOUT_BACK",
@@ -257,7 +252,7 @@ export enum KnownGuidanceManeuver {
     SwitchParallelRoad = "SWITCH_PARALLEL_ROAD",
     TakeExit = "TAKE_EXIT",
     TakeFerry = "TAKE_FERRY",
-    TRYMakeUturn = "TRY_MAKE_UTURN",
+    TryMakeUTurn = "TRY_MAKE_UTURN",
     TurnLeft = "TURN_LEFT",
     TurnRight = "TURN_RIGHT",
     WaypointLeft = "WAYPOINT_LEFT",
@@ -266,10 +261,15 @@ export enum KnownGuidanceManeuver {
 }
 
 // @public
-export enum KnownHillinessDegree {
+export enum KnownInclineLevel {
     High = "high",
     Low = "low",
     Normal = "normal"
+}
+
+// @public
+export enum KnownJsonFormat {
+    Json = "json"
 }
 
 // @public
@@ -280,17 +280,43 @@ export enum KnownJunctionType {
 }
 
 // @public
-export enum KnownMagnitudeOfDelay {
-    Four = "4",
-    One = "1",
-    Three = "3",
-    Two = "2",
-    Zero = "0"
+export enum KnownReport {
+    EffectiveSettings = "effectiveSettings"
 }
 
 // @public
 export enum KnownResponseFormat {
-    Json = "json"
+    Json = "json",
+    Xml = "xml"
+}
+
+// @public
+export enum KnownResponseSectionType {
+    CarOrTrain = "CAR_TRAIN",
+    Carpool = "CARPOOL",
+    Country = "COUNTRY",
+    Ferry = "FERRY",
+    Motorway = "MOTORWAY",
+    Pedestrian = "PEDESTRIAN",
+    TollRoad = "TOLL_ROAD",
+    TollVignette = "TOLL_VIGNETTE",
+    Traffic = "TRAFFIC",
+    TravelMode = "TRAVEL_MODE",
+    Tunnel = "TUNNEL",
+    Urban = "URBAN"
+}
+
+// @public
+export enum KnownResponseTravelMode {
+    Bicycle = "bicycle",
+    Bus = "bus",
+    Car = "car",
+    Motorcycle = "motorcycle",
+    Other = "other",
+    Pedestrian = "pedestrian",
+    Taxi = "taxi",
+    Truck = "truck",
+    Van = "van"
 }
 
 // @public
@@ -312,7 +338,7 @@ export enum KnownRouteInstructionsType {
 }
 
 // @public
-export enum KnownRouteRepresentation {
+export enum KnownRouteRepresentationForBestOrder {
     None = "none",
     Polyline = "polyline",
     SummaryOnly = "summaryOnly"
@@ -320,7 +346,7 @@ export enum KnownRouteRepresentation {
 
 // @public
 export enum KnownRouteType {
-    Eco = "eco",
+    Economy = "eco",
     Fastest = "fastest",
     Shortest = "shortest",
     Thrilling = "thrilling"
@@ -328,7 +354,8 @@ export enum KnownRouteType {
 
 // @public
 export enum KnownSectionType {
-    CarTrain = "carTrain",
+    CarOrTrain = "carTrain",
+    Carpool = "carpool",
     Country = "country",
     Ferry = "ferry",
     Motorway = "motorway",
@@ -337,13 +364,16 @@ export enum KnownSectionType {
     TollVignette = "tollVignette",
     Traffic = "traffic",
     TravelMode = "travelMode",
-    Tunnel = "tunnel"
+    Tunnel = "tunnel",
+    Urban = "urban"
 }
 
 // @public
-export enum KnownTextFormat {
-    Json = "json",
-    Xml = "xml"
+export enum KnownSimpleCategory {
+    Jam = "JAM",
+    Other = "OTHER",
+    RoadClosure = "ROAD_CLOSURE",
+    RoadWork = "ROAD_WORK"
 }
 
 // @public
@@ -388,36 +418,29 @@ export enum KnownWindingnessLevel {
 }
 
 // @public
-export type MagnitudeOfDelay = string;
-
-// @public
-export interface PostRouteDirectionsRequestBody {
-    allowVignette?: string[];
-    avoidAreas?: GeoJsonMultiPolygon;
-    avoidVignette?: string[];
-    supportingPoints?: Record<string, unknown>;
+export interface LatLongPair {
+    latitude?: number;
+    longitude?: number;
 }
 
 // @public
-export interface PostRouteMatrixRequestBody {
-    destinations?: GeoJsonMultiPoint;
-    origins?: GeoJsonMultiPoint;
-}
+export type Report = string;
 
 // @public
 export type ResponseFormat = string;
 
 // @public
+export type ResponseSectionType = string;
+
+// @public
+export type ResponseTravelMode = string;
+
+// @public (undocumented)
 export interface Route {
-    beginPostRouteDirectionsBatch(format: ResponseFormat, postRouteDirectionsBatchRequestBody: BatchRequestBody, options?: RoutePostRouteDirectionsBatchOptionalParams): Promise<PollerLike<PollOperationState<RoutePostRouteDirectionsBatchResponse>, RoutePostRouteDirectionsBatchResponse>>;
-    beginPostRouteDirectionsBatchAndWait(format: ResponseFormat, postRouteDirectionsBatchRequestBody: BatchRequestBody, options?: RoutePostRouteDirectionsBatchOptionalParams): Promise<RoutePostRouteDirectionsBatchResponse>;
-    beginPostRouteMatrix(format: ResponseFormat, postRouteMatrixRequestBody: PostRouteMatrixRequestBody, options?: RoutePostRouteMatrixOptionalParams): Promise<PollerLike<PollOperationState<RoutePostRouteMatrixResponse>, RoutePostRouteMatrixResponse>>;
-    beginPostRouteMatrixAndWait(format: ResponseFormat, postRouteMatrixRequestBody: PostRouteMatrixRequestBody, options?: RoutePostRouteMatrixOptionalParams): Promise<RoutePostRouteMatrixResponse>;
-    getRouteDirections(format: TextFormat, query: string, options?: RouteGetRouteDirectionsOptionalParams): Promise<RouteGetRouteDirectionsResponse>;
-    getRouteRange(format: TextFormat, query: string, options?: RouteGetRouteRangeOptionalParams): Promise<RouteGetRouteRangeResponse>;
-    postRouteDirections(format: TextFormat, query: string, postRouteDirectionsRequestBody: PostRouteDirectionsRequestBody, options?: RoutePostRouteDirectionsOptionalParams): Promise<RoutePostRouteDirectionsResponse>;
-    postRouteDirectionsBatchSync(format: ResponseFormat, postRouteDirectionsBatchRequestBody: BatchRequestBody, options?: RoutePostRouteDirectionsBatchSyncOptionalParams): Promise<RoutePostRouteDirectionsBatchSyncResponse>;
-    postRouteMatrixSync(format: ResponseFormat, postRouteMatrixRequestBody: PostRouteMatrixRequestBody, options?: RoutePostRouteMatrixSyncOptionalParams): Promise<RoutePostRouteMatrixSyncResponse>;
+    readonly guidance?: RouteGuidance;
+    readonly legs?: RouteLeg[];
+    readonly sections?: RouteSection[];
+    readonly summary?: RouteSummary;
 }
 
 // @public
@@ -426,8 +449,19 @@ export type RouteAvoidType = string;
 // @public (undocumented)
 export class RouteClient extends RouteClientContext {
     constructor(credentials: coreAuth.TokenCredential, options?: RouteClientOptionalParams);
-    // (undocumented)
-    route: Route;
+    beginGetRouteDirectionsBatch(batchId: string, options?: RouteClientGetRouteDirectionsBatchOptionalParams): Promise<PollerLike<PollOperationState<RouteClientGetRouteDirectionsBatchResponse>, RouteClientGetRouteDirectionsBatchResponse>>;
+    beginGetRouteDirectionsBatchAndWait(batchId: string, options?: RouteClientGetRouteDirectionsBatchOptionalParams): Promise<RouteClientGetRouteDirectionsBatchResponse>;
+    beginGetRouteMatrix(matrixId: string, options?: RouteClientGetRouteMatrixOptionalParams): Promise<PollerLike<PollOperationState<RouteClientGetRouteMatrixResponse>, RouteClientGetRouteMatrixResponse>>;
+    beginGetRouteMatrixAndWait(matrixId: string, options?: RouteClientGetRouteMatrixOptionalParams): Promise<RouteClientGetRouteMatrixResponse>;
+    beginRequestRouteDirectionsBatch(format: JsonFormat, routeDirectionsBatchQueries: BatchRequest, options?: RouteClientRequestRouteDirectionsBatchOptionalParams): Promise<PollerLike<PollOperationState<RouteClientRequestRouteDirectionsBatchResponse>, RouteClientRequestRouteDirectionsBatchResponse>>;
+    beginRequestRouteDirectionsBatchAndWait(format: JsonFormat, routeDirectionsBatchQueries: BatchRequest, options?: RouteClientRequestRouteDirectionsBatchOptionalParams): Promise<RouteClientRequestRouteDirectionsBatchResponse>;
+    beginRequestRouteMatrix(format: JsonFormat, routeMatrixQuery: RouteMatrixQuery, options?: RouteClientRequestRouteMatrixOptionalParams): Promise<PollerLike<PollOperationState<RouteClientRequestRouteMatrixResponse>, RouteClientRequestRouteMatrixResponse>>;
+    beginRequestRouteMatrixAndWait(format: JsonFormat, routeMatrixQuery: RouteMatrixQuery, options?: RouteClientRequestRouteMatrixOptionalParams): Promise<RouteClientRequestRouteMatrixResponse>;
+    getRouteDirections(format: ResponseFormat, routePoints: string, options?: RouteClientGetRouteDirectionsOptionalParams): Promise<RouteClientGetRouteDirectionsResponse>;
+    getRouteDirectionsWithAdditionalParameters(format: ResponseFormat, routePoints: string, routeDirectionParameters: RouteDirectionParameters, options?: RouteClientGetRouteDirectionsWithAdditionalParametersOptionalParams): Promise<RouteClientGetRouteDirectionsWithAdditionalParametersResponse>;
+    getRouteRange(format: ResponseFormat, query: number[], options?: RouteClientGetRouteRangeOptionalParams): Promise<RouteClientGetRouteRangeResponse>;
+    requestRouteDirectionsBatchSync(format: JsonFormat, routeDirectionsBatchQueries: BatchRequest, options?: RouteClientRequestRouteDirectionsBatchSyncOptionalParams): Promise<RouteClientRequestRouteDirectionsBatchSyncResponse>;
+    requestRouteMatrixSync(format: JsonFormat, routeMatrixQuery: RouteMatrixQuery, options?: RouteClientRequestRouteMatrixSyncOptionalParams): Promise<RouteClientRequestRouteMatrixSyncResponse>;
 }
 
 // @public (undocumented)
@@ -438,89 +472,57 @@ export class RouteClientContext extends coreClient.ServiceClient {
     // (undocumented)
     apiVersion: string;
     // (undocumented)
-    xMsClientId?: string;
+    clientId?: string;
 }
 
 // @public
-export interface RouteClientOptionalParams extends coreClient.ServiceClientOptions {
-    $host?: string;
-    apiVersion?: string;
-    endpoint?: string;
-    xMsClientId?: string;
+export interface RouteClientGetRouteDirectionsBatchHeaders {
+    location?: string;
 }
 
 // @public
-export type RouteDirectionsBatchItem = BatchItem & {
-    readonly response?: RouteDirectionsBatchItemResponse;
-};
-
-// @public
-export type RouteDirectionsBatchItemResponse = RouteDirectionsResponse & ErrorResponse & {};
-
-// @public
-export type RouteDirectionsBatchResponse = BatchResponse & {
-    readonly batchItems?: RouteDirectionsBatchItem[];
-};
-
-// @public
-export interface RouteDirectionsResponse {
-    readonly formatVersion?: string;
-    readonly optimizedWaypoints?: RouteOptimizedWaypoint[];
-    report?: RouteResponseReport;
-    readonly routes?: RouteDirectionsResult[];
-}
-
-// @public (undocumented)
-export interface RouteDirectionsResult {
-    readonly guidance?: RouteResultGuidance;
-    readonly legs?: RouteResultLeg[];
-    readonly sections?: RouteResultSection[];
-    readonly summary?: RouteDirectionsSummary;
+export interface RouteClientGetRouteDirectionsBatchOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
 }
 
 // @public
-export interface RouteDirectionsSummary {
-    readonly arrivalTime?: string;
-    readonly departureTime?: string;
-    readonly lengthInMeters?: number;
-    readonly trafficDelayInSeconds?: number;
-    readonly travelTimeInSeconds?: number;
-}
+export type RouteClientGetRouteDirectionsBatchResponse = RouteDirectionsBatchResult;
 
 // @public
-export interface RouteGetRouteDirectionsOptionalParams extends coreClient.OperationOptions {
+export interface RouteClientGetRouteDirectionsOptionalParams extends coreClient.OperationOptions {
     accelerationEfficiency?: number;
     alternativeType?: AlternativeRouteType;
     arriveAt?: Date;
-    auxiliaryPowerInkW?: string;
+    auxiliaryPowerInKw?: number;
     auxiliaryPowerInLitersPerHour?: number;
     avoid?: RouteAvoidType[];
-    computeBestOrder?: boolean;
-    computeTravelTimeFor?: ComputeTravelTimeFor;
-    constantSpeedConsumptionInkWhPerHundredkm?: string;
-    constantSpeedConsumptionInLitersPerHundredkm?: number;
-    currentChargeInkWh?: string;
+    computeBestWaypointOrder?: boolean;
+    computeTravelTime?: ComputeTravelTime;
+    constantSpeedConsumptionInKwHPerHundredKm?: string;
+    constantSpeedConsumptionInLitersPerHundredKm?: string;
+    currentChargeInKwH?: number;
     currentFuelInLiters?: number;
     decelerationEfficiency?: number;
     departAt?: Date;
     downhillEfficiency?: number;
-    fuelEnergyDensityInMJoulesPerLiter?: number;
-    hilliness?: HillinessDegree;
+    filterSectionType?: SectionType;
+    fuelEnergyDensityInMegajoulesPerLiter?: number;
+    inclineLevel?: InclineLevel;
     instructionsType?: RouteInstructionsType;
+    isCommercialVehicle?: boolean;
     language?: string;
     maxAlternatives?: number;
-    maxChargeInkWh?: string;
+    maxChargeInKwH?: number;
     minDeviationDistance?: number;
     minDeviationTime?: number;
-    report?: string;
-    routeRepresentation?: RouteRepresentation;
+    report?: Report;
+    routeRepresentationForBestOrder?: RouteRepresentationForBestOrder;
     routeType?: RouteType;
-    sectionType?: SectionType;
-    traffic?: boolean;
     travelMode?: TravelMode;
     uphillEfficiency?: number;
+    useTrafficData?: boolean;
     vehicleAxleWeight?: number;
-    vehicleCommercial?: boolean;
     vehicleEngineType?: VehicleEngineType;
     vehicleHeading?: number;
     vehicleHeight?: number;
@@ -533,34 +535,96 @@ export interface RouteGetRouteDirectionsOptionalParams extends coreClient.Operat
 }
 
 // @public
-export type RouteGetRouteDirectionsResponse = RouteDirectionsResponse;
+export type RouteClientGetRouteDirectionsResponse = RouteDirections;
 
 // @public
-export interface RouteGetRouteRangeOptionalParams extends coreClient.OperationOptions {
+export interface RouteClientGetRouteDirectionsWithAdditionalParametersOptionalParams extends coreClient.OperationOptions {
     accelerationEfficiency?: number;
-    auxiliaryPowerInkW?: string;
+    alternativeType?: AlternativeRouteType;
+    arriveAt?: Date;
+    auxiliaryPowerInKw?: number;
     auxiliaryPowerInLitersPerHour?: number;
     avoid?: RouteAvoidType[];
-    constantSpeedConsumptionInkWhPerHundredkm?: string;
-    constantSpeedConsumptionInLitersPerHundredkm?: number;
-    currentChargeInkWh?: string;
+    computeBestWaypointOrder?: boolean;
+    computeTravelTime?: ComputeTravelTime;
+    constantSpeedConsumptionInKwHPerHundredKm?: string;
+    constantSpeedConsumptionInLitersPerHundredKm?: string;
+    currentChargeInKwH?: number;
+    currentFuelInLiters?: number;
+    decelerationEfficiency?: number;
+    departAt?: Date;
+    downhillEfficiency?: number;
+    filterSectionType?: SectionType;
+    fuelEnergyDensityInMegajoulesPerLiter?: number;
+    inclineLevel?: InclineLevel;
+    instructionsType?: RouteInstructionsType;
+    isCommercialVehicle?: boolean;
+    language?: string;
+    maxAlternatives?: number;
+    maxChargeInKwH?: number;
+    minDeviationDistance?: number;
+    minDeviationTime?: number;
+    report?: Report;
+    routeRepresentationForBestOrder?: RouteRepresentationForBestOrder;
+    routeType?: RouteType;
+    travelMode?: TravelMode;
+    uphillEfficiency?: number;
+    useTrafficData?: boolean;
+    vehicleAxleWeight?: number;
+    vehicleEngineType?: VehicleEngineType;
+    vehicleHeading?: number;
+    vehicleHeight?: number;
+    vehicleLength?: number;
+    vehicleLoadType?: VehicleLoadType;
+    vehicleMaxSpeed?: number;
+    vehicleWeight?: number;
+    vehicleWidth?: number;
+    windingness?: WindingnessLevel;
+}
+
+// @public
+export type RouteClientGetRouteDirectionsWithAdditionalParametersResponse = RouteDirections;
+
+// @public
+export interface RouteClientGetRouteMatrixHeaders {
+    location?: string;
+}
+
+// @public
+export interface RouteClientGetRouteMatrixOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
+}
+
+// @public
+export type RouteClientGetRouteMatrixResponse = RouteMatrixResult;
+
+// @public
+export interface RouteClientGetRouteRangeOptionalParams extends coreClient.OperationOptions {
+    accelerationEfficiency?: number;
+    auxiliaryPowerInKw?: number;
+    auxiliaryPowerInLitersPerHour?: number;
+    avoid?: RouteAvoidType[];
+    constantSpeedConsumptionInKwHPerHundredKm?: string;
+    constantSpeedConsumptionInLitersPerHundredKm?: string;
+    currentChargeInKwH?: number;
     currentFuelInLiters?: number;
     decelerationEfficiency?: number;
     departAt?: Date;
     distanceBudgetInMeters?: number;
     downhillEfficiency?: number;
-    energyBudgetInkWh?: number;
+    energyBudgetInKwH?: number;
     fuelBudgetInLiters?: number;
-    fuelEnergyDensityInMJoulesPerLiter?: number;
-    hilliness?: HillinessDegree;
-    maxChargeInkWh?: string;
+    fuelEnergyDensityInMegajoulesPerLiter?: number;
+    inclineLevel?: InclineLevel;
+    isCommercialVehicle?: boolean;
+    maxChargeInKwH?: number;
     routeType?: RouteType;
     timeBudgetInSec?: number;
-    traffic?: boolean;
     travelMode?: TravelMode;
     uphillEfficiency?: number;
+    useTrafficData?: boolean;
     vehicleAxleWeight?: number;
-    vehicleCommercial?: boolean;
     vehicleEngineType?: VehicleEngineType;
     vehicleHeight?: number;
     vehicleLength?: number;
@@ -572,27 +636,205 @@ export interface RouteGetRouteRangeOptionalParams extends coreClient.OperationOp
 }
 
 // @public
-export type RouteGetRouteRangeResponse = GetRouteRangeResponse;
+export type RouteClientGetRouteRangeResponse = RouteRangeResult;
+
+// @public
+export interface RouteClientOptionalParams extends coreClient.ServiceClientOptions {
+    $host?: string;
+    apiVersion?: string;
+    clientId?: string;
+    endpoint?: string;
+}
+
+// @public
+export interface RouteClientRequestRouteDirectionsBatchHeaders {
+    location?: string;
+}
+
+// @public
+export interface RouteClientRequestRouteDirectionsBatchOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
+}
+
+// @public
+export type RouteClientRequestRouteDirectionsBatchResponse = RouteDirectionsBatchResult;
+
+// @public
+export interface RouteClientRequestRouteDirectionsBatchSyncOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type RouteClientRequestRouteDirectionsBatchSyncResponse = RouteDirectionsBatchResult;
+
+// @public
+export interface RouteClientRequestRouteMatrixHeaders {
+    location?: string;
+}
+
+// @public
+export interface RouteClientRequestRouteMatrixOptionalParams extends coreClient.OperationOptions {
+    arriveAt?: Date;
+    avoid?: RouteAvoidType[];
+    computeTravelTime?: ComputeTravelTime;
+    departAt?: Date;
+    filterSectionType?: SectionType;
+    inclineLevel?: InclineLevel;
+    resumeFrom?: string;
+    routeType?: RouteType;
+    travelMode?: TravelMode;
+    updateIntervalInMs?: number;
+    useTrafficData?: boolean;
+    vehicleAxleWeight?: number;
+    vehicleHeight?: number;
+    vehicleLength?: number;
+    vehicleLoadType?: VehicleLoadType;
+    vehicleMaxSpeed?: number;
+    vehicleWeight?: number;
+    vehicleWidth?: number;
+    waitForResults?: boolean;
+    windingness?: WindingnessLevel;
+}
+
+// @public
+export type RouteClientRequestRouteMatrixResponse = RouteMatrixResult;
+
+// @public
+export interface RouteClientRequestRouteMatrixSyncOptionalParams extends coreClient.OperationOptions {
+    arriveAt?: Date;
+    avoid?: RouteAvoidType[];
+    computeTravelTime?: ComputeTravelTime;
+    departAt?: Date;
+    filterSectionType?: SectionType;
+    inclineLevel?: InclineLevel;
+    routeType?: RouteType;
+    travelMode?: TravelMode;
+    useTrafficData?: boolean;
+    vehicleAxleWeight?: number;
+    vehicleHeight?: number;
+    vehicleLength?: number;
+    vehicleLoadType?: VehicleLoadType;
+    vehicleMaxSpeed?: number;
+    vehicleWeight?: number;
+    vehicleWidth?: number;
+    waitForResults?: boolean;
+    windingness?: WindingnessLevel;
+}
+
+// @public
+export type RouteClientRequestRouteMatrixSyncResponse = RouteMatrixResult;
+
+// @public
+export interface RouteDirectionParameters {
+    allowVignette?: string[];
+    avoidAreas?: GeoJsonMultiPolygon;
+    avoidVignette?: string[];
+    supportingPoints?: Record<string, unknown>;
+}
+
+// @public
+export interface RouteDirections {
+    readonly formatVersion?: string;
+    readonly optimizedWaypoints?: RouteOptimizedWaypoint[];
+    report?: RouteReport;
+    readonly routes?: Route[];
+}
+
+// @public
+export type RouteDirectionsBatchItem = BatchResultItem & {
+    readonly response?: RouteDirectionsBatchItemResponse;
+};
+
+// @public
+export type RouteDirectionsBatchItemResponse = RouteDirections & ErrorResponse & {};
+
+// @public
+export type RouteDirectionsBatchResult = BatchResult & {
+    readonly batchItems?: RouteDirectionsBatchItem[];
+};
+
+// @public
+export interface RouteGuidance {
+    readonly instructionGroups?: RouteInstructionGroup[];
+    readonly instructions?: RouteInstruction[];
+}
+
+// @public
+export interface RouteInstruction {
+    readonly combinedMessage?: string;
+    readonly countryCode?: string;
+    readonly drivingSide?: DrivingSide;
+    readonly exitNumber?: string;
+    instructionType?: GuidanceInstructionType;
+    readonly junctionType?: JunctionType;
+    readonly maneuver?: GuidanceManeuver;
+    readonly message?: string;
+    point?: LatLongPair;
+    readonly pointIndex?: number;
+    readonly possibleCombineWithNext?: boolean;
+    readonly roadNumbers?: string[];
+    readonly roundaboutExitNumber?: string;
+    readonly routeOffsetInMeters?: number;
+    readonly signpostText?: string;
+    readonly stateCode?: string;
+    readonly street?: string;
+    readonly travelTimeInSeconds?: number;
+    readonly turnAngleInDegrees?: number;
+}
+
+// @public
+export interface RouteInstructionGroup {
+    readonly firstInstructionIndex?: number;
+    readonly groupLengthInMeters?: number;
+    readonly groupMessage?: string;
+    readonly lastInstructionIndex?: number;
+}
 
 // @public
 export type RouteInstructionsType = string;
 
 // @public
-export interface RouteMatrixResponse {
-    readonly formatVersion?: string;
-    readonly matrix?: RouteMatrixResult[][];
-    readonly summary?: RouteMatrixSummary;
+export interface RouteLeg {
+    readonly points?: LatLongPair[];
+    readonly summary?: RouteLegSummary;
 }
 
 // @public
-export interface RouteMatrixResult {
+export interface RouteLegSummary {
+    readonly arrivalTime?: Date;
+    readonly batteryConsumptionInKwH?: number;
+    readonly departureTime?: Date;
+    readonly fuelConsumptionInLiters?: number;
+    readonly historicTrafficTravelTimeInSeconds?: number;
+    readonly lengthInMeters?: number;
+    readonly liveTrafficIncidentsTravelTimeInSeconds?: number;
+    readonly noTrafficTravelTimeInSeconds?: number;
+    readonly trafficDelayInSeconds?: number;
+    readonly travelTimeInSeconds?: number;
+}
+
+// @public
+export interface RouteMatrix {
     readonly response?: RouteMatrixResultResponse;
     readonly statusCode?: number;
 }
 
 // @public
+export interface RouteMatrixQuery {
+    destinations?: GeoJsonMultiPoint;
+    origins?: GeoJsonMultiPoint;
+}
+
+// @public
+export interface RouteMatrixResult {
+    readonly formatVersion?: string;
+    readonly matrix?: RouteMatrix[][];
+    readonly summary?: RouteMatrixSummary;
+}
+
+// @public
 export interface RouteMatrixResultResponse {
-    readonly routeSummary?: RouteResultLegSummary;
+    readonly summary?: RouteLegSummary;
 }
 
 // @public
@@ -608,231 +850,58 @@ export interface RouteOptimizedWaypoint {
 }
 
 // @public
-export interface RoutePostRouteDirectionsBatchHeaders {
-    location?: string;
-}
-
-// @public
-export interface RoutePostRouteDirectionsBatchOptionalParams extends coreClient.OperationOptions {
-    resumeFrom?: string;
-    updateIntervalInMs?: number;
-}
-
-// @public
-export type RoutePostRouteDirectionsBatchResponse = RouteDirectionsBatchResponse;
-
-// @public
-export interface RoutePostRouteDirectionsBatchSyncOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type RoutePostRouteDirectionsBatchSyncResponse = RouteDirectionsBatchResponse;
-
-// @public
-export interface RoutePostRouteDirectionsOptionalParams extends coreClient.OperationOptions {
-    accelerationEfficiency?: number;
-    alternativeType?: AlternativeRouteType;
-    arriveAt?: Date;
-    auxiliaryPowerInkW?: string;
-    auxiliaryPowerInLitersPerHour?: number;
-    avoid?: RouteAvoidType[];
-    computeBestOrder?: boolean;
-    computeTravelTimeFor?: ComputeTravelTimeFor;
-    constantSpeedConsumptionInkWhPerHundredkm?: string;
-    constantSpeedConsumptionInLitersPerHundredkm?: number;
-    currentChargeInkWh?: string;
-    currentFuelInLiters?: number;
-    decelerationEfficiency?: number;
-    departAt?: Date;
-    downhillEfficiency?: number;
-    fuelEnergyDensityInMJoulesPerLiter?: number;
-    hilliness?: HillinessDegree;
-    instructionsType?: RouteInstructionsType;
-    language?: string;
-    maxAlternatives?: number;
-    maxChargeInkWh?: string;
-    minDeviationDistance?: number;
-    minDeviationTime?: number;
-    report?: string;
-    routeRepresentation?: RouteRepresentation;
-    routeType?: RouteType;
-    sectionType?: SectionType;
-    traffic?: boolean;
-    travelMode?: TravelMode;
-    uphillEfficiency?: number;
-    vehicleAxleWeight?: number;
-    vehicleCommercial?: boolean;
-    vehicleEngineType?: VehicleEngineType;
-    vehicleHeading?: number;
-    vehicleHeight?: number;
-    vehicleLength?: number;
-    vehicleLoadType?: VehicleLoadType;
-    vehicleMaxSpeed?: number;
-    vehicleWeight?: number;
-    vehicleWidth?: number;
-    windingness?: WindingnessLevel;
-}
-
-// @public
-export type RoutePostRouteDirectionsResponse = RouteDirectionsResponse;
-
-// @public
-export interface RoutePostRouteMatrixHeaders {
-    location?: string;
-}
-
-// @public
-export interface RoutePostRouteMatrixOptionalParams extends coreClient.OperationOptions {
-    arriveAt?: Date;
-    avoid?: RouteAvoidType[];
-    computeTravelTimeFor?: ComputeTravelTimeFor;
-    departAt?: Date;
-    hilliness?: HillinessDegree;
-    resumeFrom?: string;
-    routeType?: RouteType;
-    sectionType?: SectionType;
-    traffic?: boolean;
-    travelMode?: TravelMode;
-    updateIntervalInMs?: number;
-    vehicleAxleWeight?: number;
-    vehicleHeight?: number;
-    vehicleLength?: number;
-    vehicleLoadType?: VehicleLoadType;
-    vehicleMaxSpeed?: number;
-    vehicleWeight?: number;
-    vehicleWidth?: number;
-    waitForResults?: boolean;
-    windingness?: WindingnessLevel;
-}
-
-// @public
-export type RoutePostRouteMatrixResponse = RouteMatrixResponse;
-
-// @public
-export interface RoutePostRouteMatrixSyncOptionalParams extends coreClient.OperationOptions {
-    arriveAt?: Date;
-    avoid?: RouteAvoidType[];
-    computeTravelTimeFor?: ComputeTravelTimeFor;
-    departAt?: Date;
-    hilliness?: HillinessDegree;
-    routeType?: RouteType;
-    sectionType?: SectionType;
-    traffic?: boolean;
-    travelMode?: TravelMode;
-    vehicleAxleWeight?: number;
-    vehicleHeight?: number;
-    vehicleLength?: number;
-    vehicleLoadType?: VehicleLoadType;
-    vehicleMaxSpeed?: number;
-    vehicleWeight?: number;
-    vehicleWidth?: number;
-    waitForResults?: boolean;
-    windingness?: WindingnessLevel;
-}
-
-// @public
-export type RoutePostRouteMatrixSyncResponse = RouteMatrixResponse;
-
-// @public
 export interface RouteRange {
-    readonly boundary?: CoordinatesPair[];
-    center?: CoordinatesPair;
+    readonly boundary?: LatLongPair[];
+    center?: LatLongPair;
 }
 
 // @public
-export type RouteRepresentation = string;
-
-// @public
-export interface RouteResponseReport {
-    readonly effectiveSettings?: RouteResponseReportEffectiveSetting[];
+export interface RouteRangeResult {
+    readonly formatVersion?: string;
+    reachableRange?: RouteRange;
+    report?: RouteReport;
 }
 
 // @public
-export interface RouteResponseReportEffectiveSetting {
-    readonly key?: string;
-    readonly value?: string;
+export interface RouteReport {
+    readonly effectiveSettings?: EffectiveSetting[];
 }
 
 // @public
-export interface RouteResultGuidance {
-    readonly instructionGroups?: RouteResultInstructionGroup[];
-    readonly instructions?: RouteResultInstruction[];
-}
+export type RouteRepresentationForBestOrder = string;
 
 // @public
-export interface RouteResultInstruction {
-    readonly combinedMessage?: string;
-    readonly countryCode?: string;
-    readonly drivingSide?: DrivingSide;
-    readonly exitNumber?: string;
-    instructionType?: GuidanceInstructionType;
-    readonly junctionType?: JunctionType;
-    readonly maneuver?: GuidanceManeuver;
-    readonly message?: string;
-    point?: CoordinatesPair;
-    readonly pointIndex?: number;
-    readonly possibleCombineWithNext?: boolean;
-    readonly roadNumbers?: string[];
-    readonly roundaboutExitNumber?: string;
-    readonly routeOffsetInMeters?: number;
-    readonly signpostText?: string;
-    readonly stateCode?: string;
-    readonly street?: string;
-    readonly travelTimeInSeconds?: number;
-    readonly turnAngleInDecimalDegrees?: number;
-}
-
-// @public
-export interface RouteResultInstructionGroup {
-    readonly firstInstructionIndex?: number;
-    readonly groupLengthInMeters?: number;
-    readonly groupMessage?: string;
-    readonly lastInstructionIndex?: number;
-}
-
-// @public (undocumented)
-export interface RouteResultLeg {
-    readonly points?: CoordinatesPair[];
-    readonly summary?: RouteResultLegSummary;
-}
-
-// @public
-export interface RouteResultLegSummary {
-    readonly arrivalTime?: string;
-    readonly batteryConsumptionInkWh?: number;
-    readonly departureTime?: string;
-    readonly fuelConsumptionInLiters?: number;
-    readonly historicTrafficTravelTimeInSeconds?: number;
-    readonly lengthInMeters?: number;
-    readonly liveTrafficIncidentsTravelTimeInSeconds?: number;
-    readonly noTrafficTravelTimeInSeconds?: number;
-    readonly trafficDelayInSeconds?: number;
-    readonly travelTimeInSeconds?: number;
-}
-
-// @public (undocumented)
-export interface RouteResultSection {
+export interface RouteSection {
     readonly delayInSeconds?: number;
+    readonly delayMagnitude?: DelayMagnitude;
     readonly effectiveSpeedInKmh?: number;
     readonly endPointIndex?: number;
-    readonly magnitudeOfDelay?: MagnitudeOfDelay;
-    readonly sectionType?: string;
-    readonly simpleCategory?: string;
+    readonly sectionType?: ResponseSectionType;
+    readonly simpleCategory?: SimpleCategory;
     readonly startPointIndex?: number;
-    tec?: RouteResultSectionTec;
-    readonly travelMode?: string;
+    tec?: RouteSectionTec;
+    readonly travelMode?: ResponseTravelMode;
 }
 
 // @public
-export interface RouteResultSectionTec {
-    causes?: RouteResultSectionTecCause[];
+export interface RouteSectionTec {
+    causes?: RouteSectionTecCause[];
     readonly effectCode?: number;
 }
 
 // @public
-export interface RouteResultSectionTecCause {
+export interface RouteSectionTecCause {
     readonly mainCauseCode?: number;
     readonly subCauseCode?: number;
+}
+
+// @public
+export interface RouteSummary {
+    readonly arrivalTime?: Date;
+    readonly departureTime?: Date;
+    readonly lengthInMeters?: number;
+    readonly trafficDelayInSeconds?: number;
+    readonly travelTimeInSeconds?: number;
 }
 
 // @public
@@ -842,7 +911,7 @@ export type RouteType = string;
 export type SectionType = string;
 
 // @public
-export type TextFormat = string;
+export type SimpleCategory = string;
 
 // @public
 export type TravelMode = string;

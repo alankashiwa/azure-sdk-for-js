@@ -32,16 +32,10 @@ export interface ErrorResponse {
     error?: ErrorDetail;
 }
 
-// @public
-export interface Geolocation {
-    getIPToLocationPreview(format: ResponseFormat, ip: string, options?: GeolocationGetIPToLocationPreviewOptionalParams): Promise<GeolocationGetIPToLocationPreviewResponse>;
-}
-
 // @public (undocumented)
 export class GeolocationClient extends GeolocationClientContext {
     constructor(credentials: coreAuth.TokenCredential, options?: GeolocationClientOptionalParams);
-    // (undocumented)
-    geolocation: Geolocation;
+    getLocation(format: JsonFormat, ipAddress: string, options?: GeolocationClientGetLocationOptionalParams): Promise<GeolocationClientGetLocationResponse>;
 }
 
 // @public (undocumented)
@@ -52,23 +46,23 @@ export class GeolocationClientContext extends coreClient.ServiceClient {
     // (undocumented)
     apiVersion: string;
     // (undocumented)
-    xMsClientId?: string;
+    clientId?: string;
 }
+
+// @public
+export interface GeolocationClientGetLocationOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type GeolocationClientGetLocationResponse = IpAddressToLocationResult;
 
 // @public
 export interface GeolocationClientOptionalParams extends coreClient.ServiceClientOptions {
     $host?: string;
     apiVersion?: string;
+    clientId?: string;
     endpoint?: string;
-    xMsClientId?: string;
 }
-
-// @public
-export interface GeolocationGetIPToLocationPreviewOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type GeolocationGetIPToLocationPreviewResponse = IpAddressToLocationResult;
 
 // @public
 export interface IpAddressToLocationResult {
@@ -77,12 +71,12 @@ export interface IpAddressToLocationResult {
 }
 
 // @public
-export enum KnownResponseFormat {
-    Json = "json"
-}
+export type JsonFormat = string;
 
 // @public
-export type ResponseFormat = string;
+export enum KnownJsonFormat {
+    Json = "json"
+}
 
 
 // (No @packageDocumentation comment for this package)

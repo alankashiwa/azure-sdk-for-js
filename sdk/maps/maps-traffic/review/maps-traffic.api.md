@@ -8,10 +8,7 @@ import * as coreAuth from '@azure/core-auth';
 import * as coreClient from '@azure/core-client';
 
 // @public
-export interface CoordinatesPair {
-    latitude?: number;
-    longitude?: number;
-}
+export type DelayMagnitude = number;
 
 // @public
 export interface ErrorAdditionalInfo {
@@ -34,7 +31,49 @@ export interface ErrorResponse {
 }
 
 // @public
+export type IconCategory = number;
+
+// @public
+export type IncidentDetailStyle = string;
+
+// @public
 export type IncidentGeometryType = string;
+
+// @public
+export enum KnownDelayMagnitude {
+    Indefinite = 4,
+    Major = 3,
+    Minor = 1,
+    Moderate = 2,
+    Unknown = 0
+}
+
+// @public
+export enum KnownIconCategory {
+    Accident = 1,
+    BrokenDownVehicle = 14,
+    Cluster = 13,
+    DangerousConditions = 3,
+    Detour = 12,
+    Flooding = 11,
+    Fog = 2,
+    Ice = 5,
+    Jam = 6,
+    LaneClosed = 7,
+    Rain = 4,
+    RoadClosed = 8,
+    RoadWorks = 9,
+    Unknown = 0,
+    Wind = 10
+}
+
+// @public
+export enum KnownIncidentDetailStyle {
+    Night = "night",
+    S1 = "s1",
+    S2 = "s2",
+    S3 = "s3"
+}
 
 // @public
 export enum KnownIncidentGeometryType {
@@ -49,15 +88,15 @@ export enum KnownProjectionStandard {
 }
 
 // @public
-export enum KnownSpeedUnit {
-    Kmph = "KMPH",
-    MPH = "MPH"
+export enum KnownResponseFormat {
+    Json = "json",
+    Xml = "xml"
 }
 
 // @public
-export enum KnownTextFormat {
-    Json = "json",
-    Xml = "xml"
+export enum KnownSpeedUnit {
+    Kmph = "KMPH",
+    MPH = "MPH"
 }
 
 // @public
@@ -85,14 +124,6 @@ export enum KnownTrafficFlowTileStyle {
 }
 
 // @public
-export enum KnownTrafficIncidentDetailStyle {
-    Night = "night",
-    S1 = "s1",
-    S2 = "s2",
-    S3 = "s3"
-}
-
-// @public
 export enum KnownTrafficIncidentTileStyle {
     Night = "night",
     S1 = "s1",
@@ -101,24 +132,42 @@ export enum KnownTrafficIncidentTileStyle {
 }
 
 // @public
+export interface LatLongPair {
+    latitude?: number;
+    longitude?: number;
+}
+
+// @public
+export interface Point {
+    readonly x?: number;
+    readonly y?: number;
+}
+
+// @public
 export type ProjectionStandard = string;
+
+// @public
+export type ResponseFormat = string;
 
 // @public
 export type SpeedUnit = string;
 
 // @public
-export type TextFormat = string;
-
-// @public
 export type TileFormat = string;
 
 // @public
+export interface TileIndex {
+    x: number;
+    y: number;
+}
+
+// @public
 export interface Traffic {
-    getTrafficFlowSegment(format: TextFormat, style: TrafficFlowSegmentStyle, zoom: number, query: string, options?: TrafficGetTrafficFlowSegmentOptionalParams): Promise<TrafficGetTrafficFlowSegmentResponse>;
-    getTrafficFlowTile(format: TileFormat, style: TrafficFlowTileStyle, zoom: number, xTileIndex: number, yTileIndex: number, options?: TrafficGetTrafficFlowTileOptionalParams): Promise<TrafficGetTrafficFlowTileResponse>;
-    getTrafficIncidentDetail(format: TextFormat, style: TrafficIncidentDetailStyle, boundingbox: string, boundingZoom: number, trafficmodelid: string, options?: TrafficGetTrafficIncidentDetailOptionalParams): Promise<TrafficGetTrafficIncidentDetailResponse>;
-    getTrafficIncidentTile(format: TileFormat, style: TrafficIncidentTileStyle, zoom: number, xTileIndex: number, yTileIndex: number, options?: TrafficGetTrafficIncidentTileOptionalParams): Promise<TrafficGetTrafficIncidentTileResponse>;
-    getTrafficIncidentViewport(format: TextFormat, boundingbox: string, boundingzoom: number, overviewbox: string, overviewzoom: number, options?: TrafficGetTrafficIncidentViewportOptionalParams): Promise<TrafficGetTrafficIncidentViewportResponse>;
+    getTrafficFlowSegment(format: ResponseFormat, style: TrafficFlowSegmentStyle, zoom: number, coordinates: number[], options?: TrafficGetTrafficFlowSegmentOptionalParams): Promise<TrafficGetTrafficFlowSegmentResponse>;
+    getTrafficFlowTile(format: TileFormat, style: TrafficFlowTileStyle, zoom: number, tileIndex: TileIndex, options?: TrafficGetTrafficFlowTileOptionalParams): Promise<TrafficGetTrafficFlowTileResponse>;
+    getTrafficIncidentDetail(format: ResponseFormat, style: IncidentDetailStyle, boundingbox: number[], boundingZoom: number, trafficmodelid: string, options?: TrafficGetTrafficIncidentDetailOptionalParams): Promise<TrafficGetTrafficIncidentDetailResponse>;
+    getTrafficIncidentTile(format: TileFormat, style: TrafficIncidentTileStyle, zoom: number, tileIndex: TileIndex, options?: TrafficGetTrafficIncidentTileOptionalParams): Promise<TrafficGetTrafficIncidentTileResponse>;
+    getTrafficIncidentViewport(format: ResponseFormat, boundingbox: number[], boundingzoom: number, overviewbox: number[], overviewzoom: number, options?: TrafficGetTrafficIncidentViewportOptionalParams): Promise<TrafficGetTrafficIncidentViewportResponse>;
 }
 
 // @public (undocumented)
@@ -136,38 +185,38 @@ export class TrafficClientContext extends coreClient.ServiceClient {
     // (undocumented)
     apiVersion: string;
     // (undocumented)
-    xMsClientId?: string;
+    clientId?: string;
 }
 
 // @public
 export interface TrafficClientOptionalParams extends coreClient.ServiceClientOptions {
     $host?: string;
     apiVersion?: string;
+    clientId?: string;
     endpoint?: string;
-    xMsClientId?: string;
 }
 
 // @public
-export interface TrafficFlowSegmentResult {
-    readonly flowSegmentData?: TrafficFlowSegmentResultFlowSegmentData;
+export interface TrafficFlowSegmentData {
+    readonly flowSegmentData?: TrafficFlowSegmentDataFlowSegmentData;
 }
 
 // @public
-export interface TrafficFlowSegmentResultFlowSegmentData {
+export interface TrafficFlowSegmentDataFlowSegmentData {
     readonly confidence?: number;
-    coordinates?: TrafficFlowSegmentResultFlowSegmentDataCoordinates;
+    coordinates?: TrafficFlowSegmentDataFlowSegmentDataCoordinates;
     readonly currentSpeed?: number;
     readonly currentTravelTime?: number;
-    readonly frc?: string;
     readonly freeFlowSpeed?: number;
     readonly freeFlowTravelTime?: number;
-    readonly openlr?: number;
+    readonly functionalRoadClass?: string;
+    readonly openLrCode?: string;
     readonly version?: string;
 }
 
 // @public
-export interface TrafficFlowSegmentResultFlowSegmentDataCoordinates {
-    readonly coordinate?: CoordinatesPair[];
+export interface TrafficFlowSegmentDataFlowSegmentDataCoordinates {
+    readonly coordinates?: LatLongPair[];
 }
 
 // @public
@@ -184,7 +233,7 @@ export interface TrafficGetTrafficFlowSegmentOptionalParams extends coreClient.O
 }
 
 // @public
-export type TrafficGetTrafficFlowSegmentResponse = TrafficFlowSegmentResult;
+export type TrafficGetTrafficFlowSegmentResponse = TrafficFlowSegmentData;
 
 // @public
 export interface TrafficGetTrafficFlowTileHeaders {
@@ -212,7 +261,7 @@ export interface TrafficGetTrafficIncidentDetailOptionalParams extends coreClien
 }
 
 // @public
-export type TrafficGetTrafficIncidentDetailResponse = TrafficIncidentDetailResult;
+export type TrafficGetTrafficIncidentDetailResponse = TrafficIncidentDetail;
 
 // @public
 export interface TrafficGetTrafficIncidentTileHeaders {
@@ -236,76 +285,57 @@ export interface TrafficGetTrafficIncidentViewportOptionalParams extends coreCli
 }
 
 // @public
-export type TrafficGetTrafficIncidentViewportResponse = TrafficIncidentViewportResult;
+export type TrafficGetTrafficIncidentViewportResponse = TrafficIncidentViewport;
 
 // @public
-export interface TrafficIncidentDetailResult {
-    readonly tm?: TrafficIncidentDetailResultTm;
+export interface TrafficIncidentDetail {
+    readonly tm?: TrafficIncidentDetailTm;
 }
 
 // @public
-export interface TrafficIncidentDetailResultTm {
+export interface TrafficIncidentDetailTm {
     readonly id?: string;
-    readonly poi?: TrafficIncidentPoi[];
+    readonly pointsOfInterest?: TrafficIncidentPointOfInterest[];
 }
-
-// @public
-export type TrafficIncidentDetailStyle = string;
 
 // @public (undocumented)
-export interface TrafficIncidentPoi {
-    readonly c?: string;
-    readonly cbl?: TrafficIncidentPoiCbl;
-    readonly cs?: number;
-    readonly ctr?: TrafficIncidentPoiCtr;
-    readonly d?: string;
-    readonly dl?: number;
-    readonly f?: string;
-    readonly ic?: number;
+export interface TrafficIncidentPointOfInterest {
+    readonly bottomLeftCoordinate?: Point;
+    readonly cause?: string;
+    readonly clusterSize?: number;
+    readonly delayInSeconds?: number;
+    readonly description?: string;
+    readonly endDate?: Date;
+    readonly iconCategory?: IconCategory;
     readonly id?: string;
-    readonly l?: number;
-    readonly p?: TrafficIncidentPoiP;
-    readonly r?: string;
-    readonly t?: string;
-    readonly ty?: number;
-}
-
-// @public
-export interface TrafficIncidentPoiCbl {
-    readonly x?: number;
-    readonly y?: number;
-}
-
-// @public
-export interface TrafficIncidentPoiCtr {
-    readonly x?: number;
-    readonly y?: number;
-}
-
-// @public
-export interface TrafficIncidentPoiP {
-    readonly x?: number;
-    readonly y?: number;
+    readonly lengthInMeters?: number;
+    readonly magnitudeOfDelay?: DelayMagnitude;
+    readonly point?: Point;
+    readonly roadNumbers?: string;
+    readonly startDate?: Date;
+    readonly topLeftCoordinate?: Point;
+    readonly trafficEndLocation?: string;
+    readonly trafficStartLocation?: string;
 }
 
 // @public
 export type TrafficIncidentTileStyle = string;
 
 // @public
-export interface TrafficIncidentViewportResult {
-    readonly viewpResp?: TrafficIncidentViewportResultViewpResp;
+export interface TrafficIncidentViewport {
+    readonly viewpResp?: TrafficIncidentViewportViewpResp;
 }
 
 // @public
-export interface TrafficIncidentViewportResultViewpResp {
-    readonly copyrightIds?: string;
+export interface TrafficIncidentViewportViewpResp {
+    readonly copyrightInformation?: string;
     readonly maps?: string;
-    readonly trafficState?: TrafficIncidentViewportResultViewpRespTrafficState;
+    readonly trafficState?: TrafficState;
     readonly version?: string;
 }
 
 // @public
-export interface TrafficIncidentViewportResultViewpRespTrafficState {
+export interface TrafficState {
     readonly trafficAge?: number;
     readonly trafficModelId?: string;
 }

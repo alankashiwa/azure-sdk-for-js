@@ -8,36 +8,19 @@ import * as coreAuth from '@azure/core-auth';
 import * as coreClient from '@azure/core-client';
 
 // @public
-export interface BoundingBoxResult {
-    readonly data?: PointElevationResult[];
-}
-
-// @public
-export interface CoordinatesPair {
-    latitude?: number;
-    longitude?: number;
-}
-
-// @public
-export interface CoordinatesPairAbbreviated {
-    lat?: number;
-    lon?: number;
-}
-
-// @public
 export interface Elevation {
-    getDataForBoundingBox(format: ResponseFormat, bounds: string[], rows: number, columns: number, options?: ElevationGetDataForBoundingBoxOptionalParams): Promise<ElevationGetDataForBoundingBoxResponse>;
-    getDataForPoints(format: ResponseFormat, points: string[], options?: ElevationGetDataForPointsOptionalParams): Promise<ElevationGetDataForPointsResponse>;
-    getDataForPolyline(format: ResponseFormat, lines: string[], options?: ElevationGetDataForPolylineOptionalParams): Promise<ElevationGetDataForPolylineResponse>;
-    postDataForPoints(format: ResponseFormat, pointsRequestBody: CoordinatesPairAbbreviated[], options?: ElevationPostDataForPointsOptionalParams): Promise<ElevationPostDataForPointsResponse>;
-    postDataForPolyline(format: ResponseFormat, linesRequestBody: CoordinatesPairAbbreviated[], options?: ElevationPostDataForPolylineOptionalParams): Promise<ElevationPostDataForPolylineResponse>;
+    coordinate?: LatLongPair;
+    readonly elevationInMeter?: number;
 }
 
 // @public (undocumented)
 export class ElevationClient extends ElevationClientContext {
     constructor(credentials: coreAuth.TokenCredential, options?: ElevationClientOptionalParams);
-    // (undocumented)
-    elevation: Elevation;
+    getDataForBoundingBox(format: JsonFormat, bounds: number[], rows: number, columns: number, options?: ElevationClientGetDataForBoundingBoxOptionalParams): Promise<ElevationClientGetDataForBoundingBoxResponse>;
+    getDataForPoints(format: JsonFormat, points: string[], options?: ElevationClientGetDataForPointsOptionalParams): Promise<ElevationClientGetDataForPointsResponse>;
+    getDataForPolyline(format: JsonFormat, lines: string[], options?: ElevationClientGetDataForPolylineOptionalParams): Promise<ElevationClientGetDataForPolylineResponse>;
+    postDataForPoints(format: JsonFormat, points: LatLongPairAbbreviated[], options?: ElevationClientPostDataForPointsOptionalParams): Promise<ElevationClientPostDataForPointsResponse>;
+    postDataForPolyline(format: JsonFormat, polyline: LatLongPairAbbreviated[], options?: ElevationClientPostDataForPolylineOptionalParams): Promise<ElevationClientPostDataForPolylineResponse>;
 }
 
 // @public (undocumented)
@@ -48,53 +31,58 @@ export class ElevationClientContext extends coreClient.ServiceClient {
     // (undocumented)
     apiVersion: string;
     // (undocumented)
-    xMsClientId?: string;
+    clientId?: string;
 }
+
+// @public
+export interface ElevationClientGetDataForBoundingBoxOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type ElevationClientGetDataForBoundingBoxResponse = ElevationResult;
+
+// @public
+export interface ElevationClientGetDataForPointsOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type ElevationClientGetDataForPointsResponse = ElevationResult;
+
+// @public
+export interface ElevationClientGetDataForPolylineOptionalParams extends coreClient.OperationOptions {
+    samples?: number;
+}
+
+// @public
+export type ElevationClientGetDataForPolylineResponse = ElevationResult;
 
 // @public
 export interface ElevationClientOptionalParams extends coreClient.ServiceClientOptions {
     $host?: string;
     apiVersion?: string;
+    clientId?: string;
     endpoint?: string;
-    xMsClientId?: string;
 }
 
 // @public
-export interface ElevationGetDataForBoundingBoxOptionalParams extends coreClient.OperationOptions {
+export interface ElevationClientPostDataForPointsOptionalParams extends coreClient.OperationOptions {
 }
 
 // @public
-export type ElevationGetDataForBoundingBoxResponse = BoundingBoxResult;
+export type ElevationClientPostDataForPointsResponse = ElevationResult;
 
 // @public
-export interface ElevationGetDataForPointsOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type ElevationGetDataForPointsResponse = PointsResult;
-
-// @public
-export interface ElevationGetDataForPolylineOptionalParams extends coreClient.OperationOptions {
+export interface ElevationClientPostDataForPolylineOptionalParams extends coreClient.OperationOptions {
     samples?: number;
 }
 
 // @public
-export type ElevationGetDataForPolylineResponse = LinesResult;
+export type ElevationClientPostDataForPolylineResponse = ElevationResult;
 
 // @public
-export interface ElevationPostDataForPointsOptionalParams extends coreClient.OperationOptions {
+export interface ElevationResult {
+    readonly elevations?: Elevation[];
 }
-
-// @public
-export type ElevationPostDataForPointsResponse = PointsResult;
-
-// @public
-export interface ElevationPostDataForPolylineOptionalParams extends coreClient.OperationOptions {
-    samples?: number;
-}
-
-// @public
-export type ElevationPostDataForPolylineResponse = LinesResult;
 
 // @public
 export interface ErrorAdditionalInfo {
@@ -117,28 +105,24 @@ export interface ErrorResponse {
 }
 
 // @public
-export enum KnownResponseFormat {
+export type JsonFormat = string;
+
+// @public
+export enum KnownJsonFormat {
     Json = "json"
 }
 
 // @public
-export interface LinesResult {
-    readonly data?: PointElevationResult[];
+export interface LatLongPair {
+    latitude?: number;
+    longitude?: number;
 }
 
 // @public
-export interface PointElevationResult {
-    coordinate?: CoordinatesPair;
-    readonly elevationInMeter?: number;
+export interface LatLongPairAbbreviated {
+    lat?: number;
+    lon?: number;
 }
-
-// @public
-export interface PointsResult {
-    readonly data?: PointElevationResult[];
-}
-
-// @public
-export type ResponseFormat = string;
 
 
 // (No @packageDocumentation comment for this package)

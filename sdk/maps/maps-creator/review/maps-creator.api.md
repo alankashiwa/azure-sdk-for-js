@@ -13,11 +13,10 @@ import { PollOperationState } from '@azure/core-lro';
 
 // @public
 export interface Alias {
-    assign(aliasId: string, creatorDataItemId: string, options?: AliasAssignOptionalParams): Promise<AliasAssignResponse>;
-    create(options?: AliasCreateOptionalParams): Promise<AliasCreateResponse>;
-    delete(aliasId: string, options?: AliasDeleteOptionalParams): Promise<void>;
-    getDetails(aliasId: string, options?: AliasGetDetailsOptionalParams): Promise<AliasGetDetailsResponse>;
-    list(options?: AliasListOptionalParams): PagedAsyncIterableIterator<AliasListItem>;
+    readonly aliasId?: string;
+    readonly createdTimestamp?: Date;
+    readonly creatorDataItemId?: string | null;
+    readonly lastUpdatedTimestamp?: Date;
 }
 
 // @public
@@ -25,7 +24,7 @@ export interface AliasAssignOptionalParams extends coreClient.OperationOptions {
 }
 
 // @public
-export type AliasAssignResponse = AliasListItem;
+export type AliasAssignResponse = Alias;
 
 // @public
 export interface AliasCreateHeaders {
@@ -38,65 +37,58 @@ export interface AliasCreateOptionalParams extends coreClient.OperationOptions {
 }
 
 // @public
-export type AliasCreateResponse = AliasCreateHeaders & AliasesCreateResponse;
+export type AliasCreateResponse = AliasCreateHeaders & Alias;
 
 // @public
 export interface AliasDeleteOptionalParams extends coreClient.OperationOptions {
 }
 
 // @public
-export interface AliasesCreateResponse {
-    readonly aliasId?: string;
-    readonly createdTimestamp?: Date;
-    readonly creatorDataItemId?: string;
-    readonly lastUpdatedTimestamp?: Date;
+export interface AliasGetOptionalParams extends coreClient.OperationOptions {
 }
 
 // @public
-export interface AliasGetDetailsOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type AliasGetDetailsResponse = AliasListItem;
-
-// @public
-export interface AliasListItem {
-    readonly aliasId?: string;
-    readonly createdTimestamp?: string;
-    readonly creatorDataItemId?: string | null;
-    readonly lastUpdatedTimestamp?: Date;
-}
+export type AliasGetResponse = Alias;
 
 // @public
 export interface AliasListNextOptionalParams extends coreClient.OperationOptions {
 }
 
 // @public
-export type AliasListNextResponse = AliasListResponse;
-
-// @public
-export type AliasListOperationResponse = AliasListResponse;
+export type AliasListNextResponse = AliasListResult;
 
 // @public
 export interface AliasListOptionalParams extends coreClient.OperationOptions {
 }
 
 // @public
-export interface AliasListResponse {
-    readonly aliases?: AliasListItem[];
+export type AliasListResponse = AliasListResult;
+
+// @public
+export interface AliasListResult {
+    readonly aliases?: Alias[];
     readonly nextLink?: string;
 }
 
 // @public
-export interface BooleanRuleObject {
+export interface AliasOperations {
+    assign(aliasId: string, creatorDataItemId: string, options?: AliasAssignOptionalParams): Promise<AliasAssignResponse>;
+    create(options?: AliasCreateOptionalParams): Promise<AliasCreateResponse>;
+    delete(aliasId: string, options?: AliasDeleteOptionalParams): Promise<void>;
+    get(aliasId: string, options?: AliasGetOptionalParams): Promise<AliasGetResponse>;
+    list(options?: AliasListOptionalParams): PagedAsyncIterableIterator<Alias>;
+}
+
+// @public
+export interface BooleanRule {
     false?: string;
     true?: string;
 }
 
 // @public
-export type BooleanTypeStyleRule = StyleObject & {
+export type BooleanStyleRule = StyleRule & {
     type: "boolean";
-    rules: BooleanRuleObject[];
+    rules: BooleanRule[];
 };
 
 // @public
@@ -106,79 +98,81 @@ export interface BufferRequestBody {
 }
 
 // @public
-export interface BufferResponse {
-    result?: GeoJsonFeatureCollectionUnion;
-    readonly summary?: BufferResponseSummary;
+export interface BufferResult {
+    features?: GeoJsonFeatureCollection;
+    readonly summary?: BufferSummary;
 }
 
-// @public
-export interface BufferResponseSummary {
+// @public (undocumented)
+export interface BufferSummary {
     readonly information?: string;
     readonly udid?: string;
 }
 
 // @public
-export interface ClosestPointResponse {
-    result?: ClosestPointResultEntry[];
-    readonly summary?: ClosestPointSummary;
+export interface ClosestPoint {
+    readonly distanceInMeters?: number;
+    readonly geometryId?: string;
+    position?: LatLongPairAbbreviated;
 }
 
 // @public
-export interface ClosestPointResultEntry {
-    readonly distanceInMeters?: number;
-    readonly geometryId?: string;
-    position?: SpatialCoordinate;
+export interface ClosestPointResponse {
+    result?: ClosestPoint[];
+    readonly summary?: ClosestPointSummary;
 }
 
 // @public
 export interface ClosestPointSummary {
     readonly information?: string;
-    sourcePoint?: SpatialCoordinate;
+    sourcePoint?: LatLongPairAbbreviated;
     readonly udid?: string;
 }
 
+// @public (undocumented)
+export interface Collection {
+    description?: string;
+    links: WFSEndpointLink[];
+    name: string;
+    readonly ontology?: string;
+    title?: string;
+}
+
 // @public
-export interface CollectionDefinitionResponse {
+export interface CollectionDefinition {
     description?: string;
     featureTypes: string[];
     geometryType: GeoJsonGeometryType;
     idPrefix: string;
-    links?: WfsEndpointLink[];
+    links?: WFSEndpointLink[];
     name: string;
     readonly ontology?: string;
-    properties?: DefinitionProperties[];
-    title?: string;
-}
-
-// @public (undocumented)
-export interface CollectionInfo {
-    description?: string;
-    links: WfsEndpointLink[];
-    name: string;
-    readonly ontology?: string;
+    properties?: DefinitionProperty[];
     title?: string;
 }
 
 // @public (undocumented)
 export interface CollectionsResponse {
-    collections: CollectionInfo[];
-    links: WfsEndpointLink[];
+    collections: Collection[];
+    links: WFSEndpointLink[];
     readonly ontology?: string;
 }
 
 // @public (undocumented)
-export interface ConformanceResponse {
+export interface ConformanceResult {
     conformsTo: string[];
 }
 
 // @public
 export interface Conversion {
-    beginConvert(udid: string, outputOntology: string, options?: ConversionConvertOptionalParams): Promise<PollerLike<PollOperationState<ConversionConvertResponse>, ConversionConvertResponse>>;
-    beginConvertAndWait(udid: string, outputOntology: string, options?: ConversionConvertOptionalParams): Promise<ConversionConvertResponse>;
-    delete(conversionId: string, options?: ConversionDeleteOptionalParams): Promise<void>;
-    get(conversionId: string, options?: ConversionGetOptionalParams): Promise<ConversionGetResponse>;
-    getOperation(operationId: string, options?: ConversionGetOperationOptionalParams): Promise<ConversionGetOperationResponse>;
-    list(options?: ConversionListOptionalParams): PagedAsyncIterableIterator<ConversionListDetailInfo>;
+    readonly conversionId?: string;
+    readonly created?: string;
+    readonly description?: string;
+    readonly featureCounts?: {
+        [propertyName: string]: number;
+    };
+    readonly ontology?: string;
+    readonly udid?: string;
 }
 
 // @public
@@ -217,55 +211,55 @@ export interface ConversionGetOptionalParams extends coreClient.OperationOptions
 }
 
 // @public
-export type ConversionGetResponse = ConversionListDetailInfo;
-
-// @public
-export interface ConversionListDetailInfo {
-    readonly conversionId?: string;
-    readonly created?: string;
-    readonly description?: string;
-    readonly featureCounts?: Record<string, unknown>;
-    readonly ontology?: string;
-    readonly udid?: string;
-}
+export type ConversionGetResponse = Conversion;
 
 // @public
 export interface ConversionListNextOptionalParams extends coreClient.OperationOptions {
 }
 
 // @public
-export type ConversionListNextResponse = ConversionListResponse;
-
-// @public
-export type ConversionListOperationResponse = ConversionListResponse;
+export type ConversionListNextResponse = ConversionListResult;
 
 // @public
 export interface ConversionListOptionalParams extends coreClient.OperationOptions {
 }
 
 // @public
-export interface ConversionListResponse {
-    readonly conversions?: ConversionListDetailInfo[];
+export type ConversionListResponse = ConversionListResult;
+
+// @public
+export interface ConversionListResult {
+    readonly conversions?: Conversion[];
     readonly nextLink?: string;
+}
+
+// @public
+export interface ConversionOperations {
+    beginConvert(udid: string, outputOntology: OutputOntology, options?: ConversionConvertOptionalParams): Promise<PollerLike<PollOperationState<ConversionConvertResponse>, ConversionConvertResponse>>;
+    beginConvertAndWait(udid: string, outputOntology: OutputOntology, options?: ConversionConvertOptionalParams): Promise<ConversionConvertResponse>;
+    delete(conversionId: string, options?: ConversionDeleteOptionalParams): Promise<void>;
+    get(conversionId: string, options?: ConversionGetOptionalParams): Promise<ConversionGetResponse>;
+    getOperation(operationId: string, options?: ConversionGetOperationOptionalParams): Promise<ConversionGetOperationResponse>;
+    list(options?: ConversionListOptionalParams): PagedAsyncIterableIterator<Conversion>;
 }
 
 // @public (undocumented)
 export class CreatorClient extends CreatorClientContext {
     constructor(credentials: coreAuth.TokenCredential, options?: CreatorClientOptionalParams);
     // (undocumented)
-    alias: Alias;
+    aliasOperations: AliasOperations;
     // (undocumented)
-    conversion: Conversion;
+    conversionOperations: ConversionOperations;
     // (undocumented)
     data: Data;
     // (undocumented)
-    dataset: Dataset;
+    datasetOperations: DatasetOperations;
     // (undocumented)
-    featureState: FeatureState;
+    featureStateOperations: FeatureStateOperations;
     // (undocumented)
     spatial: Spatial;
     // (undocumented)
-    tileset: Tileset;
+    tilesetOperations: TilesetOperations;
     // (undocumented)
     wfs: Wfs;
 }
@@ -274,96 +268,89 @@ export class CreatorClient extends CreatorClientContext {
 export class CreatorClientContext extends coreClient.ServiceClient {
     constructor(credentials: coreAuth.TokenCredential, options?: CreatorClientOptionalParams);
     // (undocumented)
-    geography: Geography;
+    clientId?: string;
     // (undocumented)
-    xMsClientId?: string;
+    geography: Geography;
 }
 
 // @public
 export interface CreatorClientOptionalParams extends coreClient.ServiceClientOptions {
+    clientId?: string;
     endpoint?: string;
     geography?: Geography;
-    xMsClientId?: string;
 }
 
 // @public
 export interface Data {
-    beginUpdatePreview(uniqueDataId: string, updateContent: Record<string, unknown>, options?: DataUpdatePreviewOptionalParams): Promise<PollerLike<PollOperationState<DataUpdatePreviewResponse>, DataUpdatePreviewResponse>>;
-    beginUpdatePreviewAndWait(uniqueDataId: string, updateContent: Record<string, unknown>, options?: DataUpdatePreviewOptionalParams): Promise<DataUpdatePreviewResponse>;
-    beginUploadPreview(...args: [
-        UploadDataFormat,
+    beginUpdate(udid: string, updateContent: Record<string, unknown>, options?: DataUpdateOptionalParams): Promise<PollerLike<PollOperationState<DataUpdateResponse>, DataUpdateResponse>>;
+    beginUpdateAndWait(udid: string, updateContent: Record<string, unknown>, options?: DataUpdateOptionalParams): Promise<DataUpdateResponse>;
+    beginUpload(...args: [
+        DataFormat,
         "application/octet-stream",
         coreRestPipeline.RequestBodyType,
-        DataUploadPreview$binaryOptionalParams?
-    ] | [
-        UploadDataFormat,
-        "application/json",
-        Record<string, unknown>,
-        DataUploadPreview$jsonOptionalParams?
-    ]): Promise<PollerLike<PollOperationState<DataUploadPreviewResponse>, DataUploadPreviewResponse>>;
-    beginUploadPreviewAndWait(...args: [
-        UploadDataFormat,
+        DataUpload$binaryOptionalParams?
+    ] | [DataFormat, "application/json", Record<string, unknown>, DataUpload$jsonOptionalParams?]): Promise<PollerLike<PollOperationState<DataUploadResponse>, DataUploadResponse>>;
+    beginUploadAndWait(...args: [
+        DataFormat,
         "application/octet-stream",
         coreRestPipeline.RequestBodyType,
-        DataUploadPreview$binaryOptionalParams?
-    ] | [
-        UploadDataFormat,
-        "application/json",
-        Record<string, unknown>,
-        DataUploadPreview$jsonOptionalParams?
-    ]): Promise<DataUploadPreviewResponse>;
-    deletePreview(uniqueDataId: string, options?: DataDeletePreviewOptionalParams): Promise<void>;
-    downloadPreview(uniqueDataId: string, options?: DataDownloadPreviewOptionalParams): Promise<DataDownloadPreviewResponse>;
-    getOperationPreview(operationId: string, options?: DataGetOperationPreviewOptionalParams): Promise<DataGetOperationPreviewResponse>;
-    listPreview(options?: DataListPreviewOptionalParams): Promise<DataListPreviewResponse>;
+        DataUpload$binaryOptionalParams?
+    ] | [DataFormat, "application/json", Record<string, unknown>, DataUpload$jsonOptionalParams?]): Promise<DataUploadResponse>;
+    delete(udid: string, options?: DataDeleteOptionalParams): Promise<void>;
+    download(udid: string, options?: DataDownloadOptionalParams): Promise<DataDownloadResponse>;
+    getOperation(operationId: string, options?: DataGetOperationOptionalParams): Promise<DataGetOperationResponse>;
+    list(options?: DataListOptionalParams): Promise<DataListResponse>;
 }
 
 // @public
-export interface DataDeletePreviewOptionalParams extends coreClient.OperationOptions {
+export interface DataDeleteOptionalParams extends coreClient.OperationOptions {
 }
 
 // @public
-export interface DataDownloadPreviewHeaders {
+export interface DataDownloadHeaders {
     contentType?: string;
 }
 
 // @public
-export interface DataDownloadPreviewOptionalParams extends coreClient.OperationOptions {
+export interface DataDownloadOptionalParams extends coreClient.OperationOptions {
 }
 
 // @public
-export type DataDownloadPreviewResponse = DataDownloadPreviewHeaders & {
+export type DataDownloadResponse = DataDownloadHeaders & {
     blobBody?: Promise<Blob>;
     readableStreamBody?: NodeJS.ReadableStream;
 };
 
 // @public
-export interface DataGetOperationPreviewHeaders {
+export type DataFormat = string;
+
+// @public
+export interface DataGetOperationHeaders {
     resourceLocation?: string;
 }
 
 // @public
-export interface DataGetOperationPreviewOptionalParams extends coreClient.OperationOptions {
+export interface DataGetOperationOptionalParams extends coreClient.OperationOptions {
 }
 
 // @public
-export type DataGetOperationPreviewResponse = DataGetOperationPreviewHeaders & LongRunningOperationResult;
+export type DataGetOperationResponse = DataGetOperationHeaders & LongRunningOperationResult;
 
 // @public
-export interface DataListPreviewOptionalParams extends coreClient.OperationOptions {
+export interface DataListOptionalParams extends coreClient.OperationOptions {
 }
 
 // @public
-export type DataListPreviewResponse = MapDataListResponse;
+export type DataListResponse = MapDataListResult;
 
 // @public
 export interface Dataset {
-    beginCreate(conversionId: string, options?: DatasetCreateOptionalParams): Promise<PollerLike<PollOperationState<DatasetCreateResponse>, DatasetCreateResponse>>;
-    beginCreateAndWait(conversionId: string, options?: DatasetCreateOptionalParams): Promise<DatasetCreateResponse>;
-    delete(datasetId: string, options?: DatasetDeleteOptionalParams): Promise<void>;
-    get(datasetId: string, options?: DatasetGetOptionalParams): Promise<DatasetGetResponse>;
-    getOperation(operationId: string, options?: DatasetGetOperationOptionalParams): Promise<DatasetGetOperationResponse>;
-    list(options?: DatasetListOptionalParams): PagedAsyncIterableIterator<DatasetDetailInfo>;
+    readonly created?: Date;
+    readonly datasetId?: string;
+    datasetSources?: DatasetSources;
+    readonly description?: string;
+    readonly featureCounts?: Record<string, unknown>;
+    readonly ontology?: string;
 }
 
 // @public
@@ -374,7 +361,7 @@ export interface DatasetCreateHeaders {
 // @public
 export interface DatasetCreateOptionalParams extends coreClient.OperationOptions {
     datasetId?: string;
-    descriptionDataset?: string;
+    description?: string;
     resumeFrom?: string;
     updateIntervalInMs?: number;
 }
@@ -384,16 +371,6 @@ export type DatasetCreateResponse = DatasetCreateHeaders & LongRunningOperationR
 
 // @public
 export interface DatasetDeleteOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export interface DatasetDetailInfo {
-    readonly created?: string;
-    readonly datasetId?: string;
-    datasetSources?: DatasetSources;
-    readonly description?: string;
-    readonly featureCounts?: Record<string, unknown>;
-    readonly ontology?: string;
 }
 
 // @public
@@ -413,26 +390,36 @@ export interface DatasetGetOptionalParams extends coreClient.OperationOptions {
 }
 
 // @public
-export type DatasetGetResponse = DatasetDetailInfo;
+export type DatasetGetResponse = Dataset;
 
 // @public
 export interface DatasetListNextOptionalParams extends coreClient.OperationOptions {
 }
 
 // @public
-export type DatasetListNextResponse = DatasetListResponse;
-
-// @public
-export type DatasetListOperationResponse = DatasetListResponse;
+export type DatasetListNextResponse = DatasetListResult;
 
 // @public
 export interface DatasetListOptionalParams extends coreClient.OperationOptions {
 }
 
 // @public
-export interface DatasetListResponse {
-    readonly datasets?: DatasetDetailInfo[];
+export type DatasetListResponse = DatasetListResult;
+
+// @public
+export interface DatasetListResult {
+    readonly datasets?: Dataset[];
     readonly nextLink?: string;
+}
+
+// @public
+export interface DatasetOperations {
+    beginCreate(conversionId: string, options?: DatasetCreateOptionalParams): Promise<PollerLike<PollOperationState<DatasetCreateResponse>, DatasetCreateResponse>>;
+    beginCreateAndWait(conversionId: string, options?: DatasetCreateOptionalParams): Promise<DatasetCreateResponse>;
+    delete(datasetId: string, options?: DatasetDeleteOptionalParams): Promise<void>;
+    get(datasetId: string, options?: DatasetGetOptionalParams): Promise<DatasetGetResponse>;
+    getOperation(operationId: string, options?: DatasetGetOperationOptionalParams): Promise<DatasetGetOperationResponse>;
+    list(options?: DatasetListOptionalParams): PagedAsyncIterableIterator<Dataset>;
 }
 
 // @public
@@ -442,44 +429,44 @@ export interface DatasetSources {
 }
 
 // @public
-export interface DataUpdatePreviewHeaders {
+export interface DataUpdateHeaders {
     resourceLocation?: string;
 }
 
 // @public
-export interface DataUpdatePreviewOptionalParams extends coreClient.OperationOptions {
+export interface DataUpdateOptionalParams extends coreClient.OperationOptions {
+    description?: string;
     resumeFrom?: string;
     updateIntervalInMs?: number;
-    uploadDataDescription?: string;
 }
 
 // @public
-export type DataUpdatePreviewResponse = DataUpdatePreviewHeaders & LongRunningOperationResult;
+export type DataUpdateResponse = DataUpdateHeaders & LongRunningOperationResult;
 
 // @public
-export interface DataUploadPreview$binaryOptionalParams extends coreClient.OperationOptions {
+export interface DataUpload$binaryOptionalParams extends coreClient.OperationOptions {
+    description?: string;
     resumeFrom?: string;
     updateIntervalInMs?: number;
-    uploadDataDescription?: string;
 }
 
 // @public
-export interface DataUploadPreview$jsonOptionalParams extends coreClient.OperationOptions {
+export interface DataUpload$jsonOptionalParams extends coreClient.OperationOptions {
+    description?: string;
     resumeFrom?: string;
     updateIntervalInMs?: number;
-    uploadDataDescription?: string;
 }
 
 // @public
-export interface DataUploadPreviewHeaders {
+export interface DataUploadHeaders {
     resourceLocation?: string;
 }
 
 // @public
-export type DataUploadPreviewResponse = DataUploadPreviewHeaders & LongRunningOperationResult;
+export type DataUploadResponse = DataUploadHeaders & LongRunningOperationResult;
 
 // @public (undocumented)
-export interface DefinitionProperties {
+export interface DefinitionProperty {
     name: string;
     required: boolean;
     type: Record<string, unknown>;
@@ -506,32 +493,29 @@ export interface ErrorResponse {
 }
 
 // @public
-export type ExtendedGeoJsonFeatureCollection = GeoJsonFeatureCollection & ExtendedGeoJsonFeatureCollectionData & {};
+export type ExtendedGeoJsonFeatureCollection = GeoJsonFeatureCollectionData & ExtendedGeoJsonFeatureCollectionData & {
+    type?: GeoJsonObjectType;
+};
 
 // @public (undocumented)
 export interface ExtendedGeoJsonFeatureCollectionData {
-    links?: WfsEndpointLink[];
+    links?: WFSEndpointLink[];
     numberReturned?: number;
     readonly ontology?: string;
 }
 
 // @public (undocumented)
-export interface FeatureResponse {
+export interface FeatureResult {
     feature: GeoJsonFeature;
-    links?: WfsEndpointLink[];
+    links?: WFSEndpointLink[];
     readonly ontology?: string;
 }
 
 // @public
 export interface FeatureState {
-    createStateset(datasetId: string, statesetCreateRequestBody: StylesObject, options?: FeatureStateCreateStatesetOptionalParams): Promise<FeatureStateCreateStatesetResponse>;
-    deleteState(statesetId: string, featureId: string, stateKeyName: string, options?: FeatureStateDeleteStateOptionalParams): Promise<void>;
-    deleteStateset(statesetId: string, options?: FeatureStateDeleteStatesetOptionalParams): Promise<void>;
-    getStates(statesetId: string, featureId: string, options?: FeatureStateGetStatesOptionalParams): Promise<FeatureStateGetStatesResponse>;
-    getStateset(statesetId: string, options?: FeatureStateGetStatesetOptionalParams): Promise<FeatureStateGetStatesetResponse>;
-    listStateset(options?: FeatureStateListStatesetOptionalParams): PagedAsyncIterableIterator<StatesetInfoObject>;
-    putStateset(statesetId: string, statesetStyleUpdateRequestBody: StylesObject, options?: FeatureStatePutStatesetOptionalParams): Promise<void>;
-    updateStates(statesetId: string, featureId: string, featureStateUpdateRequestBody: FeatureStatesStructure, options?: FeatureStateUpdateStatesOptionalParams): Promise<void>;
+    eventTimestamp?: string;
+    keyName?: string;
+    value?: string;
 }
 
 // @public
@@ -540,7 +524,7 @@ export interface FeatureStateCreateStatesetOptionalParams extends coreClient.Ope
 }
 
 // @public
-export type FeatureStateCreateStatesetResponse = StatesetCreatedResponse;
+export type FeatureStateCreateStatesetResponse = StatesetCreatedResult;
 
 // @public
 export interface FeatureStateDeleteStateOptionalParams extends coreClient.OperationOptions {
@@ -555,43 +539,48 @@ export interface FeatureStateGetStatesetOptionalParams extends coreClient.Operat
 }
 
 // @public
-export type FeatureStateGetStatesetResponse = StatesetGetResponse;
+export type FeatureStateGetStatesetResponse = Stateset;
 
 // @public
-export interface FeatureStateGetStatesOptionalParams extends coreClient.OperationOptions {
+export interface FeatureStateListStatesetsNextOptionalParams extends coreClient.OperationOptions {
 }
 
 // @public
-export type FeatureStateGetStatesResponse = FeatureStatesStructure;
+export type FeatureStateListStatesetsNextResponse = StatesetListResult;
 
 // @public
-export interface FeatureStateListStatesetNextOptionalParams extends coreClient.OperationOptions {
+export interface FeatureStateListStatesetsOptionalParams extends coreClient.OperationOptions {
 }
 
 // @public
-export type FeatureStateListStatesetNextResponse = StatesetListResponse;
+export type FeatureStateListStatesetsResponse = StatesetListResult;
 
 // @public
-export interface FeatureStateListStatesetOptionalParams extends coreClient.OperationOptions {
+export interface FeatureStateListStatesOptionalParams extends coreClient.OperationOptions {
 }
 
 // @public
-export type FeatureStateListStatesetResponse = StatesetListResponse;
+export type FeatureStateListStatesResponse = FeatureStatesStructure;
 
 // @public
-export interface FeatureStateObject {
-    eventTimestamp?: string;
-    keyName?: string;
-    value?: string;
-}
-
-// @public
-export interface FeatureStatePutStatesetOptionalParams extends coreClient.OperationOptions {
+export interface FeatureStateOperations {
+    createStateset(datasetId: string, styleRules: StyleRules, options?: FeatureStateCreateStatesetOptionalParams): Promise<FeatureStateCreateStatesetResponse>;
+    deleteState(statesetId: string, featureId: string, keyName: string, options?: FeatureStateDeleteStateOptionalParams): Promise<void>;
+    deleteStateset(statesetId: string, options?: FeatureStateDeleteStatesetOptionalParams): Promise<void>;
+    getStateset(statesetId: string, options?: FeatureStateGetStatesetOptionalParams): Promise<FeatureStateGetStatesetResponse>;
+    listStates(statesetId: string, featureId: string, options?: FeatureStateListStatesOptionalParams): Promise<FeatureStateListStatesResponse>;
+    listStatesets(options?: FeatureStateListStatesetsOptionalParams): PagedAsyncIterableIterator<StatesetInfo>;
+    updateStates(statesetId: string, featureId: string, featureStates: FeatureStatesStructure, options?: FeatureStateUpdateStatesOptionalParams): Promise<void>;
+    updateStateset(statesetId: string, styleRules: StyleRules, options?: FeatureStateUpdateStatesetOptionalParams): Promise<void>;
 }
 
 // @public
 export interface FeatureStatesStructure {
-    states?: FeatureStateObject[];
+    states?: FeatureState[];
+}
+
+// @public
+export interface FeatureStateUpdateStatesetOptionalParams extends coreClient.OperationOptions {
 }
 
 // @public
@@ -599,26 +588,26 @@ export interface FeatureStateUpdateStatesOptionalParams extends coreClient.Opera
 }
 
 // @public
-export interface GeofenceGeometry {
-    readonly deviceId?: string;
-    readonly distance?: number;
-    readonly geometryId?: string;
-    readonly nearestLat?: number;
-    readonly nearestLon?: number;
-    readonly nearestZ?: number;
-    readonly udId?: string;
-}
-
-// @public
-export type GeofenceMode = string;
-
-// @public
-export interface GeofenceResponse {
+export interface Geofence {
     readonly expiredGeofenceGeometryId?: string[];
     readonly geometries?: GeofenceGeometry[];
     readonly invalidPeriodGeofenceGeometryId?: string[];
     readonly isEventPublished?: boolean;
 }
+
+// @public
+export interface GeofenceGeometry {
+    readonly deviceId?: string;
+    readonly distance?: number;
+    readonly geometryId?: string;
+    readonly nearestElevation?: number;
+    readonly nearestLat?: number;
+    readonly nearestLon?: number;
+    readonly udid?: string;
+}
+
+// @public
+export type GeofenceMode = string;
 
 // @public
 export type GeographicResourceLocation = string;
@@ -633,16 +622,13 @@ export type GeoJsonFeature = GeoJsonObject & GeoJsonFeatureData & {
 
 // @public
 export type GeoJsonFeatureCollection = GeoJsonObject & GeoJsonFeatureCollectionData & {
-    type: "FeatureCollection" | "FeatureCollection";
+    type: "FeatureCollection";
 };
 
 // @public (undocumented)
 export interface GeoJsonFeatureCollectionData {
     features: GeoJsonFeature[];
 }
-
-// @public (undocumented)
-export type GeoJsonFeatureCollectionUnion = GeoJsonFeatureCollection | ExtendedGeoJsonFeatureCollection;
 
 // @public (undocumented)
 export interface GeoJsonFeatureData {
@@ -705,14 +691,14 @@ export interface GeoJsonMultiPolygonData {
 
 // @public
 export interface GeoJsonObject {
-    type: "GeoJsonGeometry" | "Feature" | "FeatureCollection" | "FeatureCollection" | "Point" | "MultiPoint" | "LineString" | "MultiLineString" | "Polygon" | "MultiPolygon" | "GeometryCollection";
+    type: "GeoJsonGeometry" | "Feature" | "FeatureCollection" | "Point" | "MultiPoint" | "LineString" | "MultiLineString" | "Polygon" | "MultiPolygon" | "GeometryCollection";
 }
 
 // @public
-export type GeoJsonObjectType = string;
+export type GeoJsonObjectType = "Point" | "MultiPoint" | "LineString" | "MultiLineString" | "Polygon" | "MultiPolygon" | "GeometryCollection" | "Feature" | "FeatureCollection";
 
 // @public (undocumented)
-export type GeoJsonObjectUnion = GeoJsonObject | GeoJsonGeometryUnion | GeoJsonFeature | GeoJsonFeatureCollectionUnion;
+export type GeoJsonObjectUnion = GeoJsonObject | GeoJsonGeometryUnion | GeoJsonFeature | GeoJsonFeatureCollection;
 
 // @public
 export type GeoJsonPoint = GeoJsonGeometry & GeoJsonPointData & {};
@@ -731,20 +717,30 @@ export interface GeoJsonPolygonData {
 }
 
 // @public
-export interface GreatCircleDistanceResponse {
-    readonly result?: GreatCircleDistanceResponseResult;
-    readonly summary?: GreatCircleDistanceResponseSummary;
+export interface GreatCircleDistanceResult {
+    readonly result?: GreatCircleDistanceResultResult;
+    readonly summary?: GreatCircleDistanceSummary;
 }
 
 // @public
-export interface GreatCircleDistanceResponseResult {
+export interface GreatCircleDistanceResultResult {
     readonly distanceInMeters?: number;
 }
 
 // @public
-export interface GreatCircleDistanceResponseSummary {
-    sourcePoint?: SpatialCoordinate;
-    targetPoint?: SpatialCoordinate;
+export interface GreatCircleDistanceSummary {
+    sourcePoint?: LatLongPairAbbreviated;
+    targetPoint?: LatLongPairAbbreviated;
+}
+
+// @public
+export type JsonFormat = string;
+
+// @public
+export enum KnownDataFormat {
+    DwgZipPackage = "dwgzippackage",
+    Geojson = "geojson",
+    Zip = "zip"
 }
 
 // @public
@@ -779,16 +775,8 @@ export enum KnownGeoJsonGeometryType {
 }
 
 // @public
-export enum KnownGeoJsonObjectType {
-    GeoJsonFeature = "Feature",
-    GeoJsonFeatureCollection = "FeatureCollection",
-    GeoJsonGeometryCollection = "GeometryCollection",
-    GeoJsonLineString = "LineString",
-    GeoJsonMultiLineString = "MultiLineString",
-    GeoJsonMultiPoint = "MultiPoint",
-    GeoJsonMultiPolygon = "MultiPolygon",
-    GeoJsonPoint = "Point",
-    GeoJsonPolygon = "Polygon"
+export enum KnownJsonFormat {
+    Json = "json"
 }
 
 // @public
@@ -800,28 +788,27 @@ export enum KnownLroStatus {
 }
 
 // @public
-export enum KnownResponseFormat {
-    Json = "json"
+export enum KnownOutputOntology {
+    Facility20 = "facility-2.0"
 }
 
 // @public
-export enum KnownStyleObjectType {
-    BooleanTypeStyleRule = "boolean",
-    NumberTypeStyleRule = "number",
-    StringTypeStyleRule = "string"
-}
-
-// @public
-export enum KnownUploadDataFormat {
-    Dwgzippackage = "dwgzippackage",
-    Geojson = "geojson",
-    Zip = "zip"
+export enum KnownStyleRuleType {
+    Boolean = "boolean",
+    Number = "number",
+    String = "string"
 }
 
 // @public (undocumented)
-export interface LandingPageResponse {
-    links: WfsEndpointLink[];
+export interface LandingPageResult {
+    links: WFSEndpointLink[];
     readonly ontology?: string;
+}
+
+// @public
+export interface LatLongPairAbbreviated {
+    lat?: number;
+    lon?: number;
 }
 
 // @public
@@ -837,53 +824,63 @@ export interface LongRunningOperationResult {
 export type LroStatus = string;
 
 // @public
-export interface MapDataDetailInfo {
-    readonly dataFormat?: string;
+export interface MapData {
+    // (undocumented)
+    dataFormat?: DataFormat;
     readonly description?: string;
-    readonly location?: string;
+    readonly locationURL?: string;
     readonly sizeInBytes?: number;
     readonly udid?: string;
-    readonly uploadStatus?: string;
+    readonly uploadStatus?: UploadStatus;
 }
 
 // @public
-export interface MapDataListResponse {
-    readonly mapDataList?: MapDataDetailInfo[];
+export interface MapDataListResult {
+    readonly mapDataList?: MapData[];
 }
 
 // @public
-export interface NumberRuleObject {
+export interface NumberRule {
     color?: string;
-    range?: RangeObject;
+    range?: Range;
 }
 
 // @public
-export type NumberTypeStyleRule = StyleObject & {
+export type NumberStyleRule = StyleRule & {
     type: "number";
-    rules: NumberRuleObject[];
+    rules: NumberRule[];
 };
 
 // @public
-export interface PointInPolygonResponse {
-    result?: PointInPolygonResult;
+export type OutputOntology = string;
+
+// @public
+export interface PointInPolygonResult {
+    result?: PointInPolygonResultResult;
     readonly summary?: PointInPolygonSummary;
 }
 
 // @public
-export interface PointInPolygonResult {
+export interface PointInPolygonResultResult {
     readonly intersectingGeometries?: string[];
-    readonly pointInPolygons?: boolean;
+    readonly isPointInPolygons?: boolean;
 }
 
 // @public
 export interface PointInPolygonSummary {
     readonly information?: string;
-    sourcePoint?: SpatialCoordinate;
+    sourcePoint?: LatLongPairAbbreviated;
     readonly udid?: string;
 }
 
 // @public
-export interface RangeObject {
+export interface Position {
+    latitude: number;
+    longitude: number;
+}
+
+// @public
+export interface Range {
     exclusiveMaximum?: string;
     exclusiveMinimum?: string;
     maximum?: string;
@@ -891,33 +888,31 @@ export interface RangeObject {
 }
 
 // @public
-export type ResponseFormat = string;
-
-// @public
 export interface Spatial {
-    getBuffer(format: ResponseFormat, udid: string, distances: string, options?: SpatialGetBufferOptionalParams): Promise<SpatialGetBufferResponse>;
-    getClosestPoint(format: ResponseFormat, udid: string, latitude: number, longitude: number, options?: SpatialGetClosestPointOptionalParams): Promise<SpatialGetClosestPointResponse>;
-    getGeofence(format: ResponseFormat, deviceId: string, udid: string, latitude: number, longitude: number, options?: SpatialGetGeofenceOptionalParams): Promise<SpatialGetGeofenceResponse>;
-    getGreatCircleDistance(format: ResponseFormat, query: string, options?: SpatialGetGreatCircleDistanceOptionalParams): Promise<SpatialGetGreatCircleDistanceResponse>;
-    getPointInPolygon(format: ResponseFormat, udid: string, latitude: number, longitude: number, options?: SpatialGetPointInPolygonOptionalParams): Promise<SpatialGetPointInPolygonResponse>;
-    postBuffer(format: ResponseFormat, bufferRequestBody: BufferRequestBody, options?: SpatialPostBufferOptionalParams): Promise<SpatialPostBufferResponse>;
-    postClosestPoint(format: ResponseFormat, latitude: number, longitude: number, closestPointRequestBody: Record<string, unknown>, options?: SpatialPostClosestPointOptionalParams): Promise<SpatialPostClosestPointResponse>;
-    postGeofence(format: ResponseFormat, deviceId: string, latitude: number, longitude: number, searchGeofenceRequestBody: Record<string, unknown>, options?: SpatialPostGeofenceOptionalParams): Promise<SpatialPostGeofenceResponse>;
-    postPointInPolygon(format: ResponseFormat, latitude: number, longitude: number, pointInPolygonRequestBody: Record<string, unknown>, options?: SpatialPostPointInPolygonOptionalParams): Promise<SpatialPostPointInPolygonResponse>;
+    evaluatePointInPolygon(format: JsonFormat, udid: string, position: Position, options?: SpatialEvaluatePointInPolygonOptionalParams): Promise<SpatialEvaluatePointInPolygonResponse>;
+    getBuffer(format: JsonFormat, udid: string, distances: string, options?: SpatialGetBufferOptionalParams): Promise<SpatialGetBufferResponse>;
+    getClosestPoint(format: JsonFormat, udid: string, position: Position, options?: SpatialGetClosestPointOptionalParams): Promise<SpatialGetClosestPointResponse>;
+    getGeofence(format: JsonFormat, deviceId: string, udid: string, position: Position, options?: SpatialGetGeofenceOptionalParams): Promise<SpatialGetGeofenceResponse>;
+    getGreatCircleDistance(format: JsonFormat, query: string, options?: SpatialGetGreatCircleDistanceOptionalParams): Promise<SpatialGetGreatCircleDistanceResponse>;
+    postBuffer(format: JsonFormat, bufferRequestBody: BufferRequestBody, options?: SpatialPostBufferOptionalParams): Promise<SpatialPostBufferResponse>;
+    postClosestPoint(format: JsonFormat, closestPointRequestBody: Record<string, unknown>, position: Position, options?: SpatialPostClosestPointOptionalParams): Promise<SpatialPostClosestPointResponse>;
+    postGeofence(format: JsonFormat, deviceId: string, searchGeofenceRequestBody: Record<string, unknown>, position: Position, options?: SpatialPostGeofenceOptionalParams): Promise<SpatialPostGeofenceResponse>;
+    postPointInPolygon(format: JsonFormat, pointInPolygonRequestBody: Record<string, unknown>, position: Position, options?: SpatialPostPointInPolygonOptionalParams): Promise<SpatialPostPointInPolygonResponse>;
 }
 
 // @public
-export interface SpatialCoordinate {
-    readonly lat?: number;
-    readonly lon?: number;
+export interface SpatialEvaluatePointInPolygonOptionalParams extends coreClient.OperationOptions {
 }
+
+// @public
+export type SpatialEvaluatePointInPolygonResponse = PointInPolygonResult;
 
 // @public
 export interface SpatialGetBufferOptionalParams extends coreClient.OperationOptions {
 }
 
 // @public
-export type SpatialGetBufferResponse = BufferResponse;
+export type SpatialGetBufferResponse = BufferResult;
 
 // @public
 export interface SpatialGetClosestPointOptionalParams extends coreClient.OperationOptions {
@@ -934,36 +929,29 @@ export interface SpatialGetGeofenceHeaders {
 
 // @public
 export interface SpatialGetGeofenceOptionalParams extends coreClient.OperationOptions {
+    altitude?: number;
     isAsync?: boolean;
     mode?: GeofenceMode;
-    searchBuffer?: number;
+    searchBufferInMeters?: number;
     userTime?: Date;
-    z?: number;
 }
 
 // @public
-export type SpatialGetGeofenceResponse = SpatialGetGeofenceHeaders & GeofenceResponse;
+export type SpatialGetGeofenceResponse = SpatialGetGeofenceHeaders & Geofence;
 
 // @public
 export interface SpatialGetGreatCircleDistanceOptionalParams extends coreClient.OperationOptions {
 }
 
 // @public
-export type SpatialGetGreatCircleDistanceResponse = GreatCircleDistanceResponse;
-
-// @public
-export interface SpatialGetPointInPolygonOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type SpatialGetPointInPolygonResponse = PointInPolygonResponse;
+export type SpatialGetGreatCircleDistanceResponse = GreatCircleDistanceResult;
 
 // @public
 export interface SpatialPostBufferOptionalParams extends coreClient.OperationOptions {
 }
 
 // @public
-export type SpatialPostBufferResponse = BufferResponse;
+export type SpatialPostBufferResponse = BufferResult;
 
 // @public
 export interface SpatialPostClosestPointOptionalParams extends coreClient.OperationOptions {
@@ -980,51 +968,48 @@ export interface SpatialPostGeofenceHeaders {
 
 // @public
 export interface SpatialPostGeofenceOptionalParams extends coreClient.OperationOptions {
+    altitude?: number;
     isAsync?: boolean;
     mode?: GeofenceMode;
     searchBuffer?: number;
     userTime?: Date;
-    z?: number;
 }
 
 // @public
-export type SpatialPostGeofenceResponse = SpatialPostGeofenceHeaders & GeofenceResponse;
+export type SpatialPostGeofenceResponse = SpatialPostGeofenceHeaders & Geofence;
 
 // @public
 export interface SpatialPostPointInPolygonOptionalParams extends coreClient.OperationOptions {
 }
 
 // @public
-export type SpatialPostPointInPolygonResponse = PointInPolygonResponse;
+export type SpatialPostPointInPolygonResponse = PointInPolygonResult;
 
 // @public
-export interface StatesetCreatedResponse {
+export interface Stateset {
+    datasetIds?: string[];
+    readonly description?: string;
+    styleRules?: StyleRules;
+}
+
+// @public
+export interface StatesetCreatedResult {
     readonly statesetId?: string;
 }
 
 // @public
-export interface StatesetGetResponse {
-    datasetIds?: string[];
-    readonly description?: string;
-    statesetStyle?: StylesObject;
-}
+export type StatesetInfo = Stateset & {
+    readonly statesetId?: string;
+};
 
 // @public
-export interface StatesetInfoObject {
-    datasetIds?: string[];
-    readonly description?: string;
-    statesetId?: string;
-    statesetStyle?: StylesObject;
-}
-
-// @public
-export interface StatesetListResponse {
+export interface StatesetListResult {
     readonly nextLink?: string;
-    statesets?: StatesetInfoObject[];
+    statesets?: StatesetInfo[];
 }
 
 // @public
-export type StringTypeStyleRule = StyleObject & {
+export type StringStyleRule = StyleRule & {
     type: "string";
     rules: {
         [propertyName: string]: string;
@@ -1032,30 +1017,31 @@ export type StringTypeStyleRule = StyleObject & {
 };
 
 // @public
-export interface StyleObject {
+export interface StyleRule {
     keyName: string;
     type: "boolean" | "number" | "string";
 }
 
 // @public
-export type StyleObjectType = string;
-
-// @public (undocumented)
-export type StyleObjectUnion = StyleObject | BooleanTypeStyleRule | NumberTypeStyleRule | StringTypeStyleRule;
-
-// @public
-export interface StylesObject {
-    styles?: StyleObjectUnion[];
+export interface StyleRules {
+    styleRules?: StyleRuleUnion[];
 }
 
 // @public
+export type StyleRuleType = string;
+
+// @public (undocumented)
+export type StyleRuleUnion = StyleRule | BooleanStyleRule | NumberStyleRule | StringStyleRule;
+
+// @public
 export interface Tileset {
-    beginCreate(datasetId: string, options?: TilesetCreateOptionalParams): Promise<PollerLike<PollOperationState<TilesetCreateResponse>, TilesetCreateResponse>>;
-    beginCreateAndWait(datasetId: string, options?: TilesetCreateOptionalParams): Promise<TilesetCreateResponse>;
-    delete(tilesetId: string, options?: TilesetDeleteOptionalParams): Promise<void>;
-    get(tilesetId: string, options?: TilesetGetOptionalParams): Promise<TilesetGetResponse>;
-    getOperation(operationId: string, options?: TilesetGetOperationOptionalParams): Promise<TilesetGetOperationResponse>;
-    list(options?: TilesetListOptionalParams): PagedAsyncIterableIterator<TilesetDetailInfo>;
+    readonly bbox?: number[];
+    readonly datasetId?: string;
+    readonly description?: string;
+    readonly maxZoom?: number;
+    readonly minZoom?: number;
+    readonly ontology?: string;
+    readonly tilesetId?: string;
 }
 
 // @public
@@ -1078,17 +1064,6 @@ export interface TilesetDeleteOptionalParams extends coreClient.OperationOptions
 }
 
 // @public
-export interface TilesetDetailInfo {
-    readonly bbox?: number[];
-    readonly datasetId?: string;
-    readonly description?: string;
-    readonly maxZoom?: number;
-    readonly minZoom?: number;
-    readonly ontology?: string;
-    readonly tilesetId?: string;
-}
-
-// @public
 export interface TilesetGetOperationHeaders {
     resourceLocation?: string;
 }
@@ -1105,30 +1080,40 @@ export interface TilesetGetOptionalParams extends coreClient.OperationOptions {
 }
 
 // @public
-export type TilesetGetResponse = TilesetDetailInfo;
+export type TilesetGetResponse = Tileset;
 
 // @public
 export interface TilesetListNextOptionalParams extends coreClient.OperationOptions {
 }
 
 // @public
-export type TilesetListNextResponse = TilesetListResponse;
-
-// @public
-export type TilesetListOperationResponse = TilesetListResponse;
+export type TilesetListNextResponse = TilesetListResult;
 
 // @public
 export interface TilesetListOptionalParams extends coreClient.OperationOptions {
 }
 
 // @public
-export interface TilesetListResponse {
+export type TilesetListResponse = TilesetListResult;
+
+// @public
+export interface TilesetListResult {
     readonly nextLink?: string;
-    readonly tilesets?: TilesetDetailInfo[];
+    readonly tilesets?: Tileset[];
 }
 
 // @public
-export type UploadDataFormat = string;
+export interface TilesetOperations {
+    beginCreate(datasetId: string, options?: TilesetCreateOptionalParams): Promise<PollerLike<PollOperationState<TilesetCreateResponse>, TilesetCreateResponse>>;
+    beginCreateAndWait(datasetId: string, options?: TilesetCreateOptionalParams): Promise<TilesetCreateResponse>;
+    delete(tilesetId: string, options?: TilesetDeleteOptionalParams): Promise<void>;
+    get(tilesetId: string, options?: TilesetGetOptionalParams): Promise<TilesetGetResponse>;
+    getOperation(operationId: string, options?: TilesetGetOperationOptionalParams): Promise<TilesetGetOperationResponse>;
+    list(options?: TilesetListOptionalParams): PagedAsyncIterableIterator<Tileset>;
+}
+
+// @public
+export type UploadStatus = "Pending" | "Completed" | "Failed";
 
 // @public
 export interface Wfs {
@@ -1136,10 +1121,10 @@ export interface Wfs {
     getCollection(datasetId: string, collectionId: string, options?: WfsGetCollectionOptionalParams): Promise<WfsGetCollectionResponse>;
     getCollectionDefinition(datasetId: string, collectionId: string, options?: WfsGetCollectionDefinitionOptionalParams): Promise<WfsGetCollectionDefinitionResponse>;
     getCollections(datasetId: string, options?: WfsGetCollectionsOptionalParams): Promise<WfsGetCollectionsResponse>;
-    getConformance(datasetId: string, options?: WfsGetConformanceOptionalParams): Promise<WfsGetConformanceResponse>;
     getFeature(datasetId: string, collectionId: string, featureId: string, options?: WfsGetFeatureOptionalParams): Promise<WfsGetFeatureResponse>;
     getFeatures(datasetId: string, collectionId: string, options?: WfsGetFeaturesOptionalParams): Promise<WfsGetFeaturesResponse>;
     getLandingPage(datasetId: string, options?: WfsGetLandingPageOptionalParams): Promise<WfsGetLandingPageResponse>;
+    listConformance(datasetId: string, options?: WfsListConformanceOptionalParams): Promise<WfsListConformanceResponse>;
 }
 
 // @public
@@ -1147,9 +1132,9 @@ export interface WfsDeleteFeatureOptionalParams extends coreClient.OperationOpti
 }
 
 // @public
-export interface WfsEndpointLink {
+export interface WFSEndpointLink {
     href: string;
-    hreflang?: string;
+    hrefLang?: string;
     rel?: string;
     title?: string;
     type?: string;
@@ -1160,14 +1145,14 @@ export interface WfsGetCollectionDefinitionOptionalParams extends coreClient.Ope
 }
 
 // @public
-export type WfsGetCollectionDefinitionResponse = CollectionDefinitionResponse;
+export type WfsGetCollectionDefinitionResponse = CollectionDefinition;
 
 // @public
 export interface WfsGetCollectionOptionalParams extends coreClient.OperationOptions {
 }
 
 // @public
-export type WfsGetCollectionResponse = CollectionInfo;
+export type WfsGetCollectionResponse = Collection;
 
 // @public
 export interface WfsGetCollectionsOptionalParams extends coreClient.OperationOptions {
@@ -1177,22 +1162,15 @@ export interface WfsGetCollectionsOptionalParams extends coreClient.OperationOpt
 export type WfsGetCollectionsResponse = CollectionsResponse;
 
 // @public
-export interface WfsGetConformanceOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type WfsGetConformanceResponse = ConformanceResponse;
-
-// @public
 export interface WfsGetFeatureOptionalParams extends coreClient.OperationOptions {
 }
 
 // @public
-export type WfsGetFeatureResponse = FeatureResponse;
+export type WfsGetFeatureResponse = FeatureResult;
 
 // @public
 export interface WfsGetFeaturesOptionalParams extends coreClient.OperationOptions {
-    bbox?: string;
+    boundingBox?: number[];
     filter?: string;
     limit?: number;
 }
@@ -1205,7 +1183,14 @@ export interface WfsGetLandingPageOptionalParams extends coreClient.OperationOpt
 }
 
 // @public
-export type WfsGetLandingPageResponse = LandingPageResponse;
+export type WfsGetLandingPageResponse = LandingPageResult;
+
+// @public
+export interface WfsListConformanceOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type WfsListConformanceResponse = ConformanceResult;
 
 
 // (No @packageDocumentation comment for this package)

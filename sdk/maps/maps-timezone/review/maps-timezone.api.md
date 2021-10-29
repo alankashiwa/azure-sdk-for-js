@@ -42,7 +42,10 @@ export interface IanaId {
 }
 
 // @public
-export enum KnownResponseFormat {
+export type JsonFormat = string;
+
+// @public
+export enum KnownJsonFormat {
     Json = "json"
 }
 
@@ -55,23 +58,13 @@ export enum KnownTimezoneOptions {
 }
 
 // @public
-export interface ReferenceTimeByCoordinates {
+export interface ReferenceTime {
     readonly daylightSavings?: string;
     readonly posixTz?: string;
     readonly posixTzValidYear?: number;
     readonly standardOffset?: string;
-    readonly sunrise?: string;
-    readonly sunset?: string;
-    readonly tag?: string;
-    readonly wallTime?: string;
-}
-
-// @public
-export interface ReferenceTimeById {
-    readonly daylightSavings?: string;
-    readonly posixTz?: string;
-    readonly posixTzValidYear?: number;
-    readonly standardOffset?: string;
+    readonly sunrise?: Date;
+    readonly sunset?: Date;
     readonly tag?: string;
     readonly wallTime?: string;
 }
@@ -82,9 +75,6 @@ export interface RepresentativePoint {
     readonly longitude?: number;
 }
 
-// @public
-export type ResponseFormat = string;
-
 // @public (undocumented)
 export interface TimeTransition {
     readonly daylightSavings?: string;
@@ -94,57 +84,15 @@ export interface TimeTransition {
     readonly utcStart?: Date;
 }
 
-// @public
-export interface Timezone {
-    getTimezoneByCoordinates(format: ResponseFormat, query: string, options?: TimezoneGetTimezoneByCoordinatesOptionalParams): Promise<TimezoneGetTimezoneByCoordinatesResponse>;
-    getTimezoneByID(format: ResponseFormat, query: string, options?: TimezoneGetTimezoneByIDOptionalParams): Promise<TimezoneGetTimezoneByIDResponse>;
-    getTimezoneEnumIana(format: ResponseFormat, options?: TimezoneGetTimezoneEnumIanaOptionalParams): Promise<TimezoneGetTimezoneEnumIanaResponse>;
-    getTimezoneEnumWindows(format: ResponseFormat, options?: TimezoneGetTimezoneEnumWindowsOptionalParams): Promise<TimezoneGetTimezoneEnumWindowsResponse>;
-    getTimezoneIanaVersion(format: ResponseFormat, options?: TimezoneGetTimezoneIanaVersionOptionalParams): Promise<TimezoneGetTimezoneIanaVersionResponse>;
-    getTimezoneWindowsToIana(format: ResponseFormat, query: string, options?: TimezoneGetTimezoneWindowsToIanaOptionalParams): Promise<TimezoneGetTimezoneWindowsToIanaResponse>;
-}
-
-// @public (undocumented)
-export interface TimeZoneByCoordinates {
-    readonly aliases?: string[];
-    readonly countries?: CountryRecord[];
-    readonly id?: string;
-    names?: TimezoneNames;
-    readonly referenceTime?: ReferenceTimeByCoordinates;
-    readonly representativePoint?: RepresentativePoint;
-    readonly timeTransitions?: TimeTransition[];
-}
-
-// @public
-export interface TimezoneByCoordinatesResult {
-    readonly referenceUtcTimestamp?: Date;
-    readonly timeZones?: TimeZoneByCoordinates[];
-    readonly version?: string;
-}
-
-// @public (undocumented)
-export interface TimezoneById {
-    readonly aliases?: string[];
-    readonly countries?: CountryRecord[];
-    readonly id?: string;
-    names?: TimezoneNames;
-    readonly referenceTime?: ReferenceTimeById;
-    readonly representativePoint?: RepresentativePoint;
-    readonly timeTransitions?: TimeTransition[];
-}
-
-// @public
-export interface TimezoneByIdResult {
-    readonly referenceUtcTimestamp?: Date;
-    readonly timeZones?: TimezoneById[];
-    readonly version?: string;
-}
-
 // @public (undocumented)
 export class TimezoneClient extends TimezoneClientContext {
     constructor(credentials: coreAuth.TokenCredential, options?: TimezoneClientOptionalParams);
-    // (undocumented)
-    timezone: Timezone;
+    convertWindowsTimezoneToIana(format: JsonFormat, windowsTimezoneId: string, options?: TimezoneClientConvertWindowsTimezoneToIanaOptionalParams): Promise<TimezoneClientConvertWindowsTimezoneToIanaResponse>;
+    getIanaTimezoneIds(format: JsonFormat, options?: TimezoneClientGetIanaTimezoneIdsOptionalParams): Promise<TimezoneClientGetIanaTimezoneIdsResponse>;
+    getIanaVersion(format: JsonFormat, options?: TimezoneClientGetIanaVersionOptionalParams): Promise<TimezoneClientGetIanaVersionResponse>;
+    getTimezoneByCoordinates(format: JsonFormat, coordinates: number[], options?: TimezoneClientGetTimezoneByCoordinatesOptionalParams): Promise<TimezoneClientGetTimezoneByCoordinatesResponse>;
+    getTimezoneByID(format: JsonFormat, timezoneId: string, options?: TimezoneClientGetTimezoneByIDOptionalParams): Promise<TimezoneClientGetTimezoneByIDResponse>;
+    getWindowsTimezoneIds(format: JsonFormat, options?: TimezoneClientGetWindowsTimezoneIdsOptionalParams): Promise<TimezoneClientGetWindowsTimezoneIdsResponse>;
 }
 
 // @public (undocumented)
@@ -155,80 +103,84 @@ export class TimezoneClientContext extends coreClient.ServiceClient {
     // (undocumented)
     apiVersion: string;
     // (undocumented)
-    xMsClientId?: string;
+    clientId?: string;
 }
+
+// @public
+export interface TimezoneClientConvertWindowsTimezoneToIanaOptionalParams extends coreClient.OperationOptions {
+    windowsTerritoryCode?: string;
+}
+
+// @public
+export type TimezoneClientConvertWindowsTimezoneToIanaResponse = IanaId[];
+
+// @public
+export interface TimezoneClientGetIanaTimezoneIdsOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type TimezoneClientGetIanaTimezoneIdsResponse = IanaId[];
+
+// @public
+export interface TimezoneClientGetIanaVersionOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type TimezoneClientGetIanaVersionResponse = TimezoneIanaVersionResult;
+
+// @public
+export interface TimezoneClientGetTimezoneByCoordinatesOptionalParams extends coreClient.OperationOptions {
+    acceptLanguage?: string;
+    daylightSavingsTimeFrom?: Date;
+    daylightSavingsTimeLastingYears?: number;
+    options?: TimezoneOptions;
+    timeStamp?: Date;
+}
+
+// @public
+export type TimezoneClientGetTimezoneByCoordinatesResponse = TimezoneResult;
+
+// @public
+export interface TimezoneClientGetTimezoneByIDOptionalParams extends coreClient.OperationOptions {
+    acceptLanguage?: string;
+    daylightSavingsTimeFrom?: Date;
+    daylightSavingsTimeLastingYears?: number;
+    options?: TimezoneOptions;
+    timeStamp?: Date;
+}
+
+// @public
+export type TimezoneClientGetTimezoneByIDResponse = TimezoneResult;
+
+// @public
+export interface TimezoneClientGetWindowsTimezoneIdsOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type TimezoneClientGetWindowsTimezoneIdsResponse = TimezoneWindows[];
 
 // @public
 export interface TimezoneClientOptionalParams extends coreClient.ServiceClientOptions {
     $host?: string;
     apiVersion?: string;
+    clientId?: string;
     endpoint?: string;
-    xMsClientId?: string;
 }
-
-// @public (undocumented)
-export interface TimezoneEnumWindow {
-    ianaIds?: string[];
-    readonly territory?: string;
-    readonly windowsId?: string;
-}
-
-// @public
-export interface TimezoneGetTimezoneByCoordinatesOptionalParams extends coreClient.OperationOptions {
-    acceptLanguage?: string;
-    options?: TimezoneOptions;
-    timeStamp?: Date;
-    transitionsFrom?: Date;
-    transitionsYears?: number;
-}
-
-// @public
-export type TimezoneGetTimezoneByCoordinatesResponse = TimezoneByCoordinatesResult;
-
-// @public
-export interface TimezoneGetTimezoneByIDOptionalParams extends coreClient.OperationOptions {
-    acceptLanguage?: string;
-    options?: TimezoneOptions;
-    timeStamp?: Date;
-    transitionsFrom?: Date;
-    transitionsYears?: number;
-}
-
-// @public
-export type TimezoneGetTimezoneByIDResponse = TimezoneByIdResult;
-
-// @public
-export interface TimezoneGetTimezoneEnumIanaOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type TimezoneGetTimezoneEnumIanaResponse = IanaId[];
-
-// @public
-export interface TimezoneGetTimezoneEnumWindowsOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type TimezoneGetTimezoneEnumWindowsResponse = TimezoneEnumWindow[];
-
-// @public
-export interface TimezoneGetTimezoneIanaVersionOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type TimezoneGetTimezoneIanaVersionResponse = TimezoneIanaVersionResult;
-
-// @public
-export interface TimezoneGetTimezoneWindowsToIanaOptionalParams extends coreClient.OperationOptions {
-    territory?: string;
-}
-
-// @public
-export type TimezoneGetTimezoneWindowsToIanaResponse = IanaId[];
 
 // @public
 export interface TimezoneIanaVersionResult {
     readonly version?: string;
+}
+
+// @public (undocumented)
+export interface TimezoneId {
+    readonly aliases?: string[];
+    readonly countries?: CountryRecord[];
+    readonly id?: string;
+    names?: TimezoneNames;
+    readonly referenceTime?: ReferenceTime;
+    readonly representativePoint?: RepresentativePoint;
+    readonly timeTransitions?: TimeTransition[];
 }
 
 // @public
@@ -241,6 +193,20 @@ export interface TimezoneNames {
 
 // @public
 export type TimezoneOptions = string;
+
+// @public
+export interface TimezoneResult {
+    readonly referenceUtcTimestamp?: Date;
+    readonly timeZones?: TimezoneId[];
+    readonly version?: string;
+}
+
+// @public (undocumented)
+export interface TimezoneWindows {
+    ianaIds?: string[];
+    readonly territory?: string;
+    readonly windowsId?: string;
+}
 
 
 // (No @packageDocumentation comment for this package)
