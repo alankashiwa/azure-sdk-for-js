@@ -2,12 +2,13 @@
 // Licensed under the MIT License.
 
 /**
- * @summary Demonstrates Geolocation API usage. Simple CRUD operations are performed.
+ * @summary Demonstrates Geolocation API usage. Simple queries are performed.
  */
 
 const { DefaultAzureCredential } = require("@azure/identity");
 const { GeolocationClient } = require("@azure/maps-geolocation");
-require("dotenv").config();
+const dotenv = require("dotenv");
+dotenv.config();
 
 /**
  * Azure Maps supports two ways to authenticate requests:
@@ -52,12 +53,12 @@ async function main() {
     }
   }
 
-  const geolocation = new GeolocationClient(credential).geolocation;
+  const geolocation = new GeolocationClient(credential);
 
   const ipAddressToTest = "8.8.8.8";
 
   console.log(" --- Get IP to location:");
-  console.log(await geolocation.getIPToLocationPreview("json", ipAddressToTest, operationOptions));
+  console.log(await geolocation.getLocation("json", ipAddressToTest, operationOptions));
 }
 
 main();

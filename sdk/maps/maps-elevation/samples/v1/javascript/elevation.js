@@ -2,12 +2,13 @@
 // Licensed under the MIT License.
 
 /**
- * @summary Demonstrates Elevation API usage. Simple CRUD operations are performed.
+ * @summary Demonstrates Elevation API usage. Simple queries are performed.
  */
 
 const { DefaultAzureCredential } = require("@azure/identity");
 const { ElevationClient } = require("@azure/maps-elevation");
-require("dotenv").config();
+const dotenv = require("dotenv");
+dotenv.config();
 
 /**
  * Azure Maps supports two ways to authenticate requests:
@@ -52,13 +53,13 @@ async function main() {
     }
   }
 
-  const elevation = new ElevationClient(credential).elevation;
+  const elevation = new ElevationClient(credential);
 
   console.log(" --- Get Data For Bounding Box:");
   console.log(
     await elevation.getDataForBoundingBox(
       "json",
-      ["-121.66853362143818", "46.84646479863713", "-121.65853362143818", "46.85646479863713"],
+      [-121.66853362143818, 46.84646479863713, -121.65853362143818, 46.85646479863713],
       3,
       3,
       operationOptions

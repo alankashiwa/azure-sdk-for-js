@@ -14,16 +14,28 @@
       ]
     }
   },
+  "//sampleConfiguration": {
+    "productName": "Azure Maps Geolocation",
+    "productSlugs": [
+      "azure",
+      "azure-maps",
+      "geolocation"
+    ],
+    "requiredResources": {
+      "Azure Maps Resource": "https://docs.microsoft.com/azure/azure-maps/how-to-create-template"
+    }
+  },
   "scripts": {
     "audit": "node ../../../common/scripts/rush-audit.js && rimraf node_modules package-lock.json && npm i --package-lock-only 2>&1 && npm audit",
     "build:samples": "echo Obsolete",
     "build:test": "tsc -p . && rollup -c 2>&1",
     "build:types": "downlevel-dts types types/3.1",
     "build": "tsc -p . && rollup -c 2>&1 && api-extractor run --local && npm run build:types",
-    "check-format": "prettier --list-different --config ../../../.prettierrc.json --ignore-path ../../../.prettierignore \"src/**/*.ts\" \"test/**/*.ts\" \"*.{js,json}\"",
+    "check-format": "prettier --list-different --config ../../../.prettierrc.json --ignore-path ../../../.prettierignore \"src/**/*.ts\" \"test/**/*.ts\" \"samples-dev/**/*.ts\" \"*.{js,json}\"",
     "clean": "rimraf dist dist-* temp types *.tgz *.log",
     "docs": "typedoc --excludePrivate --excludeNotExported --excludeExternals --stripInternal --mode file --out ./dist/docs ./src",
     "execute:samples": "dev-tool samples run samples-dev",
+    "publish:samples": "dev-tool samples publish",
     "extract-api": "tsc -p . && api-extractor run --local",
     "format": "prettier --write --config ../../../.prettierrc.json --ignore-path ../../../.prettierignore \"src/**/*.ts\" \"test/**/*.ts\" \"samples-dev/**/*.ts\" \"*.{js,json}\"",
     "generate:client": "autorest --typescript --v3 swagger",
