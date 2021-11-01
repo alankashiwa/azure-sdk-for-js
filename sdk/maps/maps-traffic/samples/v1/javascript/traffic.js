@@ -2,13 +2,14 @@
 // Licensed under the MIT License.
 
 /**
- * @summary Demonstrates Traffic API usage. Simple CRUD operations are performed.
+ * @summary Demonstrates Traffic API usage. Simple queries are performed.
  */
 
 const fs = require("fs");
 const { DefaultAzureCredential } = require("@azure/identity");
 const { TrafficClient } = require("@azure/maps-traffic");
-require("dotenv").config();
+const dotenv = require("dotenv");
+dotenv.config();
 
 /**
  * Azure Maps supports two ways to authenticate requests:
@@ -61,7 +62,7 @@ async function main() {
       "json",
       "absolute",
       10,
-      "52.41072,4.84239",
+      [52.41072, 4.84239],
       operationOptions
     )
   );
@@ -69,14 +70,8 @@ async function main() {
   if (!fs.existsSync("tmp")) fs.mkdirSync("tmp");
 
   console.log(" --- Get traffic flow tile:");
-  let result = await traffic.getTrafficFlowTile(
-    "png",
-    "absolute",
-    12,
-    2044,
-    1360,
-    operationOptions
-  );
+  let tileIndex = { x: 2044, y: 1360 };
+  let result = await traffic.getTrafficFlowTile("png", "absolute", 12, tileIndex, operationOptions);
   // use result.blobBody for Browser, readableStreamBody for Node.js:
   result.readableStreamBody?.pipe(fs.createWriteStream("tmp/traffic_flow_tile.png"));
 
@@ -85,7 +80,7 @@ async function main() {
     await traffic.getTrafficIncidentDetail(
       "json",
       "s3",
-      "6841263.950712,511972.674418,6886056.049288,582676.925582",
+      [6841263.950712, 511972.674418, 6886056.049288, 582676.925582],
       11,
       "1335294634919",
       operationOptions
@@ -93,15 +88,24 @@ async function main() {
   );
 
   console.log(" --- Get traffic incident tile:");
-  result = await traffic.getTrafficIncidentTile("png", "night", 10, 175, 408, operationOptions);
+  tileIndex = { x: 175, y: 408 };
+  result = await traffic.getTrafficIncidentTile("png", "night", 10, tileIndex, operationOptions);
   // use result.blobBody for Browser, readableStreamBody for Node.js:
   result.readableStreamBody?.pipe(fs.createWriteStream("tmp/traffic_incident_tile.png"));
 
   console.log(" --- Get traffic incident viewport:");
-  const viewportBBox =
-    "-939584.4813015489,-23954526.723651607,14675583.153020501,25043442.895825107";
-  const overviewBBox =
-    "-939584.4813018347,-23954526.723651607,14675583.153020501,25043442.8958229083";
+  const viewportBBox = [
+    -939584.4813015489,
+    -23954526.723651607,
+    14675583.153020501,
+    25043442.895825107
+  ];
+  const overviewBBox = [
+    -939584.4813018347,
+    -23954526.723651607,
+    14675583.153020501,
+    25043442.8958229083
+  ];
   console.log(
     await traffic.getTrafficIncidentViewport(
       "json",

@@ -2,12 +2,13 @@
 // Licensed under the MIT License.
 
 /**
- * @summary Demonstrates Weather API usage. Simple CRUD operations are performed.
+ * @summary Demonstrates Weather API usage. Simple queries are performed.
  */
 
 const { DefaultAzureCredential } = require("@azure/identity");
 const { WeatherClient } = require("@azure/maps-weather");
-require("dotenv").config();
+const dotenv = require("dotenv");
+dotenv.config();
 
 /**
  * Azure Maps supports two ways to authenticate requests:
@@ -52,17 +53,17 @@ async function main() {
     }
   }
 
-  const weather = new WeatherClient(credential).weather;
+  const weather = new WeatherClient(credential);
 
   console.log(" --- Get current weather conditions:");
   console.log(
-    await weather.getCurrentConditions("json", "47.641268,-122.125679", operationOptions)
+    await weather.getCurrentConditions("json", [47.641268, -122.125679], operationOptions)
   );
 
   console.log(" --- Get daily forecast:");
   const dailyForecastOptions = { duration: 5 };
   console.log(
-    await weather.getDailyForecast("json", "62.6490341,30.0734812", {
+    await weather.getDailyForecast("json", [62.6490341, 30.0734812], {
       ...dailyForecastOptions,
       ...operationOptions
     })
@@ -71,7 +72,7 @@ async function main() {
   console.log(" --- Get daily indices:");
   const dailyIndicesOptions = { indexGroupId: 11 };
   console.log(
-    await weather.getDailyIndices("json", "43.84745,-79.37849", {
+    await weather.getDailyIndices("json", [43.84745, -79.37849], {
       ...dailyIndicesOptions,
       ...operationOptions
     })
@@ -80,7 +81,7 @@ async function main() {
   console.log(" --- Get hourly forecast:");
   const hourlyForecastOptions = { duration: 12 };
   console.log(
-    await weather.getHourlyForecast("json", "47.632346,-122.138874", {
+    await weather.getHourlyForecast("json", [47.632346, -122.138874], {
       ...hourlyForecastOptions,
       ...operationOptions
     })
@@ -89,7 +90,7 @@ async function main() {
   console.log(" --- Get minute forecast:");
   const minuteForecastOptions = { interval: 15 };
   console.log(
-    await weather.getMinuteForecast("json", "47.632346,-122.138874", {
+    await weather.getMinuteForecast("json", [47.632346, -122.138874], {
       ...minuteForecastOptions,
       ...operationOptions
     })
@@ -98,14 +99,14 @@ async function main() {
   console.log(" --- Get quarter day forecast:");
   const quarterDayForecastOptions = { duration: 1 };
   console.log(
-    await weather.getQuarterDayForecast("json", "47.632346,-122.138874", {
+    await weather.getQuarterDayForecast("json", [47.632346, -122.138874], {
       ...quarterDayForecastOptions,
       ...operationOptions
     })
   );
 
   console.log(" --- Get severe weather alerts:");
-  console.log(await weather.getSevereWeatherAlerts("json", "48.057,-81.091", operationOptions));
+  console.log(await weather.getSevereWeatherAlerts("json", [48.057, -81.091], operationOptions));
 
   console.log(" --- Get weather along route:");
   console.log(

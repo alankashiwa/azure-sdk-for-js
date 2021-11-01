@@ -4,6 +4,8 @@ languages:
   - javascript
 products:
   - azure
+  - azure-maps
+  - weather
 urlFragment: maps-weather-javascript
 ---
 
@@ -11,15 +13,17 @@ urlFragment: maps-weather-javascript
 
 These sample programs show how to use the JavaScript client libraries for Azure Maps Weather in some common scenarios.
 
-| **File Name**         | **Description**                            |
-| --------------------- | ------------------------------------------ |
-| [weather.js][weather] | Gets forecasts and weather related alerts. |
+| **File Name**         | **Description**                                               |
+| --------------------- | ------------------------------------------------------------- |
+| [weather.js][weather] | Demonstrates Weather API usage. Simple queries are performed. |
 
 ## Prerequisites
 
-The sample programs are compatible with Node.js >=12.0.0.
+The sample programs are compatible with [LTS versions of Node.js](https://nodejs.org/about/releases/).
 
-You need [an Azure subscription][freesub] to run these sample programs.
+You need [an Azure subscription][freesub] and the following Azure resources to run these sample programs:
+
+- [Azure Maps Resource][createinstance_azuremapsresource]
 
 Samples retrieve credentials to access the service endpoint from environment variables. Alternatively, edit the source code to include the appropriate credentials. See each individual sample for details on which environment variables/credentials it requires to function.
 
@@ -46,9 +50,15 @@ node weather.js
 Alternatively, run a single sample with the correct environment variables set (setting up the `.env` file is not required if you do this), for example (cross-platform):
 
 ```bash
-npx cross-env MAPS_SUBSCRIPTION_KEY="<subscription-key>" node weather.js
+npx cross-env MAPS_SUBSCRIPTION_KEY="<maps subscription key>" MAPS_SUBSCRIPTION_KEY="<maps subscription key>" MAPS_CLIENT_ID="<maps client id>" MAPS_CLIENT_ID="<maps client id>" node weather.js
 ```
 
-[weather]: https://github.com/Azure/azure-sdk-for-js/blob/master/sdk/maps/maps-weather/samples/v1/javascript/src/weather.js
+## Next Steps
+
+Take a look at our [API Documentation][apiref] for more information about the APIs that are available in the clients.
+
+[weather]: https://github.com/Azure/azure-sdk-for-js/blob/main/sdk/maps/maps-weather/samples/v1/javascript/weather.js
+[apiref]: https://docs.microsoft.com/javascript/api/@azure/maps-weather
 [freesub]: https://azure.microsoft.com/free/
-[package]: https://github.com/Azure/azure-sdk-for-js/tree/master/sdk/maps/maps-weather/README.md
+[createinstance_azuremapsresource]: https://docs.microsoft.com/azure/azure-maps/how-to-create-template
+[package]: https://github.com/Azure/azure-sdk-for-js/tree/main/sdk/maps/maps-weather/README.md
