@@ -7,6 +7,7 @@
  */
 
 import * as coreClient from "@azure/core-client";
+import * as coreAuth from "@azure/core-auth";
 import { GeneratedClientOptionalParams } from "./models";
 
 /** @internal */
@@ -17,15 +18,24 @@ export class GeneratedClientContext extends coreClient.ServiceClient {
 
   /**
    * Initializes a new instance of the GeneratedClientContext class.
+   * @param credentials Subscription credentials which uniquely identify client subscription.
    * @param options The parameter options
    */
-  constructor(options?: GeneratedClientOptionalParams) {
+  constructor(
+    credentials: coreAuth.TokenCredential,
+    options?: GeneratedClientOptionalParams
+  ) {
+    if (credentials === undefined) {
+      throw new Error("'credentials' cannot be null");
+    }
+
     // Initializing default values for options
     if (!options) {
       options = {};
     }
     const defaults: GeneratedClientOptionalParams = {
-      requestContentType: "application/json; charset=utf-8"
+      requestContentType: "application/json; charset=utf-8",
+      credential: credentials
     };
 
     const packageDetails = `azsdk-js-maps-search/1.0.0-beta.1`;
@@ -34,6 +44,9 @@ export class GeneratedClientContext extends coreClient.ServiceClient {
         ? `${options.userAgentOptions.userAgentPrefix} ${packageDetails}`
         : `${packageDetails}`;
 
+    if (!options.credentialScopes) {
+      options.credentialScopes = ["https://atlas.microsoft.com/.default"];
+    }
     const optionsWithDefaults = {
       ...defaults,
       ...options,

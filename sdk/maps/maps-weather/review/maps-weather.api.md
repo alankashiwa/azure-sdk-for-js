@@ -4,6 +4,7 @@
 
 ```ts
 
+import * as coreAuth from '@azure/core-auth';
 import * as coreClient from '@azure/core-client';
 
 // @public (undocumented)
@@ -624,7 +625,7 @@ export interface WeatherAlongRouteSummary {
 //
 // @internal (undocumented)
 export class WeatherClient extends GeneratedClientContext {
-    constructor(options?: GeneratedClientOptionalParams);
+    constructor(credentials: coreAuth.TokenCredential, options?: GeneratedClientOptionalParams);
     getCurrentConditions(format: JsonFormat, coordinates: number[], options?: GeneratedClientGetCurrentConditionsOptionalParams): Promise<GeneratedClientGetCurrentConditionsResponse>;
     getDailyForecast(format: JsonFormat, coordinates: number[], options?: GeneratedClientGetDailyForecastOptionalParams): Promise<GeneratedClientGetDailyForecastResponse>;
     getDailyIndices(format: JsonFormat, coordinates: number[], options?: GeneratedClientGetDailyIndicesOptionalParams): Promise<GeneratedClientGetDailyIndicesResponse>;

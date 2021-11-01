@@ -4,6 +4,7 @@
 
 ```ts
 
+import * as coreAuth from '@azure/core-auth';
 import * as coreClient from '@azure/core-client';
 
 // @public
@@ -173,7 +174,7 @@ export interface TileIndex {
 //
 // @internal (undocumented)
 export class TrafficClient extends GeneratedClientContext {
-    constructor(options?: GeneratedClientOptionalParams);
+    constructor(credentials: coreAuth.TokenCredential, options?: GeneratedClientOptionalParams);
     // Warning: (ae-forgotten-export) The symbol "Traffic" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)

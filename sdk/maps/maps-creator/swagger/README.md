@@ -1,4 +1,4 @@
-# Azure Maps Weather Protocol Layer
+# Azure Maps Creator Protocol Layer
 
 > see https://aka.ms/autorest
 
@@ -22,7 +22,11 @@ input-file:
   - https://raw.githubusercontent.com/Azure/azure-rest-api-specs/master/specification/maps/data-plane/Creator/preview/1.0/spatial.json
   - https://raw.githubusercontent.com/Azure/azure-rest-api-specs/master/specification/maps/data-plane/Creator/preview/2.0/tileset.json
   - https://raw.githubusercontent.com/Azure/azure-rest-api-specs/master/specification/maps/data-plane/Creator/preview/2.0/wfs.json
-add-credentials: false
+# Add credential for now. Will remove this when adding convenience layer
+add-credentials: true
+credential-default-policy-type: BearerTokenCredentialPolicy
+credential-scopes: https://atlas.microsoft.com/.default
+# add-credentials: false
 override-client-name: GeneratedClient
 package-version: 1.0.0-beta.1
 disable-async-iterators: true

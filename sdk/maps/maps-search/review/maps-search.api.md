@@ -4,6 +4,7 @@
 
 ```ts
 
+import * as coreAuth from '@azure/core-auth';
 import * as coreClient from '@azure/core-client';
 import { PollerLike } from '@azure/core-lro';
 import { PollOperationState } from '@azure/core-lro';
@@ -600,7 +601,7 @@ export interface SearchAlongRouteRequest {
 //
 // @internal (undocumented)
 export class SearchClient extends GeneratedClientContext {
-    constructor(options?: GeneratedClientOptionalParams);
+    constructor(credentials: coreAuth.TokenCredential, options?: GeneratedClientOptionalParams);
     // (undocumented)
     search: Search;
 }

@@ -4,6 +4,7 @@
 
 ```ts
 
+import * as coreAuth from '@azure/core-auth';
 import * as coreClient from '@azure/core-client';
 
 // @public
@@ -283,7 +284,7 @@ export interface RegionCopyrightsCountry {
 //
 // @internal (undocumented)
 export class RenderClient extends GeneratedClientContext {
-    constructor(options?: GeneratedClientOptionalParams);
+    constructor(credentials: coreAuth.TokenCredential, options?: GeneratedClientOptionalParams);
     getCopyrightCaption(format: ResponseFormat, options?: GeneratedClientGetCopyrightCaptionOptionalParams): Promise<GeneratedClientGetCopyrightCaptionResponse>;
     getCopyrightForTile(format: ResponseFormat, tileIndex: TileIndex, options?: GeneratedClientGetCopyrightForTileOptionalParams): Promise<GeneratedClientGetCopyrightForTileResponse>;
     getCopyrightForWorld(format: ResponseFormat, options?: GeneratedClientGetCopyrightForWorldOptionalParams): Promise<GeneratedClientGetCopyrightForWorldResponse>;

@@ -4,6 +4,7 @@
 
 ```ts
 
+import * as coreAuth from '@azure/core-auth';
 import * as coreClient from '@azure/core-client';
 import * as coreRestPipeline from '@azure/core-rest-pipeline';
 import { PollerLike } from '@azure/core-lro';
@@ -248,7 +249,7 @@ export interface ConversionOperations {
 //
 // @internal (undocumented)
 export class CreatorClient extends GeneratedClientContext {
-    constructor(options?: GeneratedClientOptionalParams);
+    constructor(credentials: coreAuth.TokenCredential, options?: GeneratedClientOptionalParams);
     // (undocumented)
     aliasOperations: AliasOperations;
     // (undocumented)

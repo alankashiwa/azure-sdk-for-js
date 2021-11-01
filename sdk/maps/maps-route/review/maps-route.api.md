@@ -4,6 +4,7 @@
 
 ```ts
 
+import * as coreAuth from '@azure/core-auth';
 import * as coreClient from '@azure/core-client';
 import { PollerLike } from '@azure/core-lro';
 import { PollOperationState } from '@azure/core-lro';
@@ -699,7 +700,7 @@ export type RouteAvoidType = string;
 //
 // @internal (undocumented)
 export class RouteClient extends GeneratedClientContext {
-    constructor(options?: GeneratedClientOptionalParams);
+    constructor(credentials: coreAuth.TokenCredential, options?: GeneratedClientOptionalParams);
     beginGetRouteDirectionsBatch(batchId: string, options?: GeneratedClientGetRouteDirectionsBatchOptionalParams): Promise<PollerLike<PollOperationState<GeneratedClientGetRouteDirectionsBatchResponse>, GeneratedClientGetRouteDirectionsBatchResponse>>;
     beginGetRouteDirectionsBatchAndWait(batchId: string, options?: GeneratedClientGetRouteDirectionsBatchOptionalParams): Promise<GeneratedClientGetRouteDirectionsBatchResponse>;
     beginGetRouteMatrix(matrixId: string, options?: GeneratedClientGetRouteMatrixOptionalParams): Promise<PollerLike<PollOperationState<GeneratedClientGetRouteMatrixResponse>, GeneratedClientGetRouteMatrixResponse>>;

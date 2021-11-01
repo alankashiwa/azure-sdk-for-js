@@ -4,6 +4,7 @@
 
 ```ts
 
+import * as coreAuth from '@azure/core-auth';
 import * as coreClient from '@azure/core-client';
 
 // @public
@@ -51,7 +52,7 @@ export interface GeneratedClientOptionalParams extends coreClient.ServiceClientO
 //
 // @internal (undocumented)
 export class GeolocationClient extends GeneratedClientContext {
-    constructor(options?: GeneratedClientOptionalParams);
+    constructor(credentials: coreAuth.TokenCredential, options?: GeneratedClientOptionalParams);
     getLocation(format: JsonFormat, ipAddress: string, options?: GeneratedClientGetLocationOptionalParams): Promise<GeneratedClientGetLocationResponse>;
 }
 
