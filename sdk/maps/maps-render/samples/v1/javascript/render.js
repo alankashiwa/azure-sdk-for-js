@@ -2,13 +2,14 @@
 // Licensed under the MIT License.
 
 /**
- * @summary Demonstrates Render API usage. Simple CRUD operations are performed.
+ * @summary Demonstrates Render API usage. Simple queries are performed.
  */
 
 const fs = require("fs");
 const { DefaultAzureCredential } = require("@azure/identity");
 const { RenderClient } = require("@azure/maps-render");
-require("dotenv").config();
+const dotenv = require("dotenv");
+dotenv.config();
 
 /**
  * Azure Maps supports two ways to authenticate requests:
@@ -53,40 +54,28 @@ async function main() {
     }
   }
 
-  let maps = new RenderClient(credential);
-  const render = maps.render;
-  const renderV2 = maps.renderV2;
+  let render = new RenderClient(credential);
 
   console.log(" --- Get copyright caption:");
   console.log(await render.getCopyrightCaption("json", operationOptions));
 
   console.log(" --- Get copyright for tile:");
-  console.log(await render.getCopyrightForTile("json", 6, 9, 22, operationOptions));
+  let tileIndex = { z: 6, x: 9, y: 22 };
+  console.log(await render.getCopyrightForTile("json", tileIndex, operationOptions));
 
   console.log(" --- Get copyright for world:");
   console.log(await render.getCopyrightForWorld("json", operationOptions));
 
   console.log(" --- Get copyright from bounding box:");
-  console.log(
-    await render.getCopyrightFromBoundingBox(
-      "json",
-      "52.41064,4.84228",
-      "52.41072,4.84239",
-      operationOptions
-    )
-  );
+  const boundingBox = { southWest: [52.41064, 4.84228], northEast: [52.41072, 4.84239] };
+  console.log(await render.getCopyrightFromBoundingBox("json", boundingBox, operationOptions));
 
   if (!fs.existsSync("tmp")) fs.mkdirSync("tmp");
-
-  console.log(" --- Get map imagery tile:");
-  let result = await render.getMapImageryTile("png", "satellite", 6, 10, 22, operationOptions);
-  // use result.blobBody for Browser, readableStreamBody for Node.js:
-  result.readableStreamBody?.pipe(fs.createWriteStream("tmp/map_imagery_tile.png"));
 
   const statesetId = process.env.CREATOR_STATESET_ID;
   if (typeof statesetId === "string" && statesetId.length == 36) {
     console.log(" --- Get map state tile:");
-    result = await render.getMapStateTilePreview(6, 10, 22, statesetId, operationOptions);
+    let result = await render.getMapStateTile(statesetId, tileIndex, operationOptions);
     // use result.blobBody for Browser, readableStreamBody for Node.js:
     result.readableStreamBody?.pipe(fs.createWriteStream("tmp/state_tile.pbf"));
   }
@@ -96,23 +85,18 @@ async function main() {
     layer: "basic",
     style: "dark",
     zoom: 2,
-    bbox: "1.355233,42.982261,24.980233,56.526017"
+    boundingBox: [1.355233, 42.982261, 24.980233, 56.526017]
   };
-  result = await render.getMapStaticImage("png", { ...mapStaticImageOptions, ...operationOptions });
-  // use result.blobBody for Browser, readableStreamBody for Node.js:
-  result.readableStreamBody?.pipe(fs.createWriteStream("tmp/static_image.png"));
-
-  console.log(" --- Get map tile:");
-  const mapTileOptions = { tileSize: "512" };
-  result = await render.getMapTile("png", "basic", "main", 6, 10, 22, {
-    ...mapTileOptions,
+  let result = await render.getMapStaticImage("png", {
+    ...mapStaticImageOptions,
     ...operationOptions
   });
   // use result.blobBody for Browser, readableStreamBody for Node.js:
-  result.readableStreamBody?.pipe(fs.createWriteStream("tmp/tile.png"));
+  result.readableStreamBody?.pipe(fs.createWriteStream("tmp/static_image.png"));
 
   console.log(" --- Get map tile v2:");
-  result = await renderV2.getMapTilePreview("microsoft.base", 6, 10, 22, {
+  const mapTileOptions = { tileSize: "512" };
+  result = await render.getMapTileV2("microsoft.base", tileIndex, {
     ...mapTileOptions,
     ...operationOptions
   });
@@ -120,16 +104,16 @@ async function main() {
   result.readableStreamBody?.pipe(fs.createWriteStream("tmp/tile_v2.vector.pbf"));
 
   console.log(" --- Get attribution:");
-  const attribution = await renderV2.getMapAttribution(
+  const attribution = await render.getMapAttribution(
     "microsoft.base",
     6,
-    ["-122.414162", "47.579490", "-122.247157", "47.668372"],
+    [-122.414162, 47.57949, -122.247157, 47.668372],
     operationOptions
   );
   console.log(attribution);
 
   console.log(" --- Get tileset metadata:");
-  const metadata = await renderV2.getMapTileset("microsoft.base", operationOptions);
+  const metadata = await render.getMapTileset("microsoft.base", operationOptions);
   console.log(metadata);
 }
 
