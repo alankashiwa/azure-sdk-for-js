@@ -59,6 +59,6 @@ export class GeneratedClientContext extends coreClient.ServiceClient {
 
     // Assigning values to Constant parameters
     this.$host = options.$host || "https://atlas.microsoft.com";
-    this.apiVersion = options.apiVersion || "1.0";
+    this.apiVersion = options.apiVersion || "2.1";
   }
 }

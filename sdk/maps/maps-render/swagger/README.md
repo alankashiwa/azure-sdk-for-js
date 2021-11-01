@@ -13,7 +13,7 @@ generate-metadata: false
 license-header: MICROSOFT_MIT_NO_VERSION
 output-folder: ../
 source-code-folder-path: ./src/generated
-input-file: https://raw.githubusercontent.com/Azure/azure-rest-api-specs/master/specification/maps/data-plane/Render/preview/1.0/render.json
+input-file: https://raw.githubusercontent.com/Azure/azure-rest-api-specs/master/specification/maps/data-plane/Render/preview/2.1/render.json
 # Add credential for now. Will remove this when adding convenience layer
 add-credentials: true
 credential-default-policy-type: BearerTokenCredentialPolicy

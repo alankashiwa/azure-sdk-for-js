@@ -13,23 +13,22 @@ import * as Mappers from "./models/mappers";
 import { GeneratedClientContext } from "./generatedClientContext";
 import {
   GeneratedClientOptionalParams,
-  RasterTileFormat,
-  GeneratedClientGetMapStaticImageOptionalParams,
-  GeneratedClientGetMapStaticImageResponse,
-  TileFormat,
-  MapTileLayer,
-  MapTileStyle,
+  TilesetID,
   TileIndex,
-  GeneratedClientGetMapTileOptionalParams,
-  GeneratedClientGetMapTileResponse,
+  GeneratedClientGetMapTileV2OptionalParams,
+  GeneratedClientGetMapTileV2Response,
+  GeneratedClientGetMapTilesetOptionalParams,
+  GeneratedClientGetMapTilesetResponse,
+  GeneratedClientGetMapAttributionOptionalParams,
+  GeneratedClientGetMapAttributionResponse,
   GeneratedClientGetMapStateTileOptionalParams,
   GeneratedClientGetMapStateTileResponse,
   ResponseFormat,
   GeneratedClientGetCopyrightCaptionOptionalParams,
   GeneratedClientGetCopyrightCaptionResponse,
-  MapImageryStyle,
-  GeneratedClientGetMapImageryTileOptionalParams,
-  GeneratedClientGetMapImageryTileResponse,
+  RasterTileFormat,
+  GeneratedClientGetMapStaticImageOptionalParams,
+  GeneratedClientGetMapStaticImageResponse,
   BoundingBox,
   GeneratedClientGetCopyrightFromBoundingBoxOptionalParams,
   GeneratedClientGetCopyrightFromBoundingBoxResponse,
@@ -51,6 +50,131 @@ export class GeneratedClient extends GeneratedClientContext {
     options?: GeneratedClientOptionalParams
   ) {
     super(credentials, options);
+  }
+
+  /**
+   * **Applies to**: S0 and S1 pricing tiers.
+   *
+   * The Get Map Tiles API allows users to request map tiles in vector or raster formats typically to be
+   * integrated  into a map control or SDK. Some example tiles that can be requested are Azure Maps road
+   * tiles, real-time  Weather Radar tiles or the map tiles created using [Azure Maps
+   * Creator](https://aka.ms/amcreator). By default,  Azure Maps uses vector tiles for its web map
+   * control (Web SDK) and Android SDK.
+   * @param tilesetId A tileset is a collection of raster or vector data broken up into a uniform grid of
+   *                  square tiles at preset  zoom levels. Every tileset has a **tilesetId** to use when making requests.
+   *                  The **tilesetId** for tilesets created using [Azure Maps Creator](https://aka.ms/amcreator) are
+   *                  generated through the  [Tileset Create API](https://docs.microsoft.com/en-us/rest/api/maps/tileset).
+   *                  The ready-to-use tilesets supplied  by Azure Maps are listed below. For example, microsoft.base.
+   * @param tileIndex Parameter group
+   * @param options The options parameters.
+   */
+  getMapTileV2(
+    tilesetId: TilesetID,
+    tileIndex: TileIndex,
+    options?: GeneratedClientGetMapTileV2OptionalParams
+  ): Promise<GeneratedClientGetMapTileV2Response> {
+    return this.sendOperationRequest(
+      { tilesetId, tileIndex, options },
+      getMapTileV2OperationSpec
+    );
+  }
+
+  /**
+   * **Applies to**: S0 and S1 pricing tiers.
+   *
+   * The Get Map Tileset API allows users to request metadata for a tileset.
+   * @param tilesetId A tileset is a collection of raster or vector data broken up into a uniform grid of
+   *                  square tiles at preset  zoom levels. Every tileset has a **tilesetId** to use when making requests.
+   *                  The **tilesetId** for tilesets created using [Azure Maps Creator](https://aka.ms/amcreator) are
+   *                  generated through the  [Tileset Create API](https://docs.microsoft.com/en-us/rest/api/maps/tileset).
+   *                  The ready-to-use tilesets supplied  by Azure Maps are listed below. For example, microsoft.base.
+   * @param options The options parameters.
+   */
+  getMapTileset(
+    tilesetId: TilesetID,
+    options?: GeneratedClientGetMapTilesetOptionalParams
+  ): Promise<GeneratedClientGetMapTilesetResponse> {
+    return this.sendOperationRequest(
+      { tilesetId, options },
+      getMapTilesetOperationSpec
+    );
+  }
+
+  /**
+   * **Applies to**: S0 and S1 pricing tiers.
+   *
+   * The Get Map Attribution API allows users to request map copyright attribution information for a
+   * section of a tileset.
+   * @param tilesetId A tileset is a collection of raster or vector data broken up into a uniform grid of
+   *                  square tiles at preset  zoom levels. Every tileset has a **tilesetId** to use when making requests.
+   *                  The **tilesetId** for tilesets created using [Azure Maps Creator](https://aka.ms/amcreator) are
+   *                  generated through the  [Tileset Create API](https://docs.microsoft.com/en-us/rest/api/maps/tileset).
+   *                  The ready-to-use tilesets supplied  by Azure Maps are listed below. For example, microsoft.base.
+   * @param zoom Zoom level for the desired map attribution.
+   * @param bounds The string that represents the rectangular area of a bounding box. The bounds
+   *               parameter is defined by the 4 bounding box coordinates, with WGS84 longitude and latitude of the
+   *               southwest corner followed by  WGS84 longitude and latitude of the northeast corner. The string is
+   *               presented in the following  format: `[SouthwestCorner_Longitude, SouthwestCorner_Latitude,
+   *               NortheastCorner_Longitude,  NortheastCorner_Latitude]`.
+   * @param options The options parameters.
+   */
+  getMapAttribution(
+    tilesetId: TilesetID,
+    zoom: number,
+    bounds: number[],
+    options?: GeneratedClientGetMapAttributionOptionalParams
+  ): Promise<GeneratedClientGetMapAttributionResponse> {
+    return this.sendOperationRequest(
+      { tilesetId, zoom, bounds, options },
+      getMapAttributionOperationSpec
+    );
+  }
+
+  /**
+   * **Applies to**: S0 and S1 pricing tiers.
+   *
+   *
+   * Fetches state tiles in vector format typically to be integrated into indoor maps module of map
+   * control or SDK. The map control will call this API after user turns on dynamic styling (see [Zoom
+   * Levels and Tile
+   * Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid))
+   * @param statesetId The stateset id.
+   * @param tileIndex Parameter group
+   * @param options The options parameters.
+   */
+  getMapStateTile(
+    statesetId: string,
+    tileIndex: TileIndex,
+    options?: GeneratedClientGetMapStateTileOptionalParams
+  ): Promise<GeneratedClientGetMapStateTileResponse> {
+    return this.sendOperationRequest(
+      { statesetId, tileIndex, options },
+      getMapStateTileOperationSpec
+    );
+  }
+
+  /**
+   * **Applies to**: S0 and S1 pricing tiers.
+   *
+   *
+   *
+   * Copyrights API is designed to serve copyright information for Render Tile
+   * service. In addition to basic copyright for the whole map, API is serving
+   * specific groups of copyrights for some countries.
+   *
+   * As an alternative to copyrights for map request, one can receive captions
+   * for displaying the map provider information on the map.
+   * @param format Desired format of the response. Value can be either _json_ or _xml_.
+   * @param options The options parameters.
+   */
+  getCopyrightCaption(
+    format: ResponseFormat,
+    options?: GeneratedClientGetCopyrightCaptionOptionalParams
+  ): Promise<GeneratedClientGetCopyrightCaptionResponse> {
+    return this.sendOperationRequest(
+      { format, options },
+      getCopyrightCaptionOperationSpec
+    );
   }
 
   /**
@@ -129,111 +253,6 @@ export class GeneratedClient extends GeneratedClientContext {
    * **Applies to**: S0 and S1 pricing tiers.
    *
    *
-   * Fetches map tiles in vector or raster format typically to be integrated into a new map control or
-   * SDK. By default, Azure uses vector map tiles for its web map control (see [Zoom Levels and Tile
-   * Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid))
-   *
-   * **Note**: Weather tiles are only available via [Get Map Tile V2
-   * API](https://aka.ms/AzureMapsWeatherTiles). We recommend to start to use the new [Get Map Tile V2
-   * API](https://aka.ms/GetMapTileV2).
-   * @param format Desired format of the response. Possible values are png & pbf.
-   * @param layer Map layer requested. Possible values are basic, hybrid, labels and terra.
-   * @param style Map style to be returned. Possible values are main, dark, and shaded_relief.
-   * @param tileIndex Parameter group
-   * @param options The options parameters.
-   */
-  getMapTile(
-    format: TileFormat,
-    layer: MapTileLayer,
-    style: MapTileStyle,
-    tileIndex: TileIndex,
-    options?: GeneratedClientGetMapTileOptionalParams
-  ): Promise<GeneratedClientGetMapTileResponse> {
-    return this.sendOperationRequest(
-      { format, layer, style, tileIndex, options },
-      getMapTileOperationSpec
-    );
-  }
-
-  /**
-   * **Applies to**: S0 and S1 pricing tiers.
-   *
-   *
-   * Fetches state tiles in vector format typically to be integrated into indoor maps module of map
-   * control or SDK. The map control will call this API after user turns on dynamic styling (see [Zoom
-   * Levels and Tile
-   * Grid](https://docs.microsoft.com/en-us/azure/location-based-services/zoom-levels-and-tile-grid))
-   * @param statesetId The stateset id.
-   * @param tileIndex Parameter group
-   * @param options The options parameters.
-   */
-  getMapStateTile(
-    statesetId: string,
-    tileIndex: TileIndex,
-    options?: GeneratedClientGetMapStateTileOptionalParams
-  ): Promise<GeneratedClientGetMapStateTileResponse> {
-    return this.sendOperationRequest(
-      { statesetId, tileIndex, options },
-      getMapStateTileOperationSpec
-    );
-  }
-
-  /**
-   * **Applies to**: S0 and S1 pricing tiers.
-   *
-   *
-   *
-   * Copyrights API is designed to serve copyright information for Render Tile
-   * service. In addition to basic copyright for the whole map, API is serving
-   * specific groups of copyrights for some countries.
-   *
-   * As an alternative to copyrights for map request, one can receive captions
-   * for displaying the map provider information on the map.
-   * @param format Desired format of the response. Value can be either _json_ or _xml_.
-   * @param options The options parameters.
-   */
-  getCopyrightCaption(
-    format: ResponseFormat,
-    options?: GeneratedClientGetCopyrightCaptionOptionalParams
-  ): Promise<GeneratedClientGetCopyrightCaptionResponse> {
-    return this.sendOperationRequest(
-      { format, options },
-      getCopyrightCaptionOperationSpec
-    );
-  }
-
-  /**
-   * **Applies to:** S1 pricing tier.
-   *
-   *
-   * This service returns a map image tile with size 256x256, given the x and y coordinates and zoom
-   * level. Zoom level ranges from 1 to 19. The current available style value is 'satellite' which
-   * provides satellite
-   * imagery alone.
-   *
-   *
-   * **Note**: We recommend to start to use the new [Get Map Tile V2 API](https://aka.ms/GetMapTileV2).
-   * @param format Desired format of the response. Possible value: png.
-   * @param style Map style to be returned. __Possible values:__ satellite.
-   * @param tileIndex Parameter group
-   * @param options The options parameters.
-   */
-  getMapImageryTile(
-    format: RasterTileFormat,
-    style: MapImageryStyle,
-    tileIndex: TileIndex,
-    options?: GeneratedClientGetMapImageryTileOptionalParams
-  ): Promise<GeneratedClientGetMapImageryTileResponse> {
-    return this.sendOperationRequest(
-      { format, style, tileIndex, options },
-      getMapImageryTileOperationSpec
-    );
-  }
-
-  /**
-   * **Applies to**: S0 and S1 pricing tiers.
-   *
-   *
    * Returns copyright information for a given bounding box. Bounding-box requests should specify the
    * minimum and maximum longitude and latitude (EPSG-3857) coordinates
    * @param format Desired format of the response. Value can be either _json_ or _xml_.
@@ -300,8 +319,8 @@ export class GeneratedClient extends GeneratedClientContext {
 // Operation Specifications
 const serializer = coreClient.createSerializer(Mappers, /* isXml */ false);
 
-const getMapStaticImageOperationSpec: coreClient.OperationSpec = {
-  path: "/map/static/{format}",
+const getMapTileV2OperationSpec: coreClient.OperationSpec = {
+  path: "/map/tile",
   httpMethod: "GET",
   responses: {
     200: {
@@ -309,7 +328,7 @@ const getMapStaticImageOperationSpec: coreClient.OperationSpec = {
         type: { name: "Stream" },
         serializedName: "parsedResponse"
       },
-      headersMapper: Mappers.GeneratedClientGetMapStaticImageHeaders
+      headersMapper: Mappers.GeneratedClientGetMapTileV2Headers
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
@@ -317,50 +336,54 @@ const getMapStaticImageOperationSpec: coreClient.OperationSpec = {
   },
   queryParameters: [
     Parameters.apiVersion,
-    Parameters.layer,
-    Parameters.style,
-    Parameters.zoom,
-    Parameters.center,
-    Parameters.boundingBox,
-    Parameters.height,
-    Parameters.width,
-    Parameters.language,
-    Parameters.localizedMapView,
-    Parameters.pins,
-    Parameters.path
-  ],
-  urlParameters: [Parameters.$host, Parameters.format],
-  headerParameters: [Parameters.accept, Parameters.clientId],
-  serializer
-};
-const getMapTileOperationSpec: coreClient.OperationSpec = {
-  path: "/map/tile/{format}",
-  httpMethod: "GET",
-  responses: {
-    200: {
-      bodyMapper: {
-        type: { name: "Stream" },
-        serializedName: "parsedResponse"
-      },
-      headersMapper: Mappers.GeneratedClientGetMapTileHeaders
-    },
-    default: {
-      bodyMapper: Mappers.ErrorResponse
-    }
-  },
-  queryParameters: [
-    Parameters.apiVersion,
-    Parameters.language,
-    Parameters.localizedMapView,
-    Parameters.layer1,
-    Parameters.style1,
+    Parameters.tilesetId,
     Parameters.z,
     Parameters.x,
     Parameters.y,
-    Parameters.tileSize
+    Parameters.timeStamp,
+    Parameters.tileSize,
+    Parameters.language,
+    Parameters.localizedMapView
   ],
-  urlParameters: [Parameters.$host, Parameters.format1],
+  urlParameters: [Parameters.$host],
   headerParameters: [Parameters.accept, Parameters.clientId],
+  serializer
+};
+const getMapTilesetOperationSpec: coreClient.OperationSpec = {
+  path: "/map/tileset",
+  httpMethod: "GET",
+  responses: {
+    200: {
+      bodyMapper: Mappers.MapTileset
+    },
+    default: {
+      bodyMapper: Mappers.ErrorResponse
+    }
+  },
+  queryParameters: [Parameters.apiVersion, Parameters.tilesetId],
+  urlParameters: [Parameters.$host],
+  headerParameters: [Parameters.clientId, Parameters.accept1],
+  serializer
+};
+const getMapAttributionOperationSpec: coreClient.OperationSpec = {
+  path: "/map/attribution",
+  httpMethod: "GET",
+  responses: {
+    200: {
+      bodyMapper: Mappers.MapAttribution
+    },
+    default: {
+      bodyMapper: Mappers.ErrorResponse
+    }
+  },
+  queryParameters: [
+    Parameters.apiVersion,
+    Parameters.tilesetId,
+    Parameters.zoom,
+    Parameters.bounds
+  ],
+  urlParameters: [Parameters.$host],
+  headerParameters: [Parameters.clientId, Parameters.accept1],
   serializer
 };
 const getMapStateTileOperationSpec: coreClient.OperationSpec = {
@@ -386,7 +409,7 @@ const getMapStateTileOperationSpec: coreClient.OperationSpec = {
     Parameters.statesetId
   ],
   urlParameters: [Parameters.$host],
-  headerParameters: [Parameters.clientId, Parameters.accept1],
+  headerParameters: [Parameters.clientId, Parameters.accept2],
   serializer
 };
 const getCopyrightCaptionOperationSpec: coreClient.OperationSpec = {
@@ -401,12 +424,12 @@ const getCopyrightCaptionOperationSpec: coreClient.OperationSpec = {
     }
   },
   queryParameters: [Parameters.apiVersion],
-  urlParameters: [Parameters.$host, Parameters.format2],
-  headerParameters: [Parameters.clientId, Parameters.accept2],
+  urlParameters: [Parameters.$host, Parameters.format],
+  headerParameters: [Parameters.clientId, Parameters.accept1],
   serializer
 };
-const getMapImageryTileOperationSpec: coreClient.OperationSpec = {
-  path: "/map/imagery/{format}",
+const getMapStaticImageOperationSpec: coreClient.OperationSpec = {
+  path: "/map/static/{format}",
   httpMethod: "GET",
   responses: {
     200: {
@@ -414,7 +437,7 @@ const getMapImageryTileOperationSpec: coreClient.OperationSpec = {
         type: { name: "Stream" },
         serializedName: "parsedResponse"
       },
-      headersMapper: Mappers.GeneratedClientGetMapImageryTileHeaders
+      headersMapper: Mappers.GeneratedClientGetMapStaticImageHeaders
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
@@ -422,13 +445,20 @@ const getMapImageryTileOperationSpec: coreClient.OperationSpec = {
   },
   queryParameters: [
     Parameters.apiVersion,
-    Parameters.z,
-    Parameters.x,
-    Parameters.y,
-    Parameters.style2
+    Parameters.language,
+    Parameters.localizedMapView,
+    Parameters.layer,
+    Parameters.style,
+    Parameters.zoom1,
+    Parameters.center,
+    Parameters.boundingBox,
+    Parameters.height,
+    Parameters.width,
+    Parameters.pins,
+    Parameters.path
   ],
-  urlParameters: [Parameters.$host, Parameters.format],
-  headerParameters: [Parameters.clientId, Parameters.accept3],
+  urlParameters: [Parameters.$host, Parameters.format1],
+  headerParameters: [Parameters.accept, Parameters.clientId],
   serializer
 };
 const getCopyrightFromBoundingBoxOperationSpec: coreClient.OperationSpec = {
@@ -448,8 +478,8 @@ const getCopyrightFromBoundingBoxOperationSpec: coreClient.OperationSpec = {
     Parameters.northEast,
     Parameters.includeText
   ],
-  urlParameters: [Parameters.$host, Parameters.format2],
-  headerParameters: [Parameters.clientId, Parameters.accept2],
+  urlParameters: [Parameters.$host, Parameters.format],
+  headerParameters: [Parameters.clientId, Parameters.accept1],
   serializer
 };
 const getCopyrightForTileOperationSpec: coreClient.OperationSpec = {
@@ -470,8 +500,8 @@ const getCopyrightForTileOperationSpec: coreClient.OperationSpec = {
     Parameters.y,
     Parameters.includeText
   ],
-  urlParameters: [Parameters.$host, Parameters.format2],
-  headerParameters: [Parameters.clientId, Parameters.accept2],
+  urlParameters: [Parameters.$host, Parameters.format],
+  headerParameters: [Parameters.clientId, Parameters.accept1],
   serializer
 };
 const getCopyrightForWorldOperationSpec: coreClient.OperationSpec = {
@@ -486,7 +516,7 @@ const getCopyrightForWorldOperationSpec: coreClient.OperationSpec = {
     }
   },
   queryParameters: [Parameters.apiVersion, Parameters.includeText],
-  urlParameters: [Parameters.$host, Parameters.format2],
-  headerParameters: [Parameters.clientId, Parameters.accept2],
+  urlParameters: [Parameters.$host, Parameters.format],
+  headerParameters: [Parameters.clientId, Parameters.accept1],
   serializer
 };

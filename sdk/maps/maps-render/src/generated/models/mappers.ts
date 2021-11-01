@@ -104,6 +104,164 @@ export const ErrorAdditionalInfo: coreClient.CompositeMapper = {
   }
 };
 
+export const MapTileset: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "MapTileset",
+    modelProperties: {
+      tilejson: {
+        constraints: {
+          Pattern: new RegExp("\\d+\\.\\d+\\.\\d+\\w?[\\w\\d]*")
+        },
+        serializedName: "tilejson",
+        type: {
+          name: "String"
+        }
+      },
+      name: {
+        serializedName: "name",
+        type: {
+          name: "String"
+        }
+      },
+      description: {
+        serializedName: "description",
+        type: {
+          name: "String"
+        }
+      },
+      version: {
+        constraints: {
+          Pattern: new RegExp("\\d+\\.\\d+\\.\\d+\\w?[\\w\\d]*")
+        },
+        serializedName: "version",
+        type: {
+          name: "String"
+        }
+      },
+      attribution: {
+        serializedName: "attribution",
+        type: {
+          name: "String"
+        }
+      },
+      template: {
+        serializedName: "template",
+        type: {
+          name: "String"
+        }
+      },
+      legend: {
+        serializedName: "legend",
+        type: {
+          name: "String"
+        }
+      },
+      scheme: {
+        serializedName: "scheme",
+        type: {
+          name: "String"
+        }
+      },
+      tiles: {
+        serializedName: "tiles",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "String"
+            }
+          }
+        }
+      },
+      grids: {
+        serializedName: "grids",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "String"
+            }
+          }
+        }
+      },
+      data: {
+        serializedName: "data",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "String"
+            }
+          }
+        }
+      },
+      minZoom: {
+        constraints: {
+          InclusiveMaximum: 30,
+          InclusiveMinimum: 0
+        },
+        serializedName: "minzoom",
+        type: {
+          name: "Number"
+        }
+      },
+      maxZoom: {
+        constraints: {
+          InclusiveMaximum: 30,
+          InclusiveMinimum: 0
+        },
+        serializedName: "maxzoom",
+        type: {
+          name: "Number"
+        }
+      },
+      bounds: {
+        serializedName: "bounds",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "Number"
+            }
+          }
+        }
+      },
+      center: {
+        serializedName: "center",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "Number"
+            }
+          }
+        }
+      }
+    }
+  }
+};
+
+export const MapAttribution: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "MapAttribution",
+    modelProperties: {
+      copyrights: {
+        serializedName: "copyrights",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "String"
+            }
+          }
+        }
+      }
+    }
+  }
+};
+
 export const CopyrightCaption: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
@@ -219,25 +377,10 @@ export const RegionCopyrightsCountry: coreClient.CompositeMapper = {
   }
 };
 
-export const GeneratedClientGetMapStaticImageHeaders: coreClient.CompositeMapper = {
+export const GeneratedClientGetMapTileV2Headers: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
-    className: "GeneratedClientGetMapStaticImageHeaders",
-    modelProperties: {
-      contentType: {
-        serializedName: "content-type",
-        type: {
-          name: "String"
-        }
-      }
-    }
-  }
-};
-
-export const GeneratedClientGetMapTileHeaders: coreClient.CompositeMapper = {
-  type: {
-    name: "Composite",
-    className: "GeneratedClientGetMapTileHeaders",
+    className: "GeneratedClientGetMapTileV2Headers",
     modelProperties: {
       contentType: {
         serializedName: "content-type",
@@ -264,10 +407,10 @@ export const GeneratedClientGetMapStateTileHeaders: coreClient.CompositeMapper =
   }
 };
 
-export const GeneratedClientGetMapImageryTileHeaders: coreClient.CompositeMapper = {
+export const GeneratedClientGetMapStaticImageHeaders: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
-    className: "GeneratedClientGetMapImageryTileHeaders",
+    className: "GeneratedClientGetMapStaticImageHeaders",
     modelProperties: {
       contentType: {
         serializedName: "content-type",

@@ -57,6 +57,46 @@ export interface ErrorAdditionalInfo {
   readonly info?: Record<string, unknown>;
 }
 
+/** Metadata for a tileset in the TileJSON format. */
+export interface MapTileset {
+  /** Describes the version of the TileJSON spec that is implemented by this JSON object. */
+  tilejson?: string;
+  /** A name describing the tileset. The name can contain any legal character. Implementations SHOULD NOT interpret the name as HTML. */
+  name?: string;
+  /** Text description of the tileset. The description can contain any legal character. Implementations SHOULD NOT interpret the description as HTML. */
+  description?: string;
+  /** A semver.org style version number for the tiles contained within the tileset. When changes across tiles are introduced, the minor version MUST change. */
+  version?: string;
+  /** Copyright attribution to be displayed on the map. Implementations MAY decide to treat this as HTML or literal text. For security reasons, make absolutely sure that this field can't be abused as a vector for XSS or beacon tracking. */
+  attribution?: string;
+  /** A mustache template to be used to format data from grids for interaction. */
+  template?: string;
+  /** A legend to be displayed with the map. Implementations MAY decide to treat this as HTML or literal text. For security reasons, make absolutely sure that this field can't be abused as a vector for XSS or beacon tracking. */
+  legend?: string;
+  /** Default: "xyz". Either "xyz" or "tms". Influences the y direction of the tile coordinates. The global-mercator (aka Spherical Mercator) profile is assumed. */
+  scheme?: string;
+  /** An array of tile endpoints. If multiple endpoints are specified, clients may use any combination of endpoints. All endpoints MUST return the same content for the same URL. The array MUST contain at least one endpoint. */
+  tiles?: string[];
+  /** An array of interactivity endpoints. */
+  grids?: string[];
+  /** An array of data files in GeoJSON format. */
+  data?: string[];
+  /** The minimum zoom level. */
+  minZoom?: number;
+  /** The maximum zoom level. */
+  maxZoom?: number;
+  /** The maximum extent of available map tiles. Bounds MUST define an area covered by all zoom levels. The bounds are represented in WGS:84 latitude and longitude values, in the order left, bottom, right, top. Values may be integers or floating point numbers. */
+  bounds?: number[];
+  /** The default location of the tileset in the form [longitude, latitude, zoom]. The zoom level MUST be between minzoom and maxzoom. Implementations can use this value to set the default location. */
+  center?: number[];
+}
+
+/** Copyright attribution for the requested section of a tileset. */
+export interface MapAttribution {
+  /** A list of copyright strings. */
+  copyrights?: string[];
+}
+
 /** This object is returned from a successful copyright call */
 export interface CopyrightCaption {
   /**
@@ -117,14 +157,8 @@ export interface RegionCopyrightsCountry {
   readonly label?: string;
 }
 
-/** Defines headers for GeneratedClient_getMapStaticImage operation. */
-export interface GeneratedClientGetMapStaticImageHeaders {
-  /** The content-type for the response. */
-  contentType?: string;
-}
-
-/** Defines headers for GeneratedClient_getMapTile operation. */
-export interface GeneratedClientGetMapTileHeaders {
+/** Defines headers for GeneratedClient_getMapTileV2 operation. */
+export interface GeneratedClientGetMapTileV2Headers {
   /** The content-type for the response. */
   contentType?: string;
 }
@@ -135,8 +169,8 @@ export interface GeneratedClientGetMapStateTileHeaders {
   contentType?: string;
 }
 
-/** Defines headers for GeneratedClient_getMapImageryTile operation. */
-export interface GeneratedClientGetMapImageryTileHeaders {
+/** Defines headers for GeneratedClient_getMapStaticImage operation. */
+export interface GeneratedClientGetMapStaticImageHeaders {
   /** The content-type for the response. */
   contentType?: string;
 }
@@ -171,59 +205,211 @@ export interface BoundingBox {
   northEast: number[];
 }
 
-/** Known values of {@link RasterTileFormat} that the service accepts. */
-export enum KnownRasterTileFormat {
-  /** An image in the png format. Supports zoom levels 0 through 18. */
-  Png = "png"
+/** Known values of {@link TilesetID} that the service accepts. */
+export enum KnownTilesetID {
+  /**
+   * A base map is a standard map that displays roads, natural and artificial features along with the labels for those features in a vector tile.<br>
+   *
+   * Supports zoom levels 0 through 22. Format: vector (pbf).
+   */
+  MicrosoftBase = "microsoft.base",
+  /**
+   * Displays labels for roads, natural and artificial features in a vector tile.<br>
+   *
+   * Supports zoom levels 0 through 22. Format: vector (pbf).
+   */
+  MicrosoftBaseLabels = "microsoft.base.labels",
+  /**
+   * Displays road, boundary and label data in a vector tile.<br>
+   *
+   * Supports zoom levels 0 through 22. Format: vector (pbf).
+   */
+  MicrosoftBaseHybrid = "microsoft.base.hybrid",
+  /**
+   * Shaded relief and terra layers.<br>
+   *
+   * Supports zoom levels 0 through 6. Format: raster (png).
+   */
+  MicrosoftTerraMain = "microsoft.terra.main",
+  /**
+   * All layers with our main style.<br>
+   *
+   * Supports zoom levels 0 through 22. Format: raster (png).
+   */
+  MicrosoftBaseRoad = "microsoft.base.road",
+  /**
+   * All layers with our dark grey style.<br>
+   *
+   * Supports zoom levels 0 through 22. Format: raster (png).
+   */
+  MicrosoftBaseDarkgrey = "microsoft.base.darkgrey",
+  /**
+   * Label data in our main style.<br>
+   *
+   * Supports zoom levels 0 through 22. Format: raster (png).
+   */
+  MicrosoftBaseLabelsRoad = "microsoft.base.labels.road",
+  /**
+   * Label data in our dark grey style.<br>
+   *
+   * Supports zoom levels 0 through 22. Format: raster (png).
+   */
+  MicrosoftBaseLabelsDarkgrey = "microsoft.base.labels.darkgrey",
+  /**
+   * Road, boundary and label data in our main style.<br>
+   *
+   * Supports zoom levels 0 through 22. Format: raster (png).
+   */
+  MicrosoftBaseHybridRoad = "microsoft.base.hybrid.road",
+  /**
+   * Road, boundary and label data in our dark grey style.<br>
+   *
+   * Supports zoom levels 0 through 22. Format: raster (png).
+   */
+  MicrosoftBaseHybridDarkgrey = "microsoft.base.hybrid.darkgrey",
+  /**
+   * A combination of satellite and aerial imagery. Only available in S1 pricing SKU.<br>
+   *
+   * Supports zoom levels 1 through 19. Format: raster (jpeg).
+   */
+  MicrosoftImagery = "microsoft.imagery",
+  /**
+   * Weather radar tiles. Latest weather radar images including areas of rain, snow, ice and mixed conditions. Please see [coverage information](https://aka.ms/AzureMapsWeatherCoverage) for Azure Maps Weather service.  To learn more about the Radar data, please see [Weather concepts](https://aka.ms/AzureMapsWeatherConcepts).<br>
+   *
+   * Supports zoom levels 0 through 15. Format: raster (png).
+   */
+  MicrosoftWeatherRadarMain = "microsoft.weather.radar.main",
+  /**
+   * Weather infrared tiles. Latest Infrared Satellite images shows clouds by their temperature.  Please see [coverage information](https://aka.ms/AzureMapsWeatherCoverage) for Azure Maps Weather service. To learn more about the returned Satellite data, please see [Weather concepts](https://aka.ms/AzureMapsWeatherConcepts).<br>
+   *
+   * Supports zoom levels 0 through 15. Format: raster (png).
+   */
+  MicrosoftWeatherInfraredMain = "microsoft.weather.infrared.main",
+  /**
+   * Digital Elevation Model tiles. The tiles are in the GeoTIFF format with a single 32-bit floating point band. The tiles cover the whole landmass of Earth. Some small islands (e.g., atolls) might not be represented accurately.<br>
+   * * The vertical unit for measurement of elevation height is meters. An elevation value of -32767.0 is used for points that have no data value, most often returned where there isn't landmass (i.e. water).<br>
+   * * The horizontal reference datum is the World Geodetic System 1984 (WGS84-G1150) and the vertical reference datum is the Earth Gravitational Model 2008 (EGM2008).<br>
+   * * Tiles are 258x258 pixel squares rather than the standard 256 x 256. This is done to allow for accurate interpolation of values at the tile edges. As such adjacent tiles overlap by 1 pixel along all edges.<br>
+   * * Tile data comes from the [Airbus WorldDEM4Ortho product](https://www.intelligence-airbusds.com/worlddem-streaming/). Urban areas are approximately leveled down to ground level. All other areas are represented by the object surface level (e.g., trees). <br>
+   *
+   * Supports zoom level 13 only. Format: raster (tiff).
+   */
+  MicrosoftDem = "microsoft.dem",
+  /**
+   * Digital elevation contour line tiles. Compared to the microsoft.dem option, these tiles are in vector format and intended for visualization purpose. The tiles cover the whole landmass of Earth. Some small islands (e.g., atolls) might not be represented accurately.<br>
+   * * The vertical unit for measurement of elevation height is meters.<br>
+   * * The horizontal reference datum is the World Geodetic System 1984 (WGS84-G1150) and the vertical reference datum is the Earth Gravitational Model 2008 (EGM2008).<br>
+   * * Tile data comes from the [Airbus WorldDEM4Ortho product](https://www.intelligence-airbusds.com/worlddem-streaming/). Urban areas are approximately leveled down to ground level. All other areas are represented by the object surface level (e.g., trees).<br>
+   *
+   * Supports zoom levels 9 through 14. Format: vector (pbf).
+   */
+  MicrosoftDemContours = "microsoft.dem.contours",
+  /** absolute traffic tiles in vector */
+  MicrosoftTrafficAbsolute = "microsoft.traffic.absolute",
+  /** absolute traffic tiles in raster in our main style. */
+  MicrosoftTrafficAbsoluteMain = "microsoft.traffic.absolute.main",
+  /** relative traffic tiles in vector */
+  MicrosoftTrafficRelative = "microsoft.traffic.relative",
+  /** relative traffic tiles in raster in our main style. */
+  MicrosoftTrafficRelativeMain = "microsoft.traffic.relative.main",
+  /** relative traffic tiles in raster in our dark style. */
+  MicrosoftTrafficRelativeDark = "microsoft.traffic.relative.dark",
+  /** traffic tiles in vector */
+  MicrosoftTrafficDelay = "microsoft.traffic.delay",
+  /** traffic tiles in raster in our main style */
+  MicrosoftTrafficDelayMain = "microsoft.traffic.delay.main",
+  /** reduced traffic tiles in raster in our main style */
+  MicrosoftTrafficReducedMain = "microsoft.traffic.reduced.main",
+  /** incident tiles in vector */
+  MicrosoftTrafficIncident = "microsoft.traffic.incident"
 }
 
 /**
- * Defines values for RasterTileFormat. \
- * {@link KnownRasterTileFormat} can be used interchangeably with RasterTileFormat,
+ * Defines values for TilesetID. \
+ * {@link KnownTilesetID} can be used interchangeably with TilesetID,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
- * **png**: An image in the png format. Supports zoom levels 0 through 18.
+ * **microsoft.base**: A base map is a standard map that displays roads, natural and artificial features along with the labels for those features in a vector tile.<br>
+ *
+ * Supports zoom levels 0 through 22. Format: vector (pbf). \
+ * **microsoft.base.labels**: Displays labels for roads, natural and artificial features in a vector tile.<br>
+ *
+ * Supports zoom levels 0 through 22. Format: vector (pbf). \
+ * **microsoft.base.hybrid**: Displays road, boundary and label data in a vector tile.<br>
+ *
+ * Supports zoom levels 0 through 22. Format: vector (pbf). \
+ * **microsoft.terra.main**: Shaded relief and terra layers.<br>
+ *
+ * Supports zoom levels 0 through 6. Format: raster (png). \
+ * **microsoft.base.road**: All layers with our main style.<br>
+ *
+ * Supports zoom levels 0 through 22. Format: raster (png). \
+ * **microsoft.base.darkgrey**: All layers with our dark grey style.<br>
+ *
+ * Supports zoom levels 0 through 22. Format: raster (png). \
+ * **microsoft.base.labels.road**: Label data in our main style.<br>
+ *
+ * Supports zoom levels 0 through 22. Format: raster (png). \
+ * **microsoft.base.labels.darkgrey**: Label data in our dark grey style.<br>
+ *
+ * Supports zoom levels 0 through 22. Format: raster (png). \
+ * **microsoft.base.hybrid.road**: Road, boundary and label data in our main style.<br>
+ *
+ * Supports zoom levels 0 through 22. Format: raster (png). \
+ * **microsoft.base.hybrid.darkgrey**: Road, boundary and label data in our dark grey style.<br>
+ *
+ * Supports zoom levels 0 through 22. Format: raster (png). \
+ * **microsoft.imagery**: A combination of satellite and aerial imagery. Only available in S1 pricing SKU.<br>
+ *
+ * Supports zoom levels 1 through 19. Format: raster (jpeg). \
+ * **microsoft.weather.radar.main**: Weather radar tiles. Latest weather radar images including areas of rain, snow, ice and mixed conditions. Please see [coverage information](https:\/\/aka.ms\/AzureMapsWeatherCoverage) for Azure Maps Weather service.  To learn more about the Radar data, please see [Weather concepts](https:\/\/aka.ms\/AzureMapsWeatherConcepts).<br>
+ *
+ * Supports zoom levels 0 through 15. Format: raster (png). \
+ * **microsoft.weather.infrared.main**: Weather infrared tiles. Latest Infrared Satellite images shows clouds by their temperature.  Please see [coverage information](https:\/\/aka.ms\/AzureMapsWeatherCoverage) for Azure Maps Weather service. To learn more about the returned Satellite data, please see [Weather concepts](https:\/\/aka.ms\/AzureMapsWeatherConcepts).<br>
+ *
+ * Supports zoom levels 0 through 15. Format: raster (png). \
+ * **microsoft.dem**: Digital Elevation Model tiles. The tiles are in the GeoTIFF format with a single 32-bit floating point band. The tiles cover the whole landmass of Earth. Some small islands (e.g., atolls) might not be represented accurately.<br>
+ * * The vertical unit for measurement of elevation height is meters. An elevation value of -32767.0 is used for points that have no data value, most often returned where there isn't landmass (i.e. water).<br>
+ * * The horizontal reference datum is the World Geodetic System 1984 (WGS84-G1150) and the vertical reference datum is the Earth Gravitational Model 2008 (EGM2008).<br>
+ * * Tiles are 258x258 pixel squares rather than the standard 256 x 256. This is done to allow for accurate interpolation of values at the tile edges. As such adjacent tiles overlap by 1 pixel along all edges.<br>
+ * * Tile data comes from the [Airbus WorldDEM4Ortho product](https:\/\/www.intelligence-airbusds.com\/worlddem-streaming\/). Urban areas are approximately leveled down to ground level. All other areas are represented by the object surface level (e.g., trees). <br>
+ *
+ * Supports zoom level 13 only. Format: raster (tiff). \
+ * **microsoft.dem.contours**: Digital elevation contour line tiles. Compared to the microsoft.dem option, these tiles are in vector format and intended for visualization purpose. The tiles cover the whole landmass of Earth. Some small islands (e.g., atolls) might not be represented accurately.<br>
+ * * The vertical unit for measurement of elevation height is meters.<br>
+ * * The horizontal reference datum is the World Geodetic System 1984 (WGS84-G1150) and the vertical reference datum is the Earth Gravitational Model 2008 (EGM2008).<br>
+ * * Tile data comes from the [Airbus WorldDEM4Ortho product](https:\/\/www.intelligence-airbusds.com\/worlddem-streaming\/). Urban areas are approximately leveled down to ground level. All other areas are represented by the object surface level (e.g., trees).<br>
+ *
+ * Supports zoom levels 9 through 14. Format: vector (pbf). \
+ * **microsoft.traffic.absolute**: absolute traffic tiles in vector \
+ * **microsoft.traffic.absolute.main**: absolute traffic tiles in raster in our main style. \
+ * **microsoft.traffic.relative**: relative traffic tiles in vector \
+ * **microsoft.traffic.relative.main**: relative traffic tiles in raster in our main style. \
+ * **microsoft.traffic.relative.dark**: relative traffic tiles in raster in our dark style. \
+ * **microsoft.traffic.delay**: traffic tiles in vector \
+ * **microsoft.traffic.delay.main**: traffic tiles in raster in our main style \
+ * **microsoft.traffic.reduced.main**: reduced traffic tiles in raster in our main style \
+ * **microsoft.traffic.incident**: incident tiles in vector
  */
-export type RasterTileFormat = string;
+export type TilesetID = string;
 
-/** Known values of {@link StaticMapLayer} that the service accepts. */
-export enum KnownStaticMapLayer {
-  /** Returns an image containing all map features including polygons, borders, roads and labels. */
-  Basic = "basic",
-  /** Returns an image containing borders, roads, and labels, and can be overlaid on other tiles (such as satellite imagery) to produce hybrid tiles. */
-  Hybrid = "hybrid",
-  /** Returns an image of just the map's label information. */
-  Labels = "labels"
+/** Known values of {@link MapTileSize} that the service accepts. */
+export enum KnownMapTileSize {
+  /** Return a 256 by 256 pixel tile. */
+  Size256 = "256",
+  /** Return a 512 by 512 pixel tile. */
+  Size512 = "512"
 }
 
 /**
- * Defines values for StaticMapLayer. \
- * {@link KnownStaticMapLayer} can be used interchangeably with StaticMapLayer,
+ * Defines values for MapTileSize. \
+ * {@link KnownMapTileSize} can be used interchangeably with MapTileSize,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
- * **basic**: Returns an image containing all map features including polygons, borders, roads and labels. \
- * **hybrid**: Returns an image containing borders, roads, and labels, and can be overlaid on other tiles (such as satellite imagery) to produce hybrid tiles. \
- * **labels**: Returns an image of just the map's label information.
+ * **256**: Return a 256 by 256 pixel tile. \
+ * **512**: Return a 512 by 512 pixel tile.
  */
-export type StaticMapLayer = string;
-
-/** Known values of {@link MapImageStyle} that the service accepts. */
-export enum KnownMapImageStyle {
-  /** Azure Maps main style */
-  Main = "main",
-  /** Dark grey version of the Azure Maps main style */
-  Dark = "dark"
-}
-
-/**
- * Defines values for MapImageStyle. \
- * {@link KnownMapImageStyle} can be used interchangeably with MapImageStyle,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **main**: Azure Maps main style \
- * **dark**: Dark grey version of the Azure Maps main style
- */
-export type MapImageStyle = string;
+export type MapTileSize = string;
 
 /** Known values of {@link LocalizedMapView} that the service accepts. */
 export enum KnownLocalizedMapView {
@@ -291,87 +477,6 @@ export enum KnownLocalizedMapView {
  */
 export type LocalizedMapView = string;
 
-/** Known values of {@link TileFormat} that the service accepts. */
-export enum KnownTileFormat {
-  /** An image in the png format. Supports zoom levels 0 through 18. */
-  Png = "png",
-  /** Vector graphic in the pbf format. Supports zoom levels 0 through 22. */
-  Pbf = "pbf"
-}
-
-/**
- * Defines values for TileFormat. \
- * {@link KnownTileFormat} can be used interchangeably with TileFormat,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **png**: An image in the png format. Supports zoom levels 0 through 18. \
- * **pbf**: Vector graphic in the pbf format. Supports zoom levels 0 through 22.
- */
-export type TileFormat = string;
-
-/** Known values of {@link MapTileLayer} that the service accepts. */
-export enum KnownMapTileLayer {
-  /** Returns a tile containing all map features including polygons, borders, roads and labels. */
-  Basic = "basic",
-  /** Returns a tile containing borders, roads, and labels, and can be overlaid on other tiles (such as satellite imagery) to produce hybrid tiles. */
-  Hybrid = "hybrid",
-  /** Returns a tile of just the map's label information. */
-  Labels = "labels",
-  /** Map canvas complete with shaded relief tiles. Zoom levels 0-6 (inclusive) are supported. Png is the only supported TileFormat and only available MapTileSize is 512. */
-  Terra = "terra"
-}
-
-/**
- * Defines values for MapTileLayer. \
- * {@link KnownMapTileLayer} can be used interchangeably with MapTileLayer,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **basic**: Returns a tile containing all map features including polygons, borders, roads and labels. \
- * **hybrid**: Returns a tile containing borders, roads, and labels, and can be overlaid on other tiles (such as satellite imagery) to produce hybrid tiles. \
- * **labels**: Returns a tile of just the map's label information. \
- * **terra**: Map canvas complete with shaded relief tiles. Zoom levels 0-6 (inclusive) are supported. Png is the only supported TileFormat and only available MapTileSize is 512.
- */
-export type MapTileLayer = string;
-
-/** Known values of {@link MapTileStyle} that the service accepts. */
-export enum KnownMapTileStyle {
-  /** Azure Maps main style */
-  Main = "main",
-  /** Dark grey version of the Azure Maps main style. PNG is the only supported TileFormat. */
-  Dark = "dark",
-  /** Azure Maps main style completed with shaded relief. Supported by Layer terra. */
-  ShadedRelief = "shaded_relief"
-}
-
-/**
- * Defines values for MapTileStyle. \
- * {@link KnownMapTileStyle} can be used interchangeably with MapTileStyle,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **main**: Azure Maps main style \
- * **dark**: Dark grey version of the Azure Maps main style. PNG is the only supported TileFormat. \
- * **shaded_relief**: Azure Maps main style completed with shaded relief. Supported by Layer terra.
- */
-export type MapTileStyle = string;
-
-/** Known values of {@link MapTileSize} that the service accepts. */
-export enum KnownMapTileSize {
-  /** Return a 256 by 256 pixel tile. */
-  Size256 = "256",
-  /** Return a 512 by 512 pixel tile. */
-  Size512 = "512"
-}
-
-/**
- * Defines values for MapTileSize. \
- * {@link KnownMapTileSize} can be used interchangeably with MapTileSize,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **256**: Return a 256 by 256 pixel tile. \
- * **512**: Return a 512 by 512 pixel tile.
- */
-export type MapTileSize = string;
-
 /** Known values of {@link ResponseFormat} that the service accepts. */
 export enum KnownResponseFormat {
   /** [The JavaScript Object Notation Data Interchange Format](https://tools.ietf.org/html/rfc8259) */
@@ -390,20 +495,59 @@ export enum KnownResponseFormat {
  */
 export type ResponseFormat = string;
 
-/** Known values of {@link MapImageryStyle} that the service accepts. */
-export enum KnownMapImageryStyle {
-  /** Satellite imagery */
-  Satellite = "satellite"
+/** Known values of {@link RasterTileFormat} that the service accepts. */
+export enum KnownRasterTileFormat {
+  /** An image in the png format. Supports zoom levels 0 through 18. */
+  Png = "png"
 }
 
 /**
- * Defines values for MapImageryStyle. \
- * {@link KnownMapImageryStyle} can be used interchangeably with MapImageryStyle,
+ * Defines values for RasterTileFormat. \
+ * {@link KnownRasterTileFormat} can be used interchangeably with RasterTileFormat,
  *  this enum contains the known values that the service supports.
  * ### Known values supported by the service
- * **satellite**: Satellite imagery
+ * **png**: An image in the png format. Supports zoom levels 0 through 18.
  */
-export type MapImageryStyle = string;
+export type RasterTileFormat = string;
+
+/** Known values of {@link StaticMapLayer} that the service accepts. */
+export enum KnownStaticMapLayer {
+  /** Returns an image containing all map features including polygons, borders, roads and labels. */
+  Basic = "basic",
+  /** Returns an image containing borders, roads, and labels, and can be overlaid on other tiles (such as satellite imagery) to produce hybrid tiles. */
+  Hybrid = "hybrid",
+  /** Returns an image of just the map's label information. */
+  Labels = "labels"
+}
+
+/**
+ * Defines values for StaticMapLayer. \
+ * {@link KnownStaticMapLayer} can be used interchangeably with StaticMapLayer,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **basic**: Returns an image containing all map features including polygons, borders, roads and labels. \
+ * **hybrid**: Returns an image containing borders, roads, and labels, and can be overlaid on other tiles (such as satellite imagery) to produce hybrid tiles. \
+ * **labels**: Returns an image of just the map's label information.
+ */
+export type StaticMapLayer = string;
+
+/** Known values of {@link MapImageStyle} that the service accepts. */
+export enum KnownMapImageStyle {
+  /** Azure Maps main style */
+  Main = "main",
+  /** Dark grey version of the Azure Maps main style */
+  Dark = "dark"
+}
+
+/**
+ * Defines values for MapImageStyle. \
+ * {@link KnownMapImageStyle} can be used interchangeably with MapImageStyle,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **main**: Azure Maps main style \
+ * **dark**: Dark grey version of the Azure Maps main style
+ */
+export type MapImageStyle = string;
 
 /** Known values of {@link IncludeText} that the service accepts. */
 export enum KnownIncludeText {
@@ -424,8 +568,107 @@ export enum KnownIncludeText {
 export type IncludeText = string;
 
 /** Optional parameters. */
+export interface GeneratedClientGetMapTileV2OptionalParams
+  extends coreClient.OperationOptions {
+  /**
+   * The desired date and time of the requested tile. This parameter must be specified in the standard date-time format (e.g. 2019-11-14T16:03:00-08:00), as defined by [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601). This parameter is only supported when tilesetId parameter is set to one of the values below.
+   *
+   * * microsoft.weather.infrared.main: We provide tiles up to 3 hours in the past. Tiles are available in 10-minute intervals. We round the timeStamp value to the nearest 10-minute time frame.
+   * * microsoft.weather.radar.main: We provide tiles up to 1.5 hours in the past and up to 2 hours in the future. Tiles are available in 5-minute intervals. We round the timeStamp value to the nearest 5-minute time frame.
+   */
+  timeStamp?: Date;
+  /** The size of the returned map tile in pixels. */
+  tileSize?: MapTileSize;
+  /**
+   * Language in which search results should be returned. Should be one of supported IETF language tags, case insensitive. When data in specified language is not available for a specific field, default language is used.
+   *
+   * Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for details.
+   */
+  language?: string;
+  /**
+   * The View parameter (also called the "user region" parameter) allows you to show the correct maps for a certain country/region for geopolitically disputed regions. Different countries have different views of such regions, and the View parameter allows your application to comply with the view required by the country your application will be serving. By default, the View parameter is set to “Unified” even if you haven’t defined it in  the request. It is your responsibility to determine the location of your users, and then set the View parameter correctly for that location. Alternatively, you have the option to set ‘View=Auto’, which will return the map data based on the IP  address of the request. The View parameter in Azure Maps must be used in compliance with applicable laws, including those  regarding mapping, of the country where maps, images and other data and third party content that you are authorized to  access via Azure Maps is made available. Example: view=IN.
+   *
+   * Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the available Views.
+   */
+  localizedMapView?: LocalizedMapView;
+}
+
+/** Contains response data for the getMapTileV2 operation. */
+export type GeneratedClientGetMapTileV2Response = GeneratedClientGetMapTileV2Headers & {
+  /**
+   * BROWSER ONLY
+   *
+   * The response body as a browser Blob.
+   * Always `undefined` in node.js.
+   */
+  blobBody?: Promise<Blob>;
+  /**
+   * NODEJS ONLY
+   *
+   * The response body as a node.js Readable stream.
+   * Always `undefined` in the browser.
+   */
+  readableStreamBody?: NodeJS.ReadableStream;
+};
+
+/** Optional parameters. */
+export interface GeneratedClientGetMapTilesetOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the getMapTileset operation. */
+export type GeneratedClientGetMapTilesetResponse = MapTileset;
+
+/** Optional parameters. */
+export interface GeneratedClientGetMapAttributionOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the getMapAttribution operation. */
+export type GeneratedClientGetMapAttributionResponse = MapAttribution;
+
+/** Optional parameters. */
+export interface GeneratedClientGetMapStateTileOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the getMapStateTile operation. */
+export type GeneratedClientGetMapStateTileResponse = GeneratedClientGetMapStateTileHeaders & {
+  /**
+   * BROWSER ONLY
+   *
+   * The response body as a browser Blob.
+   * Always `undefined` in node.js.
+   */
+  blobBody?: Promise<Blob>;
+  /**
+   * NODEJS ONLY
+   *
+   * The response body as a node.js Readable stream.
+   * Always `undefined` in the browser.
+   */
+  readableStreamBody?: NodeJS.ReadableStream;
+};
+
+/** Optional parameters. */
+export interface GeneratedClientGetCopyrightCaptionOptionalParams
+  extends coreClient.OperationOptions {}
+
+/** Contains response data for the getCopyrightCaption operation. */
+export type GeneratedClientGetCopyrightCaptionResponse = CopyrightCaption;
+
+/** Optional parameters. */
 export interface GeneratedClientGetMapStaticImageOptionalParams
   extends coreClient.OperationOptions {
+  /**
+   * Language in which search results should be returned. Should be one of supported IETF language tags, case insensitive. When data in specified language is not available for a specific field, default language is used.
+   *
+   * Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for details.
+   */
+  language?: string;
+  /**
+   * The View parameter (also called the "user region" parameter) allows you to show the correct maps for a certain country/region for geopolitically disputed regions. Different countries have different views of such regions, and the View parameter allows your application to comply with the view required by the country your application will be serving. By default, the View parameter is set to “Unified” even if you haven’t defined it in  the request. It is your responsibility to determine the location of your users, and then set the View parameter correctly for that location. Alternatively, you have the option to set ‘View=Auto’, which will return the map data based on the IP  address of the request. The View parameter in Azure Maps must be used in compliance with applicable laws, including those  regarding mapping, of the country where maps, images and other data and third party content that you are authorized to  access via Azure Maps is made available. Example: view=IN.
+   *
+   * Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the available Views.
+   */
+  localizedMapView?: LocalizedMapView;
   /** Map layer requested. If layer is set to labels or hybrid, the format should be png. */
   layer?: StaticMapLayer;
   /** Map style to be returned. Possible values are main and dark. */
@@ -459,18 +702,6 @@ export interface GeneratedClientGetMapStaticImageOptionalParams
   height?: number;
   /** Width of the resulting image in pixels. Range is 1 to 8192. Default is 512. It shouldn’t be used with bbox. */
   width?: number;
-  /**
-   * Language in which search results should be returned. Should be one of supported IETF language tags, case insensitive. When data in specified language is not available for a specific field, default language is used.
-   *
-   * Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for details.
-   */
-  language?: string;
-  /**
-   * The View parameter (also called the "user region" parameter) allows you to show the correct maps for a certain country/region for geopolitically disputed regions. Different countries have different views of such regions, and the View parameter allows your application to comply with the view required by the country your application will be serving. By default, the View parameter is set to “Unified” even if you haven’t defined it in  the request. It is your responsibility to determine the location of your users, and then set the View parameter correctly for that location. Alternatively, you have the option to set ‘View=Auto’, which will return the map data based on the IP  address of the request. The View parameter in Azure Maps must be used in compliance with applicable laws, including those  regarding mapping, of the country where maps, images and other data and third party content that you are authorized to  access via Azure Maps is made available. Example: view=IN.
-   *
-   * Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the available Views.
-   */
-  localizedMapView?: LocalizedMapView;
   /**
    * Pushpin style and instances. Use this parameter to optionally add pushpins to the image.
    * The pushpin style describes the appearance of the pushpins, and the instances specify
@@ -701,94 +932,6 @@ export interface GeneratedClientGetMapStaticImageOptionalParams
 
 /** Contains response data for the getMapStaticImage operation. */
 export type GeneratedClientGetMapStaticImageResponse = GeneratedClientGetMapStaticImageHeaders & {
-  /**
-   * BROWSER ONLY
-   *
-   * The response body as a browser Blob.
-   * Always `undefined` in node.js.
-   */
-  blobBody?: Promise<Blob>;
-  /**
-   * NODEJS ONLY
-   *
-   * The response body as a node.js Readable stream.
-   * Always `undefined` in the browser.
-   */
-  readableStreamBody?: NodeJS.ReadableStream;
-};
-
-/** Optional parameters. */
-export interface GeneratedClientGetMapTileOptionalParams
-  extends coreClient.OperationOptions {
-  /**
-   * Language in which search results should be returned. Should be one of supported IETF language tags, case insensitive. When data in specified language is not available for a specific field, default language is used.
-   *
-   * Please refer to [Supported Languages](https://docs.microsoft.com/azure/azure-maps/supported-languages) for details.
-   */
-  language?: string;
-  /**
-   * The View parameter (also called the "user region" parameter) allows you to show the correct maps for a certain country/region for geopolitically disputed regions. Different countries have different views of such regions, and the View parameter allows your application to comply with the view required by the country your application will be serving. By default, the View parameter is set to “Unified” even if you haven’t defined it in  the request. It is your responsibility to determine the location of your users, and then set the View parameter correctly for that location. Alternatively, you have the option to set ‘View=Auto’, which will return the map data based on the IP  address of the request. The View parameter in Azure Maps must be used in compliance with applicable laws, including those  regarding mapping, of the country where maps, images and other data and third party content that you are authorized to  access via Azure Maps is made available. Example: view=IN.
-   *
-   * Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the available Views.
-   */
-  localizedMapView?: LocalizedMapView;
-  /** The size of the returned map tile in pixels. */
-  tileSize?: MapTileSize;
-}
-
-/** Contains response data for the getMapTile operation. */
-export type GeneratedClientGetMapTileResponse = GeneratedClientGetMapTileHeaders & {
-  /**
-   * BROWSER ONLY
-   *
-   * The response body as a browser Blob.
-   * Always `undefined` in node.js.
-   */
-  blobBody?: Promise<Blob>;
-  /**
-   * NODEJS ONLY
-   *
-   * The response body as a node.js Readable stream.
-   * Always `undefined` in the browser.
-   */
-  readableStreamBody?: NodeJS.ReadableStream;
-};
-
-/** Optional parameters. */
-export interface GeneratedClientGetMapStateTileOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the getMapStateTile operation. */
-export type GeneratedClientGetMapStateTileResponse = GeneratedClientGetMapStateTileHeaders & {
-  /**
-   * BROWSER ONLY
-   *
-   * The response body as a browser Blob.
-   * Always `undefined` in node.js.
-   */
-  blobBody?: Promise<Blob>;
-  /**
-   * NODEJS ONLY
-   *
-   * The response body as a node.js Readable stream.
-   * Always `undefined` in the browser.
-   */
-  readableStreamBody?: NodeJS.ReadableStream;
-};
-
-/** Optional parameters. */
-export interface GeneratedClientGetCopyrightCaptionOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the getCopyrightCaption operation. */
-export type GeneratedClientGetCopyrightCaptionResponse = CopyrightCaption;
-
-/** Optional parameters. */
-export interface GeneratedClientGetMapImageryTileOptionalParams
-  extends coreClient.OperationOptions {}
-
-/** Contains response data for the getMapImageryTile operation. */
-export type GeneratedClientGetMapImageryTileResponse = GeneratedClientGetMapImageryTileHeaders & {
   /**
    * BROWSER ONLY
    *

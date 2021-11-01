@@ -50,7 +50,7 @@ export const clientId: OperationParameter = {
 export const apiVersion: OperationQueryParameter = {
   parameterPath: "apiVersion",
   mapper: {
-    defaultValue: "1.0",
+    defaultValue: "2.1",
     isConstant: true,
     serializedName: "api-version",
     type: {
@@ -59,7 +59,165 @@ export const apiVersion: OperationQueryParameter = {
   }
 };
 
+export const tilesetId: OperationQueryParameter = {
+  parameterPath: "tilesetId",
+  mapper: {
+    serializedName: "tilesetId",
+    required: true,
+    type: {
+      name: "String"
+    }
+  }
+};
+
+export const z: OperationQueryParameter = {
+  parameterPath: ["tileIndex", "z"],
+  mapper: {
+    serializedName: "zoom",
+    required: true,
+    type: {
+      name: "Number"
+    }
+  }
+};
+
+export const x: OperationQueryParameter = {
+  parameterPath: ["tileIndex", "x"],
+  mapper: {
+    serializedName: "x",
+    required: true,
+    type: {
+      name: "Number"
+    }
+  }
+};
+
+export const y: OperationQueryParameter = {
+  parameterPath: ["tileIndex", "y"],
+  mapper: {
+    serializedName: "y",
+    required: true,
+    type: {
+      name: "Number"
+    }
+  }
+};
+
+export const timeStamp: OperationQueryParameter = {
+  parameterPath: ["options", "timeStamp"],
+  mapper: {
+    serializedName: "timeStamp",
+    type: {
+      name: "DateTime"
+    }
+  }
+};
+
+export const tileSize: OperationQueryParameter = {
+  parameterPath: ["options", "tileSize"],
+  mapper: {
+    serializedName: "tileSize",
+    type: {
+      name: "String"
+    }
+  }
+};
+
+export const language: OperationQueryParameter = {
+  parameterPath: ["options", "language"],
+  mapper: {
+    serializedName: "language",
+    type: {
+      name: "String"
+    }
+  }
+};
+
+export const localizedMapView: OperationQueryParameter = {
+  parameterPath: ["options", "localizedMapView"],
+  mapper: {
+    serializedName: "view",
+    type: {
+      name: "String"
+    }
+  }
+};
+
+export const accept1: OperationParameter = {
+  parameterPath: "accept",
+  mapper: {
+    defaultValue: "application/json",
+    isConstant: true,
+    serializedName: "Accept",
+    type: {
+      name: "String"
+    }
+  }
+};
+
+export const zoom: OperationQueryParameter = {
+  parameterPath: "zoom",
+  mapper: {
+    serializedName: "zoom",
+    required: true,
+    type: {
+      name: "Number"
+    }
+  }
+};
+
+export const bounds: OperationQueryParameter = {
+  parameterPath: "bounds",
+  mapper: {
+    serializedName: "bounds",
+    required: true,
+    type: {
+      name: "Sequence",
+      element: {
+        type: {
+          name: "Number"
+        }
+      }
+    }
+  },
+  collectionFormat: "CSV"
+};
+
+export const accept2: OperationParameter = {
+  parameterPath: "accept",
+  mapper: {
+    defaultValue: "application/vnd.mapbox-vector-tile, application/json",
+    isConstant: true,
+    serializedName: "Accept",
+    type: {
+      name: "String"
+    }
+  }
+};
+
+export const statesetId: OperationQueryParameter = {
+  parameterPath: "statesetId",
+  mapper: {
+    serializedName: "statesetId",
+    required: true,
+    type: {
+      name: "String"
+    }
+  }
+};
+
 export const format: OperationURLParameter = {
+  parameterPath: "format",
+  mapper: {
+    serializedName: "format",
+    required: true,
+    type: {
+      name: "String"
+    }
+  }
+};
+
+export const format1: OperationURLParameter = {
   parameterPath: "format",
   mapper: {
     serializedName: "format",
@@ -90,7 +248,7 @@ export const style: OperationQueryParameter = {
   }
 };
 
-export const zoom: OperationQueryParameter = {
+export const zoom1: OperationQueryParameter = {
   parameterPath: ["options", "zoom"],
   mapper: {
     constraints: {
@@ -164,26 +322,6 @@ export const width: OperationQueryParameter = {
   }
 };
 
-export const language: OperationQueryParameter = {
-  parameterPath: ["options", "language"],
-  mapper: {
-    serializedName: "language",
-    type: {
-      name: "String"
-    }
-  }
-};
-
-export const localizedMapView: OperationQueryParameter = {
-  parameterPath: ["options", "localizedMapView"],
-  mapper: {
-    serializedName: "view",
-    type: {
-      name: "String"
-    }
-  }
-};
-
 export const pins: OperationQueryParameter = {
   parameterPath: ["options", "pins"],
   mapper: {
@@ -214,151 +352,6 @@ export const path: OperationQueryParameter = {
     }
   },
   collectionFormat: "Multi"
-};
-
-export const format1: OperationURLParameter = {
-  parameterPath: "format",
-  mapper: {
-    serializedName: "format",
-    required: true,
-    type: {
-      name: "String"
-    }
-  }
-};
-
-export const layer1: OperationQueryParameter = {
-  parameterPath: "layer",
-  mapper: {
-    serializedName: "layer",
-    required: true,
-    type: {
-      name: "String"
-    }
-  }
-};
-
-export const style1: OperationQueryParameter = {
-  parameterPath: "style",
-  mapper: {
-    serializedName: "style",
-    required: true,
-    type: {
-      name: "String"
-    }
-  }
-};
-
-export const z: OperationQueryParameter = {
-  parameterPath: ["tileIndex", "z"],
-  mapper: {
-    serializedName: "zoom",
-    required: true,
-    type: {
-      name: "Number"
-    }
-  }
-};
-
-export const x: OperationQueryParameter = {
-  parameterPath: ["tileIndex", "x"],
-  mapper: {
-    serializedName: "x",
-    required: true,
-    type: {
-      name: "Number"
-    }
-  }
-};
-
-export const y: OperationQueryParameter = {
-  parameterPath: ["tileIndex", "y"],
-  mapper: {
-    serializedName: "y",
-    required: true,
-    type: {
-      name: "Number"
-    }
-  }
-};
-
-export const tileSize: OperationQueryParameter = {
-  parameterPath: ["options", "tileSize"],
-  mapper: {
-    serializedName: "tileSize",
-    type: {
-      name: "String"
-    }
-  }
-};
-
-export const accept1: OperationParameter = {
-  parameterPath: "accept",
-  mapper: {
-    defaultValue: "application/vnd.mapbox-vector-tile, application/json",
-    isConstant: true,
-    serializedName: "Accept",
-    type: {
-      name: "String"
-    }
-  }
-};
-
-export const statesetId: OperationQueryParameter = {
-  parameterPath: "statesetId",
-  mapper: {
-    serializedName: "statesetId",
-    required: true,
-    type: {
-      name: "String"
-    }
-  }
-};
-
-export const accept2: OperationParameter = {
-  parameterPath: "accept",
-  mapper: {
-    defaultValue: "application/json",
-    isConstant: true,
-    serializedName: "Accept",
-    type: {
-      name: "String"
-    }
-  }
-};
-
-export const format2: OperationURLParameter = {
-  parameterPath: "format",
-  mapper: {
-    serializedName: "format",
-    required: true,
-    type: {
-      name: "String"
-    }
-  }
-};
-
-export const accept3: OperationParameter = {
-  parameterPath: "accept",
-  mapper: {
-    defaultValue: "application/json, image/jpeg, image/png",
-    isConstant: true,
-    serializedName: "Accept",
-    type: {
-      name: "String"
-    }
-  }
-};
-
-export const style2: OperationQueryParameter = {
-  parameterPath: "style",
-  mapper: {
-    serializedName: "style",
-    required: true,
-    type: {
-      name: "String"
-    }
-  }
 };
 
 export const southWest: OperationQueryParameter = {
