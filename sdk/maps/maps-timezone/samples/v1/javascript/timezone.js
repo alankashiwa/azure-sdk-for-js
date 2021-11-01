@@ -2,12 +2,13 @@
 // Licensed under the MIT License.
 
 /**
- * @summary Demonstrates Timezone API usage. Simple CRUD operations are performed.
+ * @summary Demonstrates Timezone API usage. Simple queries are performed.
  */
 
 const { DefaultAzureCredential } = require("@azure/identity");
 const { TimezoneClient } = require("@azure/maps-timezone");
-require("dotenv").config();
+const dotenv = require("dotenv");
+dotenv.config();
 
 /**
  * Azure Maps supports two ways to authenticate requests:
@@ -52,22 +53,22 @@ async function main() {
     }
   }
 
-  const timezone = new TimezoneClient(credential).timezone;
+  const timezone = new TimezoneClient(credential);
 
   console.log(" --- Get timezone by coordinates:");
   const timezoneByCoordinatesOptions = { options: "all" };
   console.log(
-    await timezone.getTimezoneByCoordinates("json", "47.0,-122", {
+    await timezone.getTimezoneByCoordinates("json", [47.0, -122], {
       ...timezoneByCoordinatesOptions,
       ...operationOptions
     })
   );
 
-  console.log(" --- Get enum IANA timezones:");
-  console.log(await timezone.getTimezoneEnumIana("json", operationOptions));
+  console.log(" --- Get IANA timezone IDs:");
+  console.log(await timezone.getIanaTimezoneIds("json", operationOptions));
 
   console.log(" --- Get IANA version:");
-  console.log(await timezone.getTimezoneIanaVersion("json", operationOptions));
+  console.log(await timezone.getIanaVersion("json", operationOptions));
 
   console.log(" --- Get timezone by IANA ID:");
   const timezoneByIdOptions = { options: "all" };
@@ -78,12 +79,12 @@ async function main() {
     })
   );
 
-  console.log(" --- Get enum Windows timezones:");
-  console.log(await timezone.getTimezoneEnumWindows("json", operationOptions));
+  console.log(" --- Get Windows timezone IDs:");
+  console.log(await timezone.getWindowsTimezoneIds("json", operationOptions));
 
   console.log(" --- Get Windows timezone to IANA:");
   console.log(
-    await timezone.getTimezoneWindowsToIana("json", "Eastern Standard Time", operationOptions)
+    await timezone.convertWindowsTimezoneToIana("json", "Eastern Standard Time", operationOptions)
   );
 }
 
