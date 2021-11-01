@@ -4,7 +4,6 @@
 
 ```ts
 
-import * as coreAuth from '@azure/core-auth';
 import * as coreClient from '@azure/core-client';
 import { PollerLike } from '@azure/core-lro';
 import { PollOperationState } from '@azure/core-lro';
@@ -126,6 +125,14 @@ export interface ErrorDetail {
 // @public
 export interface ErrorResponse {
     error?: ErrorDetail;
+}
+
+// @public
+export interface GeneratedClientOptionalParams extends coreClient.ServiceClientOptions {
+    $host?: string;
+    apiVersion?: string;
+    clientId?: string;
+    endpoint?: string;
 }
 
 // @public
@@ -588,30 +595,14 @@ export interface SearchAlongRouteRequest {
     route?: GeoJsonLineString;
 }
 
-// @public (undocumented)
-export class SearchClient extends SearchClientContext {
-    constructor(credentials: coreAuth.TokenCredential, options?: SearchClientOptionalParams);
+// Warning: (ae-forgotten-export) The symbol "GeneratedClientContext" needs to be exported by the entry point index.d.ts
+// Warning: (ae-internal-missing-underscore) The name "SearchClient" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export class SearchClient extends GeneratedClientContext {
+    constructor(options?: GeneratedClientOptionalParams);
     // (undocumented)
     search: Search;
-}
-
-// @public (undocumented)
-export class SearchClientContext extends coreClient.ServiceClient {
-    // (undocumented)
-    $host: string;
-    constructor(credentials: coreAuth.TokenCredential, options?: SearchClientOptionalParams);
-    // (undocumented)
-    apiVersion: string;
-    // (undocumented)
-    clientId?: string;
-}
-
-// @public
-export interface SearchClientOptionalParams extends coreClient.ServiceClientOptions {
-    $host?: string;
-    apiVersion?: string;
-    clientId?: string;
-    endpoint?: string;
 }
 
 // @public

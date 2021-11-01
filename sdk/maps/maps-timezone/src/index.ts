@@ -6,6 +6,5 @@
  * Changes may cause incorrect behavior and will be lost if the code is regenerated.
  */
 
-export * from "./models";
-export { TimezoneClient } from "./timezoneClient";
-export { TimezoneClientContext } from "./timezoneClientContext";
+export * from "./generated/models";
+export { GeneratedClient as TimezoneClient } from "./generated/generatedClient";

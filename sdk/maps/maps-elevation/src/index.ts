@@ -6,6 +6,5 @@
  * Changes may cause incorrect behavior and will be lost if the code is regenerated.
  */
 
-export * from "./models";
-export { ElevationClient } from "./elevationClient";
-export { ElevationClientContext } from "./elevationClientContext";
+export * from "./generated/models";
+export { GeneratedClient as ElevationClient } from "./generated/generatedClient";

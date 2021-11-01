@@ -4,7 +4,6 @@
 
 ```ts
 
-import * as coreAuth from '@azure/core-auth';
 import * as coreClient from '@azure/core-client';
 
 // @public
@@ -31,6 +30,67 @@ export interface ErrorDetail {
 // @public
 export interface ErrorResponse {
     error?: ErrorDetail;
+}
+
+// @public
+export interface GeneratedClientConvertWindowsTimezoneToIanaOptionalParams extends coreClient.OperationOptions {
+    windowsTerritoryCode?: string;
+}
+
+// @public
+export type GeneratedClientConvertWindowsTimezoneToIanaResponse = IanaId[];
+
+// @public
+export interface GeneratedClientGetIanaTimezoneIdsOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type GeneratedClientGetIanaTimezoneIdsResponse = IanaId[];
+
+// @public
+export interface GeneratedClientGetIanaVersionOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type GeneratedClientGetIanaVersionResponse = TimezoneIanaVersionResult;
+
+// @public
+export interface GeneratedClientGetTimezoneByCoordinatesOptionalParams extends coreClient.OperationOptions {
+    acceptLanguage?: string;
+    daylightSavingsTimeFrom?: Date;
+    daylightSavingsTimeLastingYears?: number;
+    options?: TimezoneOptions;
+    timeStamp?: Date;
+}
+
+// @public
+export type GeneratedClientGetTimezoneByCoordinatesResponse = TimezoneResult;
+
+// @public
+export interface GeneratedClientGetTimezoneByIDOptionalParams extends coreClient.OperationOptions {
+    acceptLanguage?: string;
+    daylightSavingsTimeFrom?: Date;
+    daylightSavingsTimeLastingYears?: number;
+    options?: TimezoneOptions;
+    timeStamp?: Date;
+}
+
+// @public
+export type GeneratedClientGetTimezoneByIDResponse = TimezoneResult;
+
+// @public
+export interface GeneratedClientGetWindowsTimezoneIdsOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type GeneratedClientGetWindowsTimezoneIdsResponse = TimezoneWindows[];
+
+// @public
+export interface GeneratedClientOptionalParams extends coreClient.ServiceClientOptions {
+    $host?: string;
+    apiVersion?: string;
+    clientId?: string;
+    endpoint?: string;
 }
 
 // @public (undocumented)
@@ -84,87 +144,18 @@ export interface TimeTransition {
     readonly utcStart?: Date;
 }
 
-// @public (undocumented)
-export class TimezoneClient extends TimezoneClientContext {
-    constructor(credentials: coreAuth.TokenCredential, options?: TimezoneClientOptionalParams);
-    convertWindowsTimezoneToIana(format: JsonFormat, windowsTimezoneId: string, options?: TimezoneClientConvertWindowsTimezoneToIanaOptionalParams): Promise<TimezoneClientConvertWindowsTimezoneToIanaResponse>;
-    getIanaTimezoneIds(format: JsonFormat, options?: TimezoneClientGetIanaTimezoneIdsOptionalParams): Promise<TimezoneClientGetIanaTimezoneIdsResponse>;
-    getIanaVersion(format: JsonFormat, options?: TimezoneClientGetIanaVersionOptionalParams): Promise<TimezoneClientGetIanaVersionResponse>;
-    getTimezoneByCoordinates(format: JsonFormat, coordinates: number[], options?: TimezoneClientGetTimezoneByCoordinatesOptionalParams): Promise<TimezoneClientGetTimezoneByCoordinatesResponse>;
-    getTimezoneByID(format: JsonFormat, timezoneId: string, options?: TimezoneClientGetTimezoneByIDOptionalParams): Promise<TimezoneClientGetTimezoneByIDResponse>;
-    getWindowsTimezoneIds(format: JsonFormat, options?: TimezoneClientGetWindowsTimezoneIdsOptionalParams): Promise<TimezoneClientGetWindowsTimezoneIdsResponse>;
-}
-
-// @public (undocumented)
-export class TimezoneClientContext extends coreClient.ServiceClient {
-    // (undocumented)
-    $host: string;
-    constructor(credentials: coreAuth.TokenCredential, options?: TimezoneClientOptionalParams);
-    // (undocumented)
-    apiVersion: string;
-    // (undocumented)
-    clientId?: string;
-}
-
-// @public
-export interface TimezoneClientConvertWindowsTimezoneToIanaOptionalParams extends coreClient.OperationOptions {
-    windowsTerritoryCode?: string;
-}
-
-// @public
-export type TimezoneClientConvertWindowsTimezoneToIanaResponse = IanaId[];
-
-// @public
-export interface TimezoneClientGetIanaTimezoneIdsOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type TimezoneClientGetIanaTimezoneIdsResponse = IanaId[];
-
-// @public
-export interface TimezoneClientGetIanaVersionOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type TimezoneClientGetIanaVersionResponse = TimezoneIanaVersionResult;
-
-// @public
-export interface TimezoneClientGetTimezoneByCoordinatesOptionalParams extends coreClient.OperationOptions {
-    acceptLanguage?: string;
-    daylightSavingsTimeFrom?: Date;
-    daylightSavingsTimeLastingYears?: number;
-    options?: TimezoneOptions;
-    timeStamp?: Date;
-}
-
-// @public
-export type TimezoneClientGetTimezoneByCoordinatesResponse = TimezoneResult;
-
-// @public
-export interface TimezoneClientGetTimezoneByIDOptionalParams extends coreClient.OperationOptions {
-    acceptLanguage?: string;
-    daylightSavingsTimeFrom?: Date;
-    daylightSavingsTimeLastingYears?: number;
-    options?: TimezoneOptions;
-    timeStamp?: Date;
-}
-
-// @public
-export type TimezoneClientGetTimezoneByIDResponse = TimezoneResult;
-
-// @public
-export interface TimezoneClientGetWindowsTimezoneIdsOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type TimezoneClientGetWindowsTimezoneIdsResponse = TimezoneWindows[];
-
-// @public
-export interface TimezoneClientOptionalParams extends coreClient.ServiceClientOptions {
-    $host?: string;
-    apiVersion?: string;
-    clientId?: string;
-    endpoint?: string;
+// Warning: (ae-forgotten-export) The symbol "GeneratedClientContext" needs to be exported by the entry point index.d.ts
+// Warning: (ae-internal-missing-underscore) The name "TimezoneClient" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export class TimezoneClient extends GeneratedClientContext {
+    constructor(options?: GeneratedClientOptionalParams);
+    convertWindowsTimezoneToIana(format: JsonFormat, windowsTimezoneId: string, options?: GeneratedClientConvertWindowsTimezoneToIanaOptionalParams): Promise<GeneratedClientConvertWindowsTimezoneToIanaResponse>;
+    getIanaTimezoneIds(format: JsonFormat, options?: GeneratedClientGetIanaTimezoneIdsOptionalParams): Promise<GeneratedClientGetIanaTimezoneIdsResponse>;
+    getIanaVersion(format: JsonFormat, options?: GeneratedClientGetIanaVersionOptionalParams): Promise<GeneratedClientGetIanaVersionResponse>;
+    getTimezoneByCoordinates(format: JsonFormat, coordinates: number[], options?: GeneratedClientGetTimezoneByCoordinatesOptionalParams): Promise<GeneratedClientGetTimezoneByCoordinatesResponse>;
+    getTimezoneByID(format: JsonFormat, timezoneId: string, options?: GeneratedClientGetTimezoneByIDOptionalParams): Promise<GeneratedClientGetTimezoneByIDResponse>;
+    getWindowsTimezoneIds(format: JsonFormat, options?: GeneratedClientGetWindowsTimezoneIdsOptionalParams): Promise<GeneratedClientGetWindowsTimezoneIdsResponse>;
 }
 
 // @public

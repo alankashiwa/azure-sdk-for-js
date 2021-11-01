@@ -4,7 +4,6 @@
 
 ```ts
 
-import * as coreAuth from '@azure/core-auth';
 import * as coreClient from '@azure/core-client';
 
 // @public
@@ -32,36 +31,28 @@ export interface ErrorResponse {
     error?: ErrorDetail;
 }
 
-// @public (undocumented)
-export class GeolocationClient extends GeolocationClientContext {
-    constructor(credentials: coreAuth.TokenCredential, options?: GeolocationClientOptionalParams);
-    getLocation(format: JsonFormat, ipAddress: string, options?: GeolocationClientGetLocationOptionalParams): Promise<GeolocationClientGetLocationResponse>;
-}
-
-// @public (undocumented)
-export class GeolocationClientContext extends coreClient.ServiceClient {
-    // (undocumented)
-    $host: string;
-    constructor(credentials: coreAuth.TokenCredential, options?: GeolocationClientOptionalParams);
-    // (undocumented)
-    apiVersion: string;
-    // (undocumented)
-    clientId?: string;
+// @public
+export interface GeneratedClientGetLocationOptionalParams extends coreClient.OperationOptions {
 }
 
 // @public
-export interface GeolocationClientGetLocationOptionalParams extends coreClient.OperationOptions {
-}
+export type GeneratedClientGetLocationResponse = IpAddressToLocationResult;
 
 // @public
-export type GeolocationClientGetLocationResponse = IpAddressToLocationResult;
-
-// @public
-export interface GeolocationClientOptionalParams extends coreClient.ServiceClientOptions {
+export interface GeneratedClientOptionalParams extends coreClient.ServiceClientOptions {
     $host?: string;
     apiVersion?: string;
     clientId?: string;
     endpoint?: string;
+}
+
+// Warning: (ae-forgotten-export) The symbol "GeneratedClientContext" needs to be exported by the entry point index.d.ts
+// Warning: (ae-internal-missing-underscore) The name "GeolocationClient" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export class GeolocationClient extends GeneratedClientContext {
+    constructor(options?: GeneratedClientOptionalParams);
+    getLocation(format: JsonFormat, ipAddress: string, options?: GeneratedClientGetLocationOptionalParams): Promise<GeneratedClientGetLocationResponse>;
 }
 
 // @public

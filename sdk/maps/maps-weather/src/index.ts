@@ -6,6 +6,5 @@
  * Changes may cause incorrect behavior and will be lost if the code is regenerated.
  */
 
-export * from "./models";
-export { WeatherClient } from "./weatherClient";
-export { WeatherClientContext } from "./weatherClientContext";
+export * from "./generated/models";
+export { GeneratedClient as WeatherClient } from "./generated/generatedClient";

@@ -4,10 +4,8 @@
 
 ```ts
 
-import * as coreAuth from '@azure/core-auth';
 import * as coreClient from '@azure/core-client';
 import * as coreRestPipeline from '@azure/core-rest-pipeline';
-import { PagedAsyncIterableIterator } from '@azure/core-paging';
 import { PollerLike } from '@azure/core-lro';
 import { PollOperationState } from '@azure/core-lro';
 
@@ -15,7 +13,7 @@ import { PollOperationState } from '@azure/core-lro';
 export interface Alias {
     readonly aliasId?: string;
     readonly createdTimestamp?: Date;
-    readonly creatorDataItemId?: string | null;
+    readonly creatorDataItemId?: string;
     readonly lastUpdatedTimestamp?: Date;
 }
 
@@ -76,7 +74,8 @@ export interface AliasOperations {
     create(options?: AliasCreateOptionalParams): Promise<AliasCreateResponse>;
     delete(aliasId: string, options?: AliasDeleteOptionalParams): Promise<void>;
     get(aliasId: string, options?: AliasGetOptionalParams): Promise<AliasGetResponse>;
-    list(options?: AliasListOptionalParams): PagedAsyncIterableIterator<Alias>;
+    list(options?: AliasListOptionalParams): Promise<AliasListResponse>;
+    listNext(nextLink: string, options?: AliasListNextOptionalParams): Promise<AliasListNextResponse>;
 }
 
 // @public
@@ -240,12 +239,16 @@ export interface ConversionOperations {
     delete(conversionId: string, options?: ConversionDeleteOptionalParams): Promise<void>;
     get(conversionId: string, options?: ConversionGetOptionalParams): Promise<ConversionGetResponse>;
     getOperation(operationId: string, options?: ConversionGetOperationOptionalParams): Promise<ConversionGetOperationResponse>;
-    list(options?: ConversionListOptionalParams): PagedAsyncIterableIterator<Conversion>;
+    list(options?: ConversionListOptionalParams): Promise<ConversionListResponse>;
+    listNext(nextLink: string, options?: ConversionListNextOptionalParams): Promise<ConversionListNextResponse>;
 }
 
-// @public (undocumented)
-export class CreatorClient extends CreatorClientContext {
-    constructor(credentials: coreAuth.TokenCredential, options?: CreatorClientOptionalParams);
+// Warning: (ae-forgotten-export) The symbol "GeneratedClientContext" needs to be exported by the entry point index.d.ts
+// Warning: (ae-internal-missing-underscore) The name "CreatorClient" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export class CreatorClient extends GeneratedClientContext {
+    constructor(options?: GeneratedClientOptionalParams);
     // (undocumented)
     aliasOperations: AliasOperations;
     // (undocumented)
@@ -264,22 +267,6 @@ export class CreatorClient extends CreatorClientContext {
     wfs: Wfs;
 }
 
-// @public (undocumented)
-export class CreatorClientContext extends coreClient.ServiceClient {
-    constructor(credentials: coreAuth.TokenCredential, options?: CreatorClientOptionalParams);
-    // (undocumented)
-    clientId?: string;
-    // (undocumented)
-    geography: Geography;
-}
-
-// @public
-export interface CreatorClientOptionalParams extends coreClient.ServiceClientOptions {
-    clientId?: string;
-    endpoint?: string;
-    geography?: Geography;
-}
-
 // @public
 export interface Data {
     beginUpdate(udid: string, updateContent: Record<string, unknown>, options?: DataUpdateOptionalParams): Promise<PollerLike<PollOperationState<DataUpdateResponse>, DataUpdateResponse>>;
@@ -289,13 +276,23 @@ export interface Data {
         "application/octet-stream",
         coreRestPipeline.RequestBodyType,
         DataUpload$binaryOptionalParams?
-    ] | [DataFormat, "application/json", Record<string, unknown>, DataUpload$jsonOptionalParams?]): Promise<PollerLike<PollOperationState<DataUploadResponse>, DataUploadResponse>>;
+    ] | [
+        DataFormat,
+        "application/json",
+        Record<string, unknown>,
+        DataUpload$jsonOptionalParams?
+    ]): Promise<PollerLike<PollOperationState<DataUploadResponse>, DataUploadResponse>>;
     beginUploadAndWait(...args: [
         DataFormat,
         "application/octet-stream",
         coreRestPipeline.RequestBodyType,
         DataUpload$binaryOptionalParams?
-    ] | [DataFormat, "application/json", Record<string, unknown>, DataUpload$jsonOptionalParams?]): Promise<DataUploadResponse>;
+    ] | [
+        DataFormat,
+        "application/json",
+        Record<string, unknown>,
+        DataUpload$jsonOptionalParams?
+    ]): Promise<DataUploadResponse>;
     delete(udid: string, options?: DataDeleteOptionalParams): Promise<void>;
     download(udid: string, options?: DataDownloadOptionalParams): Promise<DataDownloadResponse>;
     getOperation(operationId: string, options?: DataGetOperationOptionalParams): Promise<DataGetOperationResponse>;
@@ -419,7 +416,8 @@ export interface DatasetOperations {
     delete(datasetId: string, options?: DatasetDeleteOptionalParams): Promise<void>;
     get(datasetId: string, options?: DatasetGetOptionalParams): Promise<DatasetGetResponse>;
     getOperation(operationId: string, options?: DatasetGetOperationOptionalParams): Promise<DatasetGetOperationResponse>;
-    list(options?: DatasetListOptionalParams): PagedAsyncIterableIterator<Dataset>;
+    list(options?: DatasetListOptionalParams): Promise<DatasetListResponse>;
+    listNext(nextLink: string, options?: DatasetListNextOptionalParams): Promise<DatasetListNextResponse>;
 }
 
 // @public
@@ -569,7 +567,8 @@ export interface FeatureStateOperations {
     deleteStateset(statesetId: string, options?: FeatureStateDeleteStatesetOptionalParams): Promise<void>;
     getStateset(statesetId: string, options?: FeatureStateGetStatesetOptionalParams): Promise<FeatureStateGetStatesetResponse>;
     listStates(statesetId: string, featureId: string, options?: FeatureStateListStatesOptionalParams): Promise<FeatureStateListStatesResponse>;
-    listStatesets(options?: FeatureStateListStatesetsOptionalParams): PagedAsyncIterableIterator<StatesetInfo>;
+    listStatesets(options?: FeatureStateListStatesetsOptionalParams): Promise<FeatureStateListStatesetsResponse>;
+    listStatesetsNext(nextLink: string, options?: FeatureStateListStatesetsNextOptionalParams): Promise<FeatureStateListStatesetsNextResponse>;
     updateStates(statesetId: string, featureId: string, featureStates: FeatureStatesStructure, options?: FeatureStateUpdateStatesOptionalParams): Promise<void>;
     updateStateset(statesetId: string, styleRules: StyleRules, options?: FeatureStateUpdateStatesetOptionalParams): Promise<void>;
 }
@@ -585,6 +584,13 @@ export interface FeatureStateUpdateStatesetOptionalParams extends coreClient.Ope
 
 // @public
 export interface FeatureStateUpdateStatesOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export interface GeneratedClientOptionalParams extends coreClient.ServiceClientOptions {
+    clientId?: string;
+    endpoint?: string;
+    geography?: Geography;
 }
 
 // @public
@@ -1109,7 +1115,8 @@ export interface TilesetOperations {
     delete(tilesetId: string, options?: TilesetDeleteOptionalParams): Promise<void>;
     get(tilesetId: string, options?: TilesetGetOptionalParams): Promise<TilesetGetResponse>;
     getOperation(operationId: string, options?: TilesetGetOperationOptionalParams): Promise<TilesetGetOperationResponse>;
-    list(options?: TilesetListOptionalParams): PagedAsyncIterableIterator<Tileset>;
+    list(options?: TilesetListOptionalParams): Promise<TilesetListResponse>;
+    listNext(nextLink: string, options?: TilesetListNextOptionalParams): Promise<TilesetListNextResponse>;
 }
 
 // @public

@@ -6,6 +6,5 @@
  * Changes may cause incorrect behavior and will be lost if the code is regenerated.
  */
 
-export * from "./models";
-export { RenderClient } from "./renderClient";
-export { RenderClientContext } from "./renderClientContext";
+export * from "./generated/models";
+export { GeneratedClient as RenderClient } from "./generated/generatedClient";

@@ -4,7 +4,6 @@
 
 ```ts
 
-import * as coreAuth from '@azure/core-auth';
 import * as coreClient from '@azure/core-client';
 
 // @public
@@ -28,6 +27,14 @@ export interface ErrorDetail {
 // @public
 export interface ErrorResponse {
     error?: ErrorDetail;
+}
+
+// @public
+export interface GeneratedClientOptionalParams extends coreClient.ServiceClientOptions {
+    $host?: string;
+    apiVersion?: string;
+    clientId?: string;
+    endpoint?: string;
 }
 
 // @public
@@ -161,39 +168,16 @@ export interface TileIndex {
     y: number;
 }
 
-// @public
-export interface Traffic {
-    getTrafficFlowSegment(format: ResponseFormat, style: TrafficFlowSegmentStyle, zoom: number, coordinates: number[], options?: TrafficGetTrafficFlowSegmentOptionalParams): Promise<TrafficGetTrafficFlowSegmentResponse>;
-    getTrafficFlowTile(format: TileFormat, style: TrafficFlowTileStyle, zoom: number, tileIndex: TileIndex, options?: TrafficGetTrafficFlowTileOptionalParams): Promise<TrafficGetTrafficFlowTileResponse>;
-    getTrafficIncidentDetail(format: ResponseFormat, style: IncidentDetailStyle, boundingbox: number[], boundingZoom: number, trafficmodelid: string, options?: TrafficGetTrafficIncidentDetailOptionalParams): Promise<TrafficGetTrafficIncidentDetailResponse>;
-    getTrafficIncidentTile(format: TileFormat, style: TrafficIncidentTileStyle, zoom: number, tileIndex: TileIndex, options?: TrafficGetTrafficIncidentTileOptionalParams): Promise<TrafficGetTrafficIncidentTileResponse>;
-    getTrafficIncidentViewport(format: ResponseFormat, boundingbox: number[], boundingzoom: number, overviewbox: number[], overviewzoom: number, options?: TrafficGetTrafficIncidentViewportOptionalParams): Promise<TrafficGetTrafficIncidentViewportResponse>;
-}
-
-// @public (undocumented)
-export class TrafficClient extends TrafficClientContext {
-    constructor(credentials: coreAuth.TokenCredential, options?: TrafficClientOptionalParams);
+// Warning: (ae-forgotten-export) The symbol "GeneratedClientContext" needs to be exported by the entry point index.d.ts
+// Warning: (ae-internal-missing-underscore) The name "TrafficClient" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export class TrafficClient extends GeneratedClientContext {
+    constructor(options?: GeneratedClientOptionalParams);
+    // Warning: (ae-forgotten-export) The symbol "Traffic" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
     traffic: Traffic;
-}
-
-// @public (undocumented)
-export class TrafficClientContext extends coreClient.ServiceClient {
-    // (undocumented)
-    $host: string;
-    constructor(credentials: coreAuth.TokenCredential, options?: TrafficClientOptionalParams);
-    // (undocumented)
-    apiVersion: string;
-    // (undocumented)
-    clientId?: string;
-}
-
-// @public
-export interface TrafficClientOptionalParams extends coreClient.ServiceClientOptions {
-    $host?: string;
-    apiVersion?: string;
-    clientId?: string;
-    endpoint?: string;
 }
 
 // @public

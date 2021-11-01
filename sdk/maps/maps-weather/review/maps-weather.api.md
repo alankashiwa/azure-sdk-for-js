@@ -4,27 +4,26 @@
 
 ```ts
 
-import * as coreAuth from '@azure/core-auth';
 import * as coreClient from '@azure/core-client';
 
 // @public (undocumented)
 export interface AirAndPollen {
+    airQualityType?: string;
     category?: string;
     categoryValue?: number;
-    name?: string;
-    type?: string;
+    description?: string;
     value?: number;
 }
 
 // @public
-export interface AlertArea {
-    alertDetails?: string;
-    alertDetailsLanguageCode?: string;
+export interface AlertDetails {
+    description?: string;
+    details?: string;
     endTime?: Date;
+    language?: string;
     latestStatus?: LatestStatus;
     name?: string;
     startTime?: Date;
-    summary?: string;
 }
 
 // @public (undocumented)
@@ -37,57 +36,85 @@ export interface ColorValue {
 
 // @public (undocumented)
 export interface CurrentConditions {
-    apparentTemperature?: WeatherUnit;
-    ceiling?: WeatherUnit;
+    apparentTemperature?: WeatherValue;
+    cloudCeiling?: WeatherValue;
     cloudCover?: number;
     dateTime?: Date;
-    dewPoint?: WeatherUnit;
+    description?: string;
+    dewPoint?: WeatherValue;
     hasPrecipitation?: boolean;
-    iconCode?: number;
-    isDayTime?: boolean;
+    iconCode?: IconCode;
+    isDaytime?: boolean;
     obstructionsToVisibility?: string;
-    past24HourTemperatureDeparture?: WeatherUnit;
-    phrase?: string;
+    pastTwentyFourHourTemperatureDeparture?: WeatherValue;
     precipitationSummary?: PrecipitationSummary;
-    pressure?: WeatherUnit;
+    pressure?: WeatherValue;
     pressureTendency?: PressureTendency;
-    realFeelTemperature?: WeatherUnit;
-    realFeelTemperatureShade?: WeatherUnit;
+    realFeelTemperature?: WeatherValue;
+    realFeelTemperatureShade?: WeatherValue;
     relativeHumidity?: number;
-    temperature?: WeatherUnit;
+    temperature?: WeatherValue;
     temperatureSummary?: TemperatureSummary;
     uvIndex?: number;
-    uvIndexPhrase?: string;
-    visibility?: WeatherUnit;
-    wetBulbTemperature?: WeatherUnit;
+    uvIndexDescription?: string;
+    visibility?: WeatherValue;
+    wetBulbTemperature?: WeatherValue;
     wind?: WindDetails;
-    windChillTemperature?: WeatherUnit;
+    windChillTemperature?: WeatherValue;
     windGust?: WindDetails;
 }
 
 // @public (undocumented)
 export interface CurrentConditionsResponse {
-    results?: CurrentConditions[];
+    readonly results?: CurrentConditions[];
 }
 
 // @public (undocumented)
 export interface DailyForecast {
-    airAndPollen?: AirAndPollen[];
-    date?: Date;
-    day?: DayOrNight;
-    degreeDaySummary?: DegreeDaySummary;
+    airQuality?: AirAndPollen[];
+    dateTime?: Date;
+    daytimeForecast?: DailyForecastDetail;
     hoursOfSun?: number;
-    night?: DayOrNight;
-    realFeelTemperature?: WeatherUnitRange;
-    realFeelTemperatureShade?: WeatherUnitRange;
+    meanTemperatureDeviation?: DegreeDaySummary;
+    nighttimeForecast?: DailyForecastDetail;
+    realFeelTemperature?: WeatherValueRange;
+    realFeelTemperatureShade?: WeatherValueRange;
     sources?: string[];
-    temperature?: WeatherUnitRange;
+    temperature?: WeatherValueRange;
+}
+
+// @public (undocumented)
+export interface DailyForecastDetail {
+    cloudCover?: number;
+    hasPrecipitation?: boolean;
+    hoursOfIce?: number;
+    hoursOfPrecipitation?: number;
+    hoursOfRain?: number;
+    hoursOfSnow?: number;
+    ice?: WeatherValue;
+    iceProbability?: number;
+    iconCode?: IconCode;
+    iconPhrase?: string;
+    localSource?: LocalSource;
+    longPhrase?: string;
+    precipitationIntensity?: string;
+    precipitationProbability?: number;
+    precipitationType?: PrecipitationType;
+    rain?: WeatherValue;
+    rainProbability?: number;
+    shortDescription?: string;
+    snow?: WeatherValue;
+    snowProbability?: number;
+    thunderstormProbability?: number;
+    totalLiquid?: WeatherValue;
+    wind?: WindDetails;
+    windGust?: WindDetails;
 }
 
 // @public (undocumented)
 export interface DailyForecastResponse {
-    forecasts?: DailyForecast[];
-    summary?: DailyForecastSummary;
+    readonly forecasts?: DailyForecast[];
+    readonly summary?: DailyForecastSummary;
 }
 
 // @public
@@ -101,47 +128,19 @@ export interface DailyForecastSummary {
 
 // @public
 export interface DailyIndex {
-    ascending?: boolean;
-    category?: string;
+    categoryDescription?: string;
     categoryValue?: number;
     dateTime?: Date;
     description?: string;
     indexId?: number;
     indexName?: string;
+    isAscending?: boolean;
     value?: number;
 }
 
 // @public
 export interface DailyIndicesResponse {
-    results?: DailyIndex[];
-}
-
-// @public (undocumented)
-export interface DayOrNight {
-    cloudCover?: number;
-    hasPrecipitation?: boolean;
-    hoursOfIce?: number;
-    hoursOfPrecipitation?: number;
-    hoursOfRain?: number;
-    hoursOfSnow?: number;
-    ice?: WeatherUnit;
-    iceProbability?: number;
-    iconCode?: number;
-    iconPhrase?: string;
-    localSource?: LocalSource;
-    longPhrase?: string;
-    precipitationIntensity?: string;
-    precipitationProbability?: number;
-    precipitationType?: string;
-    rain?: WeatherUnit;
-    rainProbability?: number;
-    shortPhrase?: string;
-    snow?: WeatherUnit;
-    snowProbability?: number;
-    thunderstormProbability?: number;
-    totalLiquid?: WeatherUnit;
-    wind?: WindDetails;
-    windGust?: WindDetails;
+    readonly results?: DailyIndex[];
 }
 
 // @public
@@ -149,8 +148,8 @@ export type DayQuarter = number;
 
 // @public (undocumented)
 export interface DegreeDaySummary {
-    cooling?: WeatherUnit;
-    heating?: WeatherUnit;
+    cooling?: WeatherValue;
+    heating?: WeatherValue;
 }
 
 // @public
@@ -177,74 +176,227 @@ export interface ErrorResponse {
 export interface ForecastInterval {
     cloudCover?: number;
     color?: ColorValue;
-    dbz?: number;
-    iconCode?: number;
+    decibelRelativeToZ?: number;
+    iconCode?: IconCode;
     minute?: number;
-    precipitationType?: string;
-    shortPhrase?: string;
+    precipitationType?: PrecipitationType;
+    shortDescription?: string;
     simplifiedColor?: ColorValue;
     startTime?: Date;
     threshold?: string;
 }
 
-// @public (undocumented)
-export interface HazardDetail {
-    hazardCode?: string;
-    hazardIndex?: number;
-    shortPhrase?: string;
+// @public
+export interface GeneratedClientGetCurrentConditionsOptionalParams extends coreClient.OperationOptions {
+    details?: string;
+    duration?: number;
+    language?: string;
+    unit?: WeatherDataUnit;
+}
+
+// @public
+export type GeneratedClientGetCurrentConditionsResponse = CurrentConditionsResponse;
+
+// @public
+export interface GeneratedClientGetDailyForecastOptionalParams extends coreClient.OperationOptions {
+    duration?: number;
+    language?: string;
+    unit?: WeatherDataUnit;
+}
+
+// @public
+export type GeneratedClientGetDailyForecastResponse = DailyForecastResponse;
+
+// @public
+export interface GeneratedClientGetDailyIndicesOptionalParams extends coreClient.OperationOptions {
+    duration?: number;
+    indexGroupId?: number;
+    indexId?: number;
+    language?: string;
+}
+
+// @public
+export type GeneratedClientGetDailyIndicesResponse = DailyIndicesResponse;
+
+// @public
+export interface GeneratedClientGetHourlyForecastOptionalParams extends coreClient.OperationOptions {
+    duration?: number;
+    language?: string;
+    unit?: WeatherDataUnit;
+}
+
+// @public
+export type GeneratedClientGetHourlyForecastResponse = HourlyForecastResponse;
+
+// @public
+export interface GeneratedClientGetMinuteForecastOptionalParams extends coreClient.OperationOptions {
+    interval?: number;
+    language?: string;
+}
+
+// @public
+export type GeneratedClientGetMinuteForecastResponse = MinuteForecastResponse;
+
+// @public
+export interface GeneratedClientGetQuarterDayForecastOptionalParams extends coreClient.OperationOptions {
+    duration?: number;
+    language?: string;
+    unit?: WeatherDataUnit;
+}
+
+// @public
+export type GeneratedClientGetQuarterDayForecastResponse = QuarterDayForecastResponse;
+
+// @public
+export interface GeneratedClientGetSevereWeatherAlertsOptionalParams extends coreClient.OperationOptions {
+    details?: string;
+    language?: string;
+}
+
+// @public
+export type GeneratedClientGetSevereWeatherAlertsResponse = SevereWeatherAlertsResponse;
+
+// @public
+export interface GeneratedClientGetWeatherAlongRouteOptionalParams extends coreClient.OperationOptions {
+    language?: string;
+}
+
+// @public
+export type GeneratedClientGetWeatherAlongRouteResponse = WeatherAlongRouteResponse;
+
+// @public
+export interface GeneratedClientOptionalParams extends coreClient.ServiceClientOptions {
+    $host?: string;
+    apiVersion?: string;
+    clientId?: string;
+    endpoint?: string;
 }
 
 // @public (undocumented)
+export interface HazardDetail {
+    hazardCode?: string;
+    hazardIndex?: HazardIndex;
+    shortDescription?: string;
+}
+
+// @public
+export type HazardIndex = number;
+
+// @public (undocumented)
 export interface HourlyForecast {
-    ceiling?: WeatherUnit;
+    cloudCeiling?: WeatherValue;
     cloudCover?: number;
-    date?: Date;
-    dewPoint?: WeatherUnit;
+    dateTime?: Date;
+    dewPoint?: WeatherValue;
     hasPrecipitation?: boolean;
-    ice?: WeatherUnit;
+    ice?: WeatherValue;
     iceProbability?: number;
-    iconCode?: number;
+    iconCode?: IconCode;
     iconPhrase?: string;
     isDaylight?: boolean;
     precipitationProbability?: number;
-    rain?: WeatherUnit;
+    rain?: WeatherValue;
     rainProbability?: number;
-    realFeelTemperature?: WeatherUnit;
+    realFeelTemperature?: WeatherValue;
     relativeHumidity?: number;
-    snow?: WeatherUnit;
+    snow?: WeatherValue;
     snowProbability?: number;
-    temperature?: WeatherUnit;
-    totalLiquid?: WeatherUnit;
+    temperature?: WeatherValue;
+    totalLiquid?: WeatherValue;
     uvIndex?: number;
-    uvIndexPhrase?: string;
-    visibility?: WeatherUnit;
-    wetBulbTemperature?: WeatherUnit;
+    uvIndexDescription?: string;
+    visibility?: WeatherValue;
+    wetBulbTemperature?: WeatherValue;
     wind?: WindDetails;
     windGust?: WindDetails;
 }
 
 // @public (undocumented)
 export interface HourlyForecastResponse {
-    forecasts?: HourlyForecast[];
+    readonly forecasts?: HourlyForecast[];
 }
+
+// @public
+export type IconCode = number;
 
 // @public (undocumented)
 export interface IntervalSummary {
-    briefPhrase?: string;
+    briefDescription?: string;
     endMinute?: number;
-    iconCode?: number;
+    iconCode?: IconCode;
     longPhrase?: string;
-    shortPhrase?: string;
+    shortDescription?: string;
     startMinute?: number;
     totalMinutes?: number;
 }
 
 // @public
+export type JsonFormat = string;
+
+// @public
 export enum KnownDayQuarter {
-    One = 1,
-    Three = 3,
-    Two = 2,
-    Zero = 0
+    FirstQuarter = 0,
+    ForthQuarter = 3,
+    SecondQuarter = 1,
+    ThirdQuarter = 2
+}
+
+// @public
+export enum KnownHazardIndex {
+    Emergency = 4,
+    Informed = 1,
+    NoHazard = 0,
+    PayAttention = 2,
+    TakeAction = 3
+}
+
+// @public
+export enum KnownIconCode {
+    Clear = 33,
+    Cloudy = 7,
+    Cold = 31,
+    Dreary = 8,
+    Flurries = 19,
+    Fog = 11,
+    FreezingRain = 26,
+    HazyMoonlight = 37,
+    HazySunshine = 5,
+    Hot = 30,
+    Ice = 24,
+    IntermittentClouds = 4,
+    IntermittentCloudsNight = 36,
+    MostlyClear = 34,
+    MostlyCloudy = 6,
+    MostlyCloudyNight = 38,
+    MostlyCloudyWithFlurries = 20,
+    MostlyCloudyWithFlurriesNight = 43,
+    MostlyCloudyWithShowers = 13,
+    MostlyCloudyWithShowersNight = 40,
+    MostlyCloudyWithSnow = 23,
+    MostlyCloudyWithSnowNight = 44,
+    MostlyCloudyWithThunderstorms = 16,
+    MostlyCloudyWithThunderstormsNight = 42,
+    MostlySunny = 2,
+    PartlyCloudy = 35,
+    PartlyCloudyWithShowers = 39,
+    PartlyCloudyWithThunderstorms = 41,
+    PartlySunny = 3,
+    PartlySunnyWithFlurries = 21,
+    PartlySunnyWithShowers = 14,
+    PartlySunnyWithThunderstorms = 17,
+    Rain = 18,
+    RainAndSnow = 29,
+    Showers = 12,
+    Sleet = 25,
+    Snow = 22,
+    Sunny = 1,
+    Thunderstorms = 15,
+    Windy = 32
+}
+
+// @public
+export enum KnownJsonFormat {
+    Json = "json"
 }
 
 // @public
@@ -260,8 +412,39 @@ export enum KnownLatestStatusKeyword {
 }
 
 // @public
-export enum KnownResponseFormat {
-    Json = "json"
+export enum KnownPrecipitationType {
+    Ice = "Ice",
+    Mix = "Mix",
+    Rain = "Rain",
+    Snow = "Snow"
+}
+
+// @public
+export enum KnownUnitType {
+    Celsius = 17,
+    Centimeter = 4,
+    Fahrenheit = 18,
+    Feet = 0,
+    Float = 21,
+    HectoPascals = 11,
+    Inches = 1,
+    InchesOfMercury = 12,
+    Integer = 22,
+    Kelvin = 19,
+    Kilometer = 6,
+    KilometersPerHour = 7,
+    KiloPascals = 13,
+    Knots = 8,
+    Meter = 5,
+    MetersPerSecond = 10,
+    MicrogramsPerCubicMeterOfAir = 31,
+    Miles = 2,
+    MilesPerHour = 9,
+    Millibars = 14,
+    Millimeter = 3,
+    MillimetersOfMercury = 15,
+    Percent = 20,
+    PoundsPerSquareInch = 16
 }
 
 // @public
@@ -288,78 +471,84 @@ export interface LocalSource {
 
 // @public (undocumented)
 export interface MinuteForecastResponse {
-    intervals?: ForecastInterval[];
-    intervalSummaries?: IntervalSummary[];
-    summary?: MinuteForecastSummary;
+    readonly intervals?: ForecastInterval[];
+    readonly intervalSummaries?: IntervalSummary[];
+    readonly summary?: MinuteForecastSummary;
 }
 
 // @public
 export interface MinuteForecastSummary {
-    briefPhrase?: string;
+    briefDescription?: string;
     briefPhrase60?: string;
-    iconCode?: number;
+    iconCode?: IconCode;
     longPhrase?: string;
-    shortPhrase?: string;
+    shortDescription?: string;
+}
+
+// @public
+export interface PastHoursTemperature {
+    maximum?: WeatherValue;
+    minimum?: WeatherValue;
 }
 
 // @public (undocumented)
 export interface PrecipitationSummary {
-    past12Hours?: WeatherUnit;
-    past18Hours?: WeatherUnit;
-    past24Hours?: WeatherUnit;
-    past3Hours?: WeatherUnit;
-    past6Hours?: WeatherUnit;
-    past9Hours?: WeatherUnit;
-    pastHour?: WeatherUnit;
+    pastEighteenHours?: WeatherValue;
+    pastHour?: WeatherValue;
+    pastNineHours?: WeatherValue;
+    pastSixHours?: WeatherValue;
+    pastThreeHours?: WeatherValue;
+    pastTwelveHours?: WeatherValue;
+    pastTwentyFourHours?: WeatherValue;
 }
+
+// @public
+export type PrecipitationType = string;
 
 // @public (undocumented)
 export interface PressureTendency {
     code?: string;
-    localizedDescription?: string;
+    description?: string;
 }
 
 // @public (undocumented)
 export interface QuarterDayForecast {
     cloudCover?: number;
-    date?: string;
-    dewPoint?: WeatherUnit;
+    dateTime?: Date;
+    dewPoint?: WeatherValue;
     effectiveDate?: Date;
     hasPrecipitation?: boolean;
-    ice?: WeatherUnit;
-    iconCode?: number;
+    ice?: WeatherValue;
+    iconCode?: IconCode;
     iconPhrase?: string;
     phrase?: string;
     precipitationIntensity?: string;
     precipitationProbability?: number;
-    precipitationType?: string;
+    precipitationType?: PrecipitationType;
     quarter?: DayQuarter;
-    rain?: WeatherUnit;
-    realFeelTemperature?: WeatherUnitRange;
+    rain?: WeatherValue;
+    realFeelTemperature?: WeatherValueRange;
     relativeHumidity?: number;
-    snow?: WeatherUnit;
-    temperature?: WeatherUnitRange;
+    snow?: WeatherValue;
+    temperature?: WeatherValueRange;
     thunderstormProbability?: number;
-    totalLiquid?: WeatherUnit;
-    visibility?: WeatherUnit;
+    totalLiquid?: WeatherValue;
+    visibility?: WeatherValue;
     wind?: WindDetails;
     windGust?: WindDetails;
 }
 
 // @public (undocumented)
 export interface QuarterDayForecastResponse {
-    forecasts?: QuarterDayForecast[];
+    readonly forecasts?: QuarterDayForecast[];
 }
 
 // @public
-export type ResponseFormat = string;
-
-// @public
 export interface SevereWeatherAlert {
-    alertAreas?: AlertArea[];
+    alertDetails?: AlertDetails[];
     alertId?: number;
     category?: string;
-    class?: string;
+    classification?: string;
     countryCode?: string;
     description?: SevereWeatherAlertDescription;
     disclaimer?: string;
@@ -371,13 +560,13 @@ export interface SevereWeatherAlert {
 
 // @public
 export interface SevereWeatherAlertDescription {
-    english?: string;
-    localized?: string;
+    description?: string;
+    status?: string;
 }
 
 // @public
 export interface SevereWeatherAlertsResponse {
-    results?: SevereWeatherAlert[];
+    readonly results?: SevereWeatherAlert[];
 }
 
 // @public
@@ -388,39 +577,28 @@ export interface SunGlare {
 
 // @public (undocumented)
 export interface TemperatureSummary {
-    past12Hours?: TemperatureSummaryPast12Hours;
-    past24Hours?: TemperatureSummaryPast24Hours;
-    past6Hours?: TemperatureSummaryPast6Hours;
+    pastSixHours?: PastHoursTemperature;
+    pastTwelveHours?: PastHoursTemperature;
+    pastTwentyFourHours?: PastHoursTemperature;
 }
 
 // @public
-export interface TemperatureSummaryPast12Hours {
-    maximum?: WeatherUnit;
-    minimum?: WeatherUnit;
-}
+export type UnitType = number;
 
-// @public
-export interface TemperatureSummaryPast24Hours {
-    maximum?: WeatherUnit;
-    minimum?: WeatherUnit;
-}
-
-// @public
-export interface TemperatureSummaryPast6Hours {
-    maximum?: WeatherUnit;
-    minimum?: WeatherUnit;
-}
-
-// @public
-export interface Weather {
-    getCurrentConditions(format: ResponseFormat, query: string, options?: WeatherGetCurrentConditionsOptionalParams): Promise<WeatherGetCurrentConditionsResponse>;
-    getDailyForecast(format: ResponseFormat, query: string, options?: WeatherGetDailyForecastOptionalParams): Promise<WeatherGetDailyForecastResponse>;
-    getDailyIndices(format: ResponseFormat, query: string, options?: WeatherGetDailyIndicesOptionalParams): Promise<WeatherGetDailyIndicesResponse>;
-    getHourlyForecast(format: ResponseFormat, query: string, options?: WeatherGetHourlyForecastOptionalParams): Promise<WeatherGetHourlyForecastResponse>;
-    getMinuteForecast(format: ResponseFormat, query: string, options?: WeatherGetMinuteForecastOptionalParams): Promise<WeatherGetMinuteForecastResponse>;
-    getQuarterDayForecast(format: ResponseFormat, query: string, options?: WeatherGetQuarterDayForecastOptionalParams): Promise<WeatherGetQuarterDayForecastResponse>;
-    getSevereWeatherAlerts(format: ResponseFormat, query: string, options?: WeatherGetSevereWeatherAlertsOptionalParams): Promise<WeatherGetSevereWeatherAlertsResponse>;
-    getWeatherAlongRoute(format: ResponseFormat, query: string, options?: WeatherGetWeatherAlongRouteOptionalParams): Promise<WeatherGetWeatherAlongRouteResponse>;
+// @public (undocumented)
+export interface WaypointForecast {
+    cloudCover?: number;
+    hazards?: WeatherHazards;
+    iconCode?: IconCode;
+    isDaytime?: boolean;
+    lightningCount?: number;
+    notifications?: WeatherNotification[];
+    precipitation?: WeatherAlongRoutePrecipitation;
+    shortDescription?: string;
+    sunGlare?: SunGlare;
+    temperature?: WeatherValue;
+    wind?: WindDetails;
+    windGust?: WindDetails;
 }
 
 // @public
@@ -431,164 +609,60 @@ export interface WeatherAlongRoutePrecipitation {
 
 // @public
 export interface WeatherAlongRouteResponse {
-    summary?: WeatherAlongRouteSummary;
-    waypoints?: WeatherWaypoint[];
+    readonly summary?: WeatherAlongRouteSummary;
+    readonly waypoints?: WaypointForecast[];
 }
 
 // @public
 export interface WeatherAlongRouteSummary {
     hazards?: WeatherHazards;
-    iconCode?: number;
+    iconCode?: IconCode;
 }
 
-// @public (undocumented)
-export class WeatherClient extends WeatherClientContext {
-    constructor(credentials: coreAuth.TokenCredential, options?: WeatherClientOptionalParams);
-    // (undocumented)
-    weather: Weather;
-}
-
-// @public (undocumented)
-export class WeatherClientContext extends coreClient.ServiceClient {
-    // (undocumented)
-    $host: string;
-    constructor(credentials: coreAuth.TokenCredential, options?: WeatherClientOptionalParams);
-    // (undocumented)
-    apiVersion: string;
-    // (undocumented)
-    xMsClientId?: string;
-}
-
-// @public
-export interface WeatherClientOptionalParams extends coreClient.ServiceClientOptions {
-    $host?: string;
-    apiVersion?: string;
-    endpoint?: string;
-    xMsClientId?: string;
+// Warning: (ae-forgotten-export) The symbol "GeneratedClientContext" needs to be exported by the entry point index.d.ts
+// Warning: (ae-internal-missing-underscore) The name "WeatherClient" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export class WeatherClient extends GeneratedClientContext {
+    constructor(options?: GeneratedClientOptionalParams);
+    getCurrentConditions(format: JsonFormat, coordinates: number[], options?: GeneratedClientGetCurrentConditionsOptionalParams): Promise<GeneratedClientGetCurrentConditionsResponse>;
+    getDailyForecast(format: JsonFormat, coordinates: number[], options?: GeneratedClientGetDailyForecastOptionalParams): Promise<GeneratedClientGetDailyForecastResponse>;
+    getDailyIndices(format: JsonFormat, coordinates: number[], options?: GeneratedClientGetDailyIndicesOptionalParams): Promise<GeneratedClientGetDailyIndicesResponse>;
+    getHourlyForecast(format: JsonFormat, coordinates: number[], options?: GeneratedClientGetHourlyForecastOptionalParams): Promise<GeneratedClientGetHourlyForecastResponse>;
+    getMinuteForecast(format: JsonFormat, coordinates: number[], options?: GeneratedClientGetMinuteForecastOptionalParams): Promise<GeneratedClientGetMinuteForecastResponse>;
+    getQuarterDayForecast(format: JsonFormat, coordinates: number[], options?: GeneratedClientGetQuarterDayForecastOptionalParams): Promise<GeneratedClientGetQuarterDayForecastResponse>;
+    getSevereWeatherAlerts(format: JsonFormat, coordinates: number[], options?: GeneratedClientGetSevereWeatherAlertsOptionalParams): Promise<GeneratedClientGetSevereWeatherAlertsResponse>;
+    getWeatherAlongRoute(format: JsonFormat, query: string, options?: GeneratedClientGetWeatherAlongRouteOptionalParams): Promise<GeneratedClientGetWeatherAlongRouteResponse>;
 }
 
 // @public
 export type WeatherDataUnit = string;
 
 // @public
-export interface WeatherGetCurrentConditionsOptionalParams extends coreClient.OperationOptions {
-    details?: string;
-    duration?: number;
-    language?: string;
-    unit?: WeatherDataUnit;
-}
-
-// @public
-export type WeatherGetCurrentConditionsResponse = CurrentConditionsResponse;
-
-// @public
-export interface WeatherGetDailyForecastOptionalParams extends coreClient.OperationOptions {
-    duration?: number;
-    language?: string;
-    unit?: WeatherDataUnit;
-}
-
-// @public
-export type WeatherGetDailyForecastResponse = DailyForecastResponse;
-
-// @public
-export interface WeatherGetDailyIndicesOptionalParams extends coreClient.OperationOptions {
-    duration?: number;
-    indexGroupId?: number;
-    indexId?: number;
-    language?: string;
-}
-
-// @public
-export type WeatherGetDailyIndicesResponse = DailyIndicesResponse;
-
-// @public
-export interface WeatherGetHourlyForecastOptionalParams extends coreClient.OperationOptions {
-    duration?: number;
-    language?: string;
-    unit?: WeatherDataUnit;
-}
-
-// @public
-export type WeatherGetHourlyForecastResponse = HourlyForecastResponse;
-
-// @public
-export interface WeatherGetMinuteForecastOptionalParams extends coreClient.OperationOptions {
-    interval?: number;
-    language?: string;
-}
-
-// @public
-export type WeatherGetMinuteForecastResponse = MinuteForecastResponse;
-
-// @public
-export interface WeatherGetQuarterDayForecastOptionalParams extends coreClient.OperationOptions {
-    duration?: number;
-    language?: string;
-    unit?: WeatherDataUnit;
-}
-
-// @public
-export type WeatherGetQuarterDayForecastResponse = QuarterDayForecastResponse;
-
-// @public
-export interface WeatherGetSevereWeatherAlertsOptionalParams extends coreClient.OperationOptions {
-    details?: string;
-    language?: string;
-}
-
-// @public
-export type WeatherGetSevereWeatherAlertsResponse = SevereWeatherAlertsResponse;
-
-// @public
-export interface WeatherGetWeatherAlongRouteOptionalParams extends coreClient.OperationOptions {
-    language?: string;
-}
-
-// @public
-export type WeatherGetWeatherAlongRouteResponse = WeatherAlongRouteResponse;
-
-// @public
 export interface WeatherHazards {
-    hazardDetails?: HazardDetail[];
-    maxHazardIndex?: number;
+    details?: HazardDetail[];
+    maxHazardIndex?: HazardIndex;
 }
 
 // @public (undocumented)
 export interface WeatherNotification {
     hazardCode?: string;
-    hazardIndex?: number;
-    shortPhrase?: string;
+    hazardIndex?: HazardIndex;
+    shortDescription?: string;
     type?: string;
 }
 
 // @public
-export interface WeatherUnit {
-    unit?: string;
-    unitType?: number;
+export interface WeatherValue {
+    unitLabel?: string;
+    unitType?: UnitType;
     value?: number;
 }
 
 // @public
-export interface WeatherUnitRange {
-    maximum?: WeatherUnit;
-    minimum?: WeatherUnit;
-}
-
-// @public (undocumented)
-export interface WeatherWaypoint {
-    cloudCover?: number;
-    hazards?: WeatherHazards;
-    iconCode?: number;
-    isDayTime?: boolean;
-    lightningCount?: number;
-    notifications?: WeatherNotification[];
-    precipitation?: WeatherAlongRoutePrecipitation;
-    shortPhrase?: string;
-    sunGlare?: SunGlare;
-    temperature?: WeatherUnit;
-    wind?: WindDetails;
-    windGust?: WindDetails;
+export interface WeatherValueRange {
+    maximum?: WeatherValue;
+    minimum?: WeatherValue;
 }
 
 // @public
@@ -600,13 +674,13 @@ export interface WindDetails {
 // @public
 export interface WindDirection {
     degrees?: number;
-    localizedDescription?: string;
+    description?: string;
 }
 
 // @public
 export interface WindSpeed {
     unit?: string;
-    unitType?: number;
+    unitType?: UnitType;
     value?: number;
 }
 

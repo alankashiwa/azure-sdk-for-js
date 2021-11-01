@@ -6,6 +6,5 @@
  * Changes may cause incorrect behavior and will be lost if the code is regenerated.
  */
 
-export * from "./models";
-export { GeolocationClient } from "./geolocationClient";
-export { GeolocationClientContext } from "./geolocationClientContext";
+export * from "./generated/models";
+export { GeneratedClient as GeolocationClient } from "./generated/generatedClient";

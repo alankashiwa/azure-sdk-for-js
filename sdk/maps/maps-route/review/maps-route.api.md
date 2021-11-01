@@ -4,7 +4,6 @@
 
 ```ts
 
-import * as coreAuth from '@azure/core-auth';
 import * as coreClient from '@azure/core-client';
 import { PollerLike } from '@azure/core-lro';
 import { PollOperationState } from '@azure/core-lro';
@@ -72,6 +71,255 @@ export interface ErrorDetail {
 export interface ErrorResponse {
     error?: ErrorDetail;
 }
+
+// @public
+export interface GeneratedClientGetRouteDirectionsBatchHeaders {
+    location?: string;
+}
+
+// @public
+export interface GeneratedClientGetRouteDirectionsBatchOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
+}
+
+// @public
+export type GeneratedClientGetRouteDirectionsBatchResponse = RouteDirectionsBatchResult;
+
+// @public
+export interface GeneratedClientGetRouteDirectionsOptionalParams extends coreClient.OperationOptions {
+    accelerationEfficiency?: number;
+    alternativeType?: AlternativeRouteType;
+    arriveAt?: Date;
+    auxiliaryPowerInKw?: number;
+    auxiliaryPowerInLitersPerHour?: number;
+    avoid?: RouteAvoidType[];
+    computeBestWaypointOrder?: boolean;
+    computeTravelTime?: ComputeTravelTime;
+    constantSpeedConsumptionInKwHPerHundredKm?: string;
+    constantSpeedConsumptionInLitersPerHundredKm?: string;
+    currentChargeInKwH?: number;
+    currentFuelInLiters?: number;
+    decelerationEfficiency?: number;
+    departAt?: Date;
+    downhillEfficiency?: number;
+    filterSectionType?: SectionType;
+    fuelEnergyDensityInMegajoulesPerLiter?: number;
+    inclineLevel?: InclineLevel;
+    instructionsType?: RouteInstructionsType;
+    isCommercialVehicle?: boolean;
+    language?: string;
+    maxAlternatives?: number;
+    maxChargeInKwH?: number;
+    minDeviationDistance?: number;
+    minDeviationTime?: number;
+    report?: Report;
+    routeRepresentationForBestOrder?: RouteRepresentationForBestOrder;
+    routeType?: RouteType;
+    travelMode?: TravelMode;
+    uphillEfficiency?: number;
+    useTrafficData?: boolean;
+    vehicleAxleWeight?: number;
+    vehicleEngineType?: VehicleEngineType;
+    vehicleHeading?: number;
+    vehicleHeight?: number;
+    vehicleLength?: number;
+    vehicleLoadType?: VehicleLoadType;
+    vehicleMaxSpeed?: number;
+    vehicleWeight?: number;
+    vehicleWidth?: number;
+    windingness?: WindingnessLevel;
+}
+
+// @public
+export type GeneratedClientGetRouteDirectionsResponse = RouteDirections;
+
+// @public
+export interface GeneratedClientGetRouteDirectionsWithAdditionalParametersOptionalParams extends coreClient.OperationOptions {
+    accelerationEfficiency?: number;
+    alternativeType?: AlternativeRouteType;
+    arriveAt?: Date;
+    auxiliaryPowerInKw?: number;
+    auxiliaryPowerInLitersPerHour?: number;
+    avoid?: RouteAvoidType[];
+    computeBestWaypointOrder?: boolean;
+    computeTravelTime?: ComputeTravelTime;
+    constantSpeedConsumptionInKwHPerHundredKm?: string;
+    constantSpeedConsumptionInLitersPerHundredKm?: string;
+    currentChargeInKwH?: number;
+    currentFuelInLiters?: number;
+    decelerationEfficiency?: number;
+    departAt?: Date;
+    downhillEfficiency?: number;
+    filterSectionType?: SectionType;
+    fuelEnergyDensityInMegajoulesPerLiter?: number;
+    inclineLevel?: InclineLevel;
+    instructionsType?: RouteInstructionsType;
+    isCommercialVehicle?: boolean;
+    language?: string;
+    maxAlternatives?: number;
+    maxChargeInKwH?: number;
+    minDeviationDistance?: number;
+    minDeviationTime?: number;
+    report?: Report;
+    routeRepresentationForBestOrder?: RouteRepresentationForBestOrder;
+    routeType?: RouteType;
+    travelMode?: TravelMode;
+    uphillEfficiency?: number;
+    useTrafficData?: boolean;
+    vehicleAxleWeight?: number;
+    vehicleEngineType?: VehicleEngineType;
+    vehicleHeading?: number;
+    vehicleHeight?: number;
+    vehicleLength?: number;
+    vehicleLoadType?: VehicleLoadType;
+    vehicleMaxSpeed?: number;
+    vehicleWeight?: number;
+    vehicleWidth?: number;
+    windingness?: WindingnessLevel;
+}
+
+// @public
+export type GeneratedClientGetRouteDirectionsWithAdditionalParametersResponse = RouteDirections;
+
+// @public
+export interface GeneratedClientGetRouteMatrixHeaders {
+    location?: string;
+}
+
+// @public
+export interface GeneratedClientGetRouteMatrixOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
+}
+
+// @public
+export type GeneratedClientGetRouteMatrixResponse = RouteMatrixResult;
+
+// @public
+export interface GeneratedClientGetRouteRangeOptionalParams extends coreClient.OperationOptions {
+    accelerationEfficiency?: number;
+    auxiliaryPowerInKw?: number;
+    auxiliaryPowerInLitersPerHour?: number;
+    avoid?: RouteAvoidType[];
+    constantSpeedConsumptionInKwHPerHundredKm?: string;
+    constantSpeedConsumptionInLitersPerHundredKm?: string;
+    currentChargeInKwH?: number;
+    currentFuelInLiters?: number;
+    decelerationEfficiency?: number;
+    departAt?: Date;
+    distanceBudgetInMeters?: number;
+    downhillEfficiency?: number;
+    energyBudgetInKwH?: number;
+    fuelBudgetInLiters?: number;
+    fuelEnergyDensityInMegajoulesPerLiter?: number;
+    inclineLevel?: InclineLevel;
+    isCommercialVehicle?: boolean;
+    maxChargeInKwH?: number;
+    routeType?: RouteType;
+    timeBudgetInSec?: number;
+    travelMode?: TravelMode;
+    uphillEfficiency?: number;
+    useTrafficData?: boolean;
+    vehicleAxleWeight?: number;
+    vehicleEngineType?: VehicleEngineType;
+    vehicleHeight?: number;
+    vehicleLength?: number;
+    vehicleLoadType?: VehicleLoadType;
+    vehicleMaxSpeed?: number;
+    vehicleWeight?: number;
+    vehicleWidth?: number;
+    windingness?: WindingnessLevel;
+}
+
+// @public
+export type GeneratedClientGetRouteRangeResponse = RouteRangeResult;
+
+// @public
+export interface GeneratedClientOptionalParams extends coreClient.ServiceClientOptions {
+    $host?: string;
+    apiVersion?: string;
+    clientId?: string;
+    endpoint?: string;
+}
+
+// @public
+export interface GeneratedClientRequestRouteDirectionsBatchHeaders {
+    location?: string;
+}
+
+// @public
+export interface GeneratedClientRequestRouteDirectionsBatchOptionalParams extends coreClient.OperationOptions {
+    resumeFrom?: string;
+    updateIntervalInMs?: number;
+}
+
+// @public
+export type GeneratedClientRequestRouteDirectionsBatchResponse = RouteDirectionsBatchResult;
+
+// @public
+export interface GeneratedClientRequestRouteDirectionsBatchSyncOptionalParams extends coreClient.OperationOptions {
+}
+
+// @public
+export type GeneratedClientRequestRouteDirectionsBatchSyncResponse = RouteDirectionsBatchResult;
+
+// @public
+export interface GeneratedClientRequestRouteMatrixHeaders {
+    location?: string;
+}
+
+// @public
+export interface GeneratedClientRequestRouteMatrixOptionalParams extends coreClient.OperationOptions {
+    arriveAt?: Date;
+    avoid?: RouteAvoidType[];
+    computeTravelTime?: ComputeTravelTime;
+    departAt?: Date;
+    filterSectionType?: SectionType;
+    inclineLevel?: InclineLevel;
+    resumeFrom?: string;
+    routeType?: RouteType;
+    travelMode?: TravelMode;
+    updateIntervalInMs?: number;
+    useTrafficData?: boolean;
+    vehicleAxleWeight?: number;
+    vehicleHeight?: number;
+    vehicleLength?: number;
+    vehicleLoadType?: VehicleLoadType;
+    vehicleMaxSpeed?: number;
+    vehicleWeight?: number;
+    vehicleWidth?: number;
+    waitForResults?: boolean;
+    windingness?: WindingnessLevel;
+}
+
+// @public
+export type GeneratedClientRequestRouteMatrixResponse = RouteMatrixResult;
+
+// @public
+export interface GeneratedClientRequestRouteMatrixSyncOptionalParams extends coreClient.OperationOptions {
+    arriveAt?: Date;
+    avoid?: RouteAvoidType[];
+    computeTravelTime?: ComputeTravelTime;
+    departAt?: Date;
+    filterSectionType?: SectionType;
+    inclineLevel?: InclineLevel;
+    routeType?: RouteType;
+    travelMode?: TravelMode;
+    useTrafficData?: boolean;
+    vehicleAxleWeight?: number;
+    vehicleHeight?: number;
+    vehicleLength?: number;
+    vehicleLoadType?: VehicleLoadType;
+    vehicleMaxSpeed?: number;
+    vehicleWeight?: number;
+    vehicleWidth?: number;
+    waitForResults?: boolean;
+    windingness?: WindingnessLevel;
+}
+
+// @public
+export type GeneratedClientRequestRouteMatrixSyncResponse = RouteMatrixResult;
 
 // @public
 export type GeoJsonFeature = GeoJsonObject & GeoJsonFeatureData & {
@@ -446,283 +694,26 @@ export interface Route {
 // @public
 export type RouteAvoidType = string;
 
-// @public (undocumented)
-export class RouteClient extends RouteClientContext {
-    constructor(credentials: coreAuth.TokenCredential, options?: RouteClientOptionalParams);
-    beginGetRouteDirectionsBatch(batchId: string, options?: RouteClientGetRouteDirectionsBatchOptionalParams): Promise<PollerLike<PollOperationState<RouteClientGetRouteDirectionsBatchResponse>, RouteClientGetRouteDirectionsBatchResponse>>;
-    beginGetRouteDirectionsBatchAndWait(batchId: string, options?: RouteClientGetRouteDirectionsBatchOptionalParams): Promise<RouteClientGetRouteDirectionsBatchResponse>;
-    beginGetRouteMatrix(matrixId: string, options?: RouteClientGetRouteMatrixOptionalParams): Promise<PollerLike<PollOperationState<RouteClientGetRouteMatrixResponse>, RouteClientGetRouteMatrixResponse>>;
-    beginGetRouteMatrixAndWait(matrixId: string, options?: RouteClientGetRouteMatrixOptionalParams): Promise<RouteClientGetRouteMatrixResponse>;
-    beginRequestRouteDirectionsBatch(format: JsonFormat, routeDirectionsBatchQueries: BatchRequest, options?: RouteClientRequestRouteDirectionsBatchOptionalParams): Promise<PollerLike<PollOperationState<RouteClientRequestRouteDirectionsBatchResponse>, RouteClientRequestRouteDirectionsBatchResponse>>;
-    beginRequestRouteDirectionsBatchAndWait(format: JsonFormat, routeDirectionsBatchQueries: BatchRequest, options?: RouteClientRequestRouteDirectionsBatchOptionalParams): Promise<RouteClientRequestRouteDirectionsBatchResponse>;
-    beginRequestRouteMatrix(format: JsonFormat, routeMatrixQuery: RouteMatrixQuery, options?: RouteClientRequestRouteMatrixOptionalParams): Promise<PollerLike<PollOperationState<RouteClientRequestRouteMatrixResponse>, RouteClientRequestRouteMatrixResponse>>;
-    beginRequestRouteMatrixAndWait(format: JsonFormat, routeMatrixQuery: RouteMatrixQuery, options?: RouteClientRequestRouteMatrixOptionalParams): Promise<RouteClientRequestRouteMatrixResponse>;
-    getRouteDirections(format: ResponseFormat, routePoints: string, options?: RouteClientGetRouteDirectionsOptionalParams): Promise<RouteClientGetRouteDirectionsResponse>;
-    getRouteDirectionsWithAdditionalParameters(format: ResponseFormat, routePoints: string, routeDirectionParameters: RouteDirectionParameters, options?: RouteClientGetRouteDirectionsWithAdditionalParametersOptionalParams): Promise<RouteClientGetRouteDirectionsWithAdditionalParametersResponse>;
-    getRouteRange(format: ResponseFormat, query: number[], options?: RouteClientGetRouteRangeOptionalParams): Promise<RouteClientGetRouteRangeResponse>;
-    requestRouteDirectionsBatchSync(format: JsonFormat, routeDirectionsBatchQueries: BatchRequest, options?: RouteClientRequestRouteDirectionsBatchSyncOptionalParams): Promise<RouteClientRequestRouteDirectionsBatchSyncResponse>;
-    requestRouteMatrixSync(format: JsonFormat, routeMatrixQuery: RouteMatrixQuery, options?: RouteClientRequestRouteMatrixSyncOptionalParams): Promise<RouteClientRequestRouteMatrixSyncResponse>;
+// Warning: (ae-forgotten-export) The symbol "GeneratedClientContext" needs to be exported by the entry point index.d.ts
+// Warning: (ae-internal-missing-underscore) The name "RouteClient" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export class RouteClient extends GeneratedClientContext {
+    constructor(options?: GeneratedClientOptionalParams);
+    beginGetRouteDirectionsBatch(batchId: string, options?: GeneratedClientGetRouteDirectionsBatchOptionalParams): Promise<PollerLike<PollOperationState<GeneratedClientGetRouteDirectionsBatchResponse>, GeneratedClientGetRouteDirectionsBatchResponse>>;
+    beginGetRouteDirectionsBatchAndWait(batchId: string, options?: GeneratedClientGetRouteDirectionsBatchOptionalParams): Promise<GeneratedClientGetRouteDirectionsBatchResponse>;
+    beginGetRouteMatrix(matrixId: string, options?: GeneratedClientGetRouteMatrixOptionalParams): Promise<PollerLike<PollOperationState<GeneratedClientGetRouteMatrixResponse>, GeneratedClientGetRouteMatrixResponse>>;
+    beginGetRouteMatrixAndWait(matrixId: string, options?: GeneratedClientGetRouteMatrixOptionalParams): Promise<GeneratedClientGetRouteMatrixResponse>;
+    beginRequestRouteDirectionsBatch(format: JsonFormat, routeDirectionsBatchQueries: BatchRequest, options?: GeneratedClientRequestRouteDirectionsBatchOptionalParams): Promise<PollerLike<PollOperationState<GeneratedClientRequestRouteDirectionsBatchResponse>, GeneratedClientRequestRouteDirectionsBatchResponse>>;
+    beginRequestRouteDirectionsBatchAndWait(format: JsonFormat, routeDirectionsBatchQueries: BatchRequest, options?: GeneratedClientRequestRouteDirectionsBatchOptionalParams): Promise<GeneratedClientRequestRouteDirectionsBatchResponse>;
+    beginRequestRouteMatrix(format: JsonFormat, routeMatrixQuery: RouteMatrixQuery, options?: GeneratedClientRequestRouteMatrixOptionalParams): Promise<PollerLike<PollOperationState<GeneratedClientRequestRouteMatrixResponse>, GeneratedClientRequestRouteMatrixResponse>>;
+    beginRequestRouteMatrixAndWait(format: JsonFormat, routeMatrixQuery: RouteMatrixQuery, options?: GeneratedClientRequestRouteMatrixOptionalParams): Promise<GeneratedClientRequestRouteMatrixResponse>;
+    getRouteDirections(format: ResponseFormat, routePoints: string, options?: GeneratedClientGetRouteDirectionsOptionalParams): Promise<GeneratedClientGetRouteDirectionsResponse>;
+    getRouteDirectionsWithAdditionalParameters(format: ResponseFormat, routePoints: string, routeDirectionParameters: RouteDirectionParameters, options?: GeneratedClientGetRouteDirectionsWithAdditionalParametersOptionalParams): Promise<GeneratedClientGetRouteDirectionsWithAdditionalParametersResponse>;
+    getRouteRange(format: ResponseFormat, query: number[], options?: GeneratedClientGetRouteRangeOptionalParams): Promise<GeneratedClientGetRouteRangeResponse>;
+    requestRouteDirectionsBatchSync(format: JsonFormat, routeDirectionsBatchQueries: BatchRequest, options?: GeneratedClientRequestRouteDirectionsBatchSyncOptionalParams): Promise<GeneratedClientRequestRouteDirectionsBatchSyncResponse>;
+    requestRouteMatrixSync(format: JsonFormat, routeMatrixQuery: RouteMatrixQuery, options?: GeneratedClientRequestRouteMatrixSyncOptionalParams): Promise<GeneratedClientRequestRouteMatrixSyncResponse>;
 }
-
-// @public (undocumented)
-export class RouteClientContext extends coreClient.ServiceClient {
-    // (undocumented)
-    $host: string;
-    constructor(credentials: coreAuth.TokenCredential, options?: RouteClientOptionalParams);
-    // (undocumented)
-    apiVersion: string;
-    // (undocumented)
-    clientId?: string;
-}
-
-// @public
-export interface RouteClientGetRouteDirectionsBatchHeaders {
-    location?: string;
-}
-
-// @public
-export interface RouteClientGetRouteDirectionsBatchOptionalParams extends coreClient.OperationOptions {
-    resumeFrom?: string;
-    updateIntervalInMs?: number;
-}
-
-// @public
-export type RouteClientGetRouteDirectionsBatchResponse = RouteDirectionsBatchResult;
-
-// @public
-export interface RouteClientGetRouteDirectionsOptionalParams extends coreClient.OperationOptions {
-    accelerationEfficiency?: number;
-    alternativeType?: AlternativeRouteType;
-    arriveAt?: Date;
-    auxiliaryPowerInKw?: number;
-    auxiliaryPowerInLitersPerHour?: number;
-    avoid?: RouteAvoidType[];
-    computeBestWaypointOrder?: boolean;
-    computeTravelTime?: ComputeTravelTime;
-    constantSpeedConsumptionInKwHPerHundredKm?: string;
-    constantSpeedConsumptionInLitersPerHundredKm?: string;
-    currentChargeInKwH?: number;
-    currentFuelInLiters?: number;
-    decelerationEfficiency?: number;
-    departAt?: Date;
-    downhillEfficiency?: number;
-    filterSectionType?: SectionType;
-    fuelEnergyDensityInMegajoulesPerLiter?: number;
-    inclineLevel?: InclineLevel;
-    instructionsType?: RouteInstructionsType;
-    isCommercialVehicle?: boolean;
-    language?: string;
-    maxAlternatives?: number;
-    maxChargeInKwH?: number;
-    minDeviationDistance?: number;
-    minDeviationTime?: number;
-    report?: Report;
-    routeRepresentationForBestOrder?: RouteRepresentationForBestOrder;
-    routeType?: RouteType;
-    travelMode?: TravelMode;
-    uphillEfficiency?: number;
-    useTrafficData?: boolean;
-    vehicleAxleWeight?: number;
-    vehicleEngineType?: VehicleEngineType;
-    vehicleHeading?: number;
-    vehicleHeight?: number;
-    vehicleLength?: number;
-    vehicleLoadType?: VehicleLoadType;
-    vehicleMaxSpeed?: number;
-    vehicleWeight?: number;
-    vehicleWidth?: number;
-    windingness?: WindingnessLevel;
-}
-
-// @public
-export type RouteClientGetRouteDirectionsResponse = RouteDirections;
-
-// @public
-export interface RouteClientGetRouteDirectionsWithAdditionalParametersOptionalParams extends coreClient.OperationOptions {
-    accelerationEfficiency?: number;
-    alternativeType?: AlternativeRouteType;
-    arriveAt?: Date;
-    auxiliaryPowerInKw?: number;
-    auxiliaryPowerInLitersPerHour?: number;
-    avoid?: RouteAvoidType[];
-    computeBestWaypointOrder?: boolean;
-    computeTravelTime?: ComputeTravelTime;
-    constantSpeedConsumptionInKwHPerHundredKm?: string;
-    constantSpeedConsumptionInLitersPerHundredKm?: string;
-    currentChargeInKwH?: number;
-    currentFuelInLiters?: number;
-    decelerationEfficiency?: number;
-    departAt?: Date;
-    downhillEfficiency?: number;
-    filterSectionType?: SectionType;
-    fuelEnergyDensityInMegajoulesPerLiter?: number;
-    inclineLevel?: InclineLevel;
-    instructionsType?: RouteInstructionsType;
-    isCommercialVehicle?: boolean;
-    language?: string;
-    maxAlternatives?: number;
-    maxChargeInKwH?: number;
-    minDeviationDistance?: number;
-    minDeviationTime?: number;
-    report?: Report;
-    routeRepresentationForBestOrder?: RouteRepresentationForBestOrder;
-    routeType?: RouteType;
-    travelMode?: TravelMode;
-    uphillEfficiency?: number;
-    useTrafficData?: boolean;
-    vehicleAxleWeight?: number;
-    vehicleEngineType?: VehicleEngineType;
-    vehicleHeading?: number;
-    vehicleHeight?: number;
-    vehicleLength?: number;
-    vehicleLoadType?: VehicleLoadType;
-    vehicleMaxSpeed?: number;
-    vehicleWeight?: number;
-    vehicleWidth?: number;
-    windingness?: WindingnessLevel;
-}
-
-// @public
-export type RouteClientGetRouteDirectionsWithAdditionalParametersResponse = RouteDirections;
-
-// @public
-export interface RouteClientGetRouteMatrixHeaders {
-    location?: string;
-}
-
-// @public
-export interface RouteClientGetRouteMatrixOptionalParams extends coreClient.OperationOptions {
-    resumeFrom?: string;
-    updateIntervalInMs?: number;
-}
-
-// @public
-export type RouteClientGetRouteMatrixResponse = RouteMatrixResult;
-
-// @public
-export interface RouteClientGetRouteRangeOptionalParams extends coreClient.OperationOptions {
-    accelerationEfficiency?: number;
-    auxiliaryPowerInKw?: number;
-    auxiliaryPowerInLitersPerHour?: number;
-    avoid?: RouteAvoidType[];
-    constantSpeedConsumptionInKwHPerHundredKm?: string;
-    constantSpeedConsumptionInLitersPerHundredKm?: string;
-    currentChargeInKwH?: number;
-    currentFuelInLiters?: number;
-    decelerationEfficiency?: number;
-    departAt?: Date;
-    distanceBudgetInMeters?: number;
-    downhillEfficiency?: number;
-    energyBudgetInKwH?: number;
-    fuelBudgetInLiters?: number;
-    fuelEnergyDensityInMegajoulesPerLiter?: number;
-    inclineLevel?: InclineLevel;
-    isCommercialVehicle?: boolean;
-    maxChargeInKwH?: number;
-    routeType?: RouteType;
-    timeBudgetInSec?: number;
-    travelMode?: TravelMode;
-    uphillEfficiency?: number;
-    useTrafficData?: boolean;
-    vehicleAxleWeight?: number;
-    vehicleEngineType?: VehicleEngineType;
-    vehicleHeight?: number;
-    vehicleLength?: number;
-    vehicleLoadType?: VehicleLoadType;
-    vehicleMaxSpeed?: number;
-    vehicleWeight?: number;
-    vehicleWidth?: number;
-    windingness?: WindingnessLevel;
-}
-
-// @public
-export type RouteClientGetRouteRangeResponse = RouteRangeResult;
-
-// @public
-export interface RouteClientOptionalParams extends coreClient.ServiceClientOptions {
-    $host?: string;
-    apiVersion?: string;
-    clientId?: string;
-    endpoint?: string;
-}
-
-// @public
-export interface RouteClientRequestRouteDirectionsBatchHeaders {
-    location?: string;
-}
-
-// @public
-export interface RouteClientRequestRouteDirectionsBatchOptionalParams extends coreClient.OperationOptions {
-    resumeFrom?: string;
-    updateIntervalInMs?: number;
-}
-
-// @public
-export type RouteClientRequestRouteDirectionsBatchResponse = RouteDirectionsBatchResult;
-
-// @public
-export interface RouteClientRequestRouteDirectionsBatchSyncOptionalParams extends coreClient.OperationOptions {
-}
-
-// @public
-export type RouteClientRequestRouteDirectionsBatchSyncResponse = RouteDirectionsBatchResult;
-
-// @public
-export interface RouteClientRequestRouteMatrixHeaders {
-    location?: string;
-}
-
-// @public
-export interface RouteClientRequestRouteMatrixOptionalParams extends coreClient.OperationOptions {
-    arriveAt?: Date;
-    avoid?: RouteAvoidType[];
-    computeTravelTime?: ComputeTravelTime;
-    departAt?: Date;
-    filterSectionType?: SectionType;
-    inclineLevel?: InclineLevel;
-    resumeFrom?: string;
-    routeType?: RouteType;
-    travelMode?: TravelMode;
-    updateIntervalInMs?: number;
-    useTrafficData?: boolean;
-    vehicleAxleWeight?: number;
-    vehicleHeight?: number;
-    vehicleLength?: number;
-    vehicleLoadType?: VehicleLoadType;
-    vehicleMaxSpeed?: number;
-    vehicleWeight?: number;
-    vehicleWidth?: number;
-    waitForResults?: boolean;
-    windingness?: WindingnessLevel;
-}
-
-// @public
-export type RouteClientRequestRouteMatrixResponse = RouteMatrixResult;
-
-// @public
-export interface RouteClientRequestRouteMatrixSyncOptionalParams extends coreClient.OperationOptions {
-    arriveAt?: Date;
-    avoid?: RouteAvoidType[];
-    computeTravelTime?: ComputeTravelTime;
-    departAt?: Date;
-    filterSectionType?: SectionType;
-    inclineLevel?: InclineLevel;
-    routeType?: RouteType;
-    travelMode?: TravelMode;
-    useTrafficData?: boolean;
-    vehicleAxleWeight?: number;
-    vehicleHeight?: number;
-    vehicleLength?: number;
-    vehicleLoadType?: VehicleLoadType;
-    vehicleMaxSpeed?: number;
-    vehicleWeight?: number;
-    vehicleWidth?: number;
-    waitForResults?: boolean;
-    windingness?: WindingnessLevel;
-}
-
-// @public
-export type RouteClientRequestRouteMatrixSyncResponse = RouteMatrixResult;
 
 // @public
 export interface RouteDirectionParameters {
