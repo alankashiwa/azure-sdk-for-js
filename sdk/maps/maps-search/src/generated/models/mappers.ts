@@ -1146,8 +1146,8 @@ export const SearchInsideGeometryRequest: coreClient.CompositeMapper = {
       geometry: {
         serializedName: "geometry",
         type: {
-          name: "Composite",
-          className: "GeoJsonObject"
+          name: "Dictionary",
+          value: { type: { name: "any" } }
         }
       }
     }

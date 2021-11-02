@@ -4,6 +4,8 @@ languages:
   - javascript
 products:
   - azure
+  - azure-maps
+  - search
 urlFragment: maps-search-javascript
 ---
 
@@ -11,15 +13,17 @@ urlFragment: maps-search-javascript
 
 These sample programs show how to use the JavaScript client libraries for Azure Maps Search in some common scenarios.
 
-| **File Name**       | **Description**                                                 |
-| ------------------- | --------------------------------------------------------------- |
-| [search.js][search] | Operations useful for finding objects, locations and addresses. |
+| **File Name**       | **Description**                                              |
+| ------------------- | ------------------------------------------------------------ |
+| [search.js][search] | Demonstrates Search API usage. Simple queries are performed. |
 
 ## Prerequisites
 
-The sample programs are compatible with Node.js >=12.0.0.
+The sample programs are compatible with [LTS versions of Node.js](https://nodejs.org/about/releases/).
 
-You need [an Azure subscription][freesub] to run these sample programs.
+You need [an Azure subscription][freesub] and the following Azure resources to run these sample programs:
+
+- [Azure Maps Resource][createinstance_azuremapsresource]
 
 Samples retrieve credentials to access the service endpoint from environment variables. Alternatively, edit the source code to include the appropriate credentials. See each individual sample for details on which environment variables/credentials it requires to function.
 
@@ -46,9 +50,15 @@ node search.js
 Alternatively, run a single sample with the correct environment variables set (setting up the `.env` file is not required if you do this), for example (cross-platform):
 
 ```bash
-npx cross-env MAPS_SUBSCRIPTION_KEY="<subscription-key>" node search.js
+npx cross-env MAPS_SUBSCRIPTION_KEY="<maps subscription key>" MAPS_SUBSCRIPTION_KEY="<maps subscription key>" MAPS_CLIENT_ID="<maps client id>" MAPS_CLIENT_ID="<maps client id>" node search.js
 ```
 
-[search]: https://github.com/Azure/azure-sdk-for-js/blob/master/sdk/maps/maps-search/samples/v1/javascript/src/search.js
+## Next Steps
+
+Take a look at our [API Documentation][apiref] for more information about the APIs that are available in the clients.
+
+[search]: https://github.com/Azure/azure-sdk-for-js/blob/main/sdk/maps/maps-search/samples/v1/javascript/search.js
+[apiref]: https://docs.microsoft.com/javascript/api/@azure/maps-search
 [freesub]: https://azure.microsoft.com/free/
-[package]: https://github.com/Azure/azure-sdk-for-js/tree/master/sdk/maps/maps-search/README.md
+[createinstance_azuremapsresource]: https://docs.microsoft.com/azure/azure-maps/how-to-create-template
+[package]: https://github.com/Azure/azure-sdk-for-js/tree/main/sdk/maps/maps-search/README.md

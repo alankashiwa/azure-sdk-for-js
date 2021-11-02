@@ -716,7 +716,7 @@ export type SearchIndexes = string;
 
 // @public
 export interface SearchInsideGeometryRequest {
-    geometry?: GeoJsonObjectUnion;
+    geometry?: Record<string, unknown>;
 }
 
 // @public

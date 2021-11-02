@@ -34,7 +34,7 @@ use-extension:
 ```yaml
 directive:
   - from: swagger-document
-    where: $.definitions.SearchInsideGeometryRequestBody.properties.geometry
+    where: $.definitions.SearchInsideGeometryRequest.properties.geometry
     transform: >
       $ = {
         "description": "A valid `GeoJSON` object. Please refer to [RFC 7946](https://tools.ietf.org/html/rfc7946#section-3) for details.",

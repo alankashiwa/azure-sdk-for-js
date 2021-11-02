@@ -648,7 +648,7 @@ export interface ReverseSearchCrossStreetAddressResultItem {
 /** This type represents the request body for the Search Inside Geometry service. */
 export interface SearchInsideGeometryRequest {
   /** A valid `GeoJSON` object. Please refer to [RFC 7946](https://tools.ietf.org/html/rfc7946#section-3) for details. */
-  geometry?: GeoJsonObjectUnion;
+  geometry?: Record<string, unknown>;
 }
 
 /** This type represents the request body for the Search Along Route service. */

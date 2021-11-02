@@ -2,13 +2,13 @@
 // Licensed under the MIT License.
 
 /**
- * @summary Demonstrates Search API usage. Simple CRUD operations are performed.
+ * @summary Demonstrates Search API usage. Simple queries are performed.
  */
 
-const fs = require("fs");
 const { DefaultAzureCredential } = require("@azure/identity");
 const { SearchClient } = require("@azure/maps-search");
-require("dotenv").config();
+const dotenv = require("dotenv");
+dotenv.config();
 
 /**
  * Azure Maps supports two ways to authenticate requests:
@@ -55,24 +55,15 @@ async function main() {
 
   const search = new SearchClient(credential).search;
 
-  const filePathForPostSearchAddressBatch =
-    "../../resources/search_address_batch_request_body.json";
-  const filePathForPostSearchAddressReverseBatch =
-    "../../resources/search_address_reverse_batch_request_body.json";
-  const filePathForPostSearchFuzzyBatch = "../../resources/search_fuzzy_batch_request_body.json";
-  const filePathForPostSearchAlongRoute = "../../resources/search_along_route_request_body.json";
-  const filePathForPostSearchInsideGeometry =
-    "../../resources/search_inside_geometry_request_body.json";
-
   console.log(" --- Get search address:");
-  console.log(await search.getSearchAddress("json", "400 Broad, Seattle", operationOptions));
+  console.log(await search.searchAddress("json", "400 Broad, Seattle", operationOptions));
 
   console.log(" --- Get search address reverse:");
-  console.log(await search.getSearchAddressReverse("json", "47.591180,-122.332700", operationOptions));
+  console.log(await search.reverseSearchAddress("json", [47.59118, -122.3327], operationOptions));
 
   console.log(" --- Get search address reverse cross street:");
   console.log(
-    await search.getSearchAddressReverseCrossStreet("json", "47.591180,-122.332700", operationOptions)
+    await search.reverseSearchCrossStreetAddress("json", [47.59118, -122.3327], operationOptions)
   );
 
   console.log(" --- Get search address structured:");
@@ -85,27 +76,27 @@ async function main() {
     postalCode: "98052"
   };
   console.log(
-    await search.getSearchAddressStructured("json", {
+    await search.searchStructuredAddress("json", {
       ...searchAddressStructuredOptions,
       ...operationOptions
     })
   );
 
   console.log(" --- Get search fuzzy:");
-  const fuzzyResult = await search.getSearchFuzzy("json", "Seattle", {
-    countrySet: ["Brazil"],
+  const fuzzyResult = await search.fuzzySearch("json", "pizza", {
+    countryFilter: ["Brazil"],
     ...operationOptions
   });
   console.log(fuzzyResult);
 
   // let's save geometry IDs from the fuzzy search for the getSearchPolygon example
   let geometries = [];
-  fuzzyResult.results.forEach((res) => geometries.push(res.dataSources.geometry.id));
+  fuzzyResult.results?.forEach((res) => geometries.push(res.dataSources?.geometry?.id));
 
   console.log(" --- Get search nearby:");
   const searchNearbyOptions = { radius: 8046 };
   console.log(
-    await search.getSearchNearby("json", 40.70627, -74.011454, {
+    await search.searchNearbyPointOfInterest("json", 40.70627, -74.011454, {
       ...searchNearbyOptions,
       ...operationOptions
     })
@@ -119,67 +110,109 @@ async function main() {
     radius: 8046
   };
   console.log(
-    await search.getSearchPOI("json", "juice bars", { ...searchPOIOptions, ...operationOptions })
+    await search.searchPointOfInterest("json", "juice bars", {
+      ...searchPOIOptions,
+      ...operationOptions
+    })
   );
 
   console.log(" --- Get search POI category:");
   const searchPOICategoryOptions = {
-    limit: 5,
+    skip: 5,
     lat: 47.606038,
     lon: -122.333345,
-    radius: 8046
+    radiusInMeters: 8046
   };
-  console.log(await search.getSearchPOICategory("json", "atm", operationOptions));
+  console.log(
+    await search.searchPointOfInterestCategory("json", "atm", {
+      ...searchPOICategoryOptions,
+      ...operationOptions
+    })
+  );
 
   console.log(" --- Get search POI category tree:");
-  console.log(await search.getSearchPOICategoryTreePreview("json", operationOptions));
+  console.log(await search.getPointOfInterestCategoryTree("json", operationOptions));
 
   console.log(" --- Get search polygon:");
-  console.log(await search.getSearchPolygon("json", geometries, operationOptions));
+  console.log(await search.getPolygon("json", geometries, operationOptions));
 
   console.log(" --- Post search address batch:");
-  const postSearchAddressBatchPayload = JSON.parse(
-    fs.readFileSync(filePathForPostSearchAddressBatch, "utf8")
-  );
+  const searchAddressBatchRequestBody = {
+    batchItems: [
+      {
+        query: "?query=400 Broad St, Seattle, WA 98109&limit=3"
+      },
+      {
+        query: "?query=One, Microsoft Way, Redmond, WA 98052&limit=3"
+      },
+      {
+        query: "?query=350 5th Ave, New York, NY 10118&limit=1"
+      }
+    ]
+  };
   console.log(
-    await search.beginPostSearchAddressBatchAndWait(
+    await search.beginSearchAddressBatchAndWait(
       "json",
-      postSearchAddressBatchPayload,
+      searchAddressBatchRequestBody,
       operationOptions
     )
   );
 
   console.log(" --- Post search address reverse batch:");
-  const postSearchAddressReverseBatchPayload = JSON.parse(
-    fs.readFileSync(filePathForPostSearchAddressReverseBatch, "utf8")
-  );
+  const searchAddressReverseBatchRequestBody = {
+    batchItems: [
+      {
+        query: "?query=48.858561,2.294911"
+      },
+      {
+        query: "?query=47.639765,-122.127896&radius=5000&limit=2"
+      },
+      {
+        query: "?query=47.621028,-122.348170"
+      }
+    ]
+  };
   console.log(
-    await search.beginPostSearchAddressReverseBatchAndWait(
+    await search.beginReverseSearchAddressBatchAndWait(
       "json",
-      postSearchAddressReverseBatchPayload,
+      searchAddressReverseBatchRequestBody,
       operationOptions
     )
   );
 
   console.log(" --- Post search fuzzy batch:");
-  const postSearchFuzzyBatchPayload = JSON.parse(
-    fs.readFileSync(filePathForPostSearchFuzzyBatch, "utf8")
-  );
+  const searchFuzzyBatchRequestBody = {
+    batchItems: [
+      {
+        query: "?query=atm&lat=47.639769&lon=-122.128362&radius=5000&limit=5"
+      },
+      {
+        query: "?query=Statue Of Liberty&limit=2"
+      },
+      {
+        query: "?query=Starbucks&lat=47.639769&lon=-122.128362&radius=5000"
+      }
+    ]
+  };
   console.log(
-    await search.beginPostSearchFuzzyBatchAndWait(
-      "json",
-      postSearchFuzzyBatchPayload,
-      operationOptions
-    )
+    await search.beginFuzzySearchBatchAndWait("json", searchFuzzyBatchRequestBody, operationOptions)
   );
 
   console.log(" --- Post search along route:");
   const searchAlongRouteOptions = { limit: 2 };
-  const postSearchAlongRoutePayload = JSON.parse(
-    fs.readFileSync(filePathForPostSearchAlongRoute, "utf8")
-  );
+  const searchAlongRouteRequest = {
+    route: {
+      type: "LineString",
+      coordinates: [
+        [-122.143035, 47.653536],
+        [-122.187164, 47.617556],
+        [-122.114981, 47.570599],
+        [-122.132756, 47.654009]
+      ]
+    }
+  };
   console.log(
-    await search.postSearchAlongRoute("json", "burger", 1000, postSearchAlongRoutePayload, {
+    await search.searchAlongRoute("json", "burger", 1000, searchAlongRouteRequest, {
       ...searchAlongRouteOptions,
       ...operationOptions
     })
@@ -187,11 +220,21 @@ async function main() {
 
   console.log(" --- Post search inside geometry:");
   const searchInsideGeometryOptions = { limit: 2 };
-  const postSearchInsideGeometryPayload = JSON.parse(
-    fs.readFileSync(filePathForPostSearchInsideGeometry, "utf8")
-  );
+  const searchInsideGeometryRequest = {
+    geometry: {
+      type: "Polygon",
+      coordinates: [
+        [
+          [-122.43576049804686, 37.7524152343544],
+          [-122.43301391601562, 37.70660472542312],
+          [-122.36434936523438, 37.712059855877314],
+          [-122.43576049804686, 37.7524152343544]
+        ]
+      ]
+    }
+  };
   console.log(
-    await search.postSearchInsideGeometry("json", "burger", postSearchInsideGeometryPayload, {
+    await search.searchInsideGeometry("json", "burger", searchInsideGeometryRequest, {
       ...searchInsideGeometryOptions,
       ...operationOptions
     })
