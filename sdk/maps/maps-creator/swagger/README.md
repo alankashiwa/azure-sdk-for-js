@@ -48,21 +48,21 @@ directive:
         "type": "object"
       };
     reason: Autorest TS codegen does not deserialize array of base class objects as an operation parameter properly -> https://github.com/Azure/autorest.typescript/issues/1040
-  - from: spatial.json
+  - from: swagger-document
     where: $.parameters.ClosestPointRequestBody.schema
     transform: >
       $ = {
         "type": "object"
       };
     reason: Autorest TS codegen does not deserialize array of base class objects as an operation parameter properly -> https://github.com/Azure/autorest.typescript/issues/1040
-  - from: spatial.json
+  - from: swagger-document
     where: $.parameters.PointInPolygonRequestBody.schema
     transform: >
       $ = {
         "type": "object"
       };
     reason: Autorest TS codegen does not deserialize array of base class objects as an operation parameter properly -> https://github.com/Azure/autorest.typescript/issues/1040
-  - from: spatial.json
+  - from: swagger-document
     where: $.definitions.BufferRequestBody.properties.geometries
     transform: >
       $ = {

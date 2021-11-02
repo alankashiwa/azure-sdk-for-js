@@ -195,7 +195,7 @@ const operationOptions = {
 const client = new ElevationClient(credential).elevation;
 const response = await client.getDataForBoundingBox(
   "json",
-  ["-121.66853362143818", "46.84646479863713", "-121.65853362143818", "46.85646479863713"],
+  [-121.66853362143818, 46.84646479863713, -121.65853362143818, 46.85646479863713],
   3,
   3,
   operationOptions

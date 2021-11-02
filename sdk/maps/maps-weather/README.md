@@ -93,7 +93,7 @@ const operationOptions = {
 const client = new WeatherClient(credential).weather;
 const response = await client.getCurrentConditions(
   "json",
-  "47.641268,-122.125679",
+  [47.641268, -122.125679],
   operationOptions
 );
 ```
@@ -183,7 +183,7 @@ const operationOptions = {
 const client = new WeatherClient(credential).weather;
 const response = await client.getSevereWeatherAlerts(
   "json",
-  "41.161079,-104.805450",
+  [41.161079, -104.80545],
   operationOptions
 );
 ```
@@ -236,7 +236,7 @@ const operationOptions = {
 
 const client = new WeatherClient(credential).weather;
 const dailyForecastOptions = { duration: 5 };
-const response = await client.getDailyForecast("json", "47.60357,-122.32945", {
+const response = await client.getDailyForecast("json", [47.60357, -122.32945], {
   ...dailyForecastOptions,
   ...operationOptions
 });
@@ -385,7 +385,7 @@ const operationOptions = {
 
 const client = new WeatherClient(credential).weather;
 const hourlyForecastOptions = { duration: 12 };
-const response = await client.getHourlyForecast("json", "47.60357,-122.32945", {
+const response = await client.getHourlyForecast("json", [47.60357, -122.32945], {
   ...hourlyForecastOptions,
   ...operationOptions
 });
@@ -451,7 +451,7 @@ const operationOptions = {
 
 const client = new WeatherClient(credential).weather;
 const minuteForecastOptions = { interval: 15 };
-const response = await client.getMinuteForecast("json", "47.632346,-122.138874", {
+const response = await client.getMinuteForecast("json", [47.632346, -122.138874], {
   ...minuteForecastOptions,
   ...operationOptions
 });

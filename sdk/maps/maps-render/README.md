@@ -84,9 +84,10 @@ const operationOptions = {
   }
 };
 
-const client = new RenderClient(credential).renderV2;
+const client = new RenderClient(credential);
 const mapTileOptions = { tileSize: "512" };
-const response = await client.getMapTilePreview("microsoft.base", 6, 10, 22, {
+const tileIndex = { z: 6, x: 9, y: 22 };
+const response = await client.getMapTileV2("microsoft.base", tileIndex, {
   ...mapTileOptions,
   ...operationOptions
 });
@@ -108,7 +109,7 @@ const client = new RenderClient(credential).renderV2;
 const attribution = await client.getMapAttribution(
   "microsoft.base",
   6,
-  ["-122.414162", "47.579490", "-122.247157", "47.668372"],
+  [-122.414162, 47.57949, -122.247157, 47.668372],
   operationOptions
 );
 ```

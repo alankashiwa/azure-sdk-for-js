@@ -85,7 +85,7 @@ const operationOptions = {
 };
 
 const client = new TimezoneClient(credential).timezone;
-const response = await client.getTimezoneByCoordinates("json", "47.0,-122", {
+const response = await client.getTimezoneByCoordinates("json", [47.0, -122], {
   ...timezoneByCoordinatesOptions,
   ...operationOptions
 });
@@ -164,7 +164,7 @@ const operationOptions = {
 };
 
 const client = new TimezoneClient(credential).timezone;
-const response = await client.getTimezoneEnumIana("json", operationOptions);
+const response = await client.getIanaTimezoneIds("json", operationOptions);
 ```
 
 Response

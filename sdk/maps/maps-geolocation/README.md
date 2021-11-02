@@ -81,7 +81,7 @@ const operationOptions = {
 };
 
 const client = new GeolocationClient(credential).geolocation;
-const response = await client.getIPToLocationPreview("json", ipAddressToTest, operationOptions);
+const response = await client.getLocation("json", ipAddressToTest, operationOptions);
 ```
 
 Response

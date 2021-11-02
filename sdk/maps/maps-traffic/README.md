@@ -89,7 +89,7 @@ const response = await client.getTrafficFlowSegment(
   "json",
   "absolute",
   10,
-  "52.41072,4.84239",
+  [52.41072, 4.84239],
   operationOptions
 );
 ```
@@ -141,12 +141,12 @@ const operationOptions = {
 };
 
 const client = new TrafficClient(credential).traffic;
+const tileIndex = { x: 2044, y: 1360 };
 const response = await client.getTrafficFlowTile(
   "png",
   "absolute",
   12,
-  2044,
-  1360,
+  tileIndex,
   operationOptions
 );
 ```
@@ -164,12 +164,12 @@ const operationOptions = {
 };
 
 const client = new TrafficClient(credential).traffic;
+const tileIndex = { x: 175, y: 408 };
 const response = await client.getTrafficIncidentTile(
   "png",
   "night",
   10,
-  175,
-  408,
+  tileIndex,
   operationOptions
 );
 ```

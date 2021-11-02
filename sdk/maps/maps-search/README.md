@@ -86,7 +86,7 @@ const operationOptions = {
 };
 
 const client = new SearchClient(credential).search;
-const response = await client.getSearchAddress("json", "400 Broad, Seattle", operationOptions);
+const response = await client.searchAddress("json", "400 Broad, Seattle", operationOptions);
 ```
 
 Response
@@ -152,8 +152,8 @@ const operationOptions = {
 };
 
 const client = new SearchClient(credential).search;
-const response = await client.getSearchFuzzy("json", "pizza", {
-  countrySet: ["Brazil"],
+const response = await client.fuzzySearch("json", "pizza", {
+  countryFilter: ["Brazil"],
   ...operationOptions
 });
 ```
@@ -236,11 +236,7 @@ const operationOptions = {
 };
 
 const client = new SearchClient(credential).search;
-const response = await client.getSearchAddressReverse(
-  "json",
-  "47.591180,-122.332700",
-  operationOptions
-);
+const response = await client.reverseSearchAddress("json", [47.59118, -122.3327], operationOptions);
 ```
 
 Response
@@ -296,9 +292,9 @@ const operationOptions = {
 };
 
 const client = new SearchClient(credential).search;
-const response = await client.getSearchAddressReverseCrossStreet(
+const response = await client.reverseSearchCrossStreetAddress(
   "json",
-  "47.591180,-122.332700",
+  [47.59118, -122.3327],
   operationOptions
 );
 ```
