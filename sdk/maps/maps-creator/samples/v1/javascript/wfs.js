@@ -7,7 +7,8 @@
 
 const { DefaultAzureCredential } = require("@azure/identity");
 const { CreatorClient } = require("@azure/maps-creator");
-require("dotenv").config();
+const dotenv = require("dotenv");
+dotenv.config();
 
 /**
  * Azure Maps supports two ways to authenticate requests:
@@ -61,7 +62,7 @@ async function main() {
   }
 
   console.log(" --- Get conformance of the dataset:");
-  console.log(await wfs.getConformance(datasetId, operationOptions));
+  console.log(await wfs.listConformance(datasetId, operationOptions));
 
   console.log(" --- Get landing page of the dataset:");
   console.log(await wfs.getLandingPage(datasetId, operationOptions));
@@ -84,9 +85,9 @@ async function main() {
   console.log(await wfs.getFeature(datasetId, "facility", featureId, operationOptions));
 
   /* This code works as expected however it would remove the feature and require to create the dataset once again.
-    console.log(" --- Remove the feature:");
-    await wfs.deleteFeature(datasetId, "facility", featureId, operationOptions);
-    console.log("Done (no response body)");*/
+      console.log(" --- Remove the feature:");
+      await wfs.deleteFeature(datasetId, "facility", featureId!, operationOptions);
+      console.log("Done (no response body)");*/
 }
 
 main();

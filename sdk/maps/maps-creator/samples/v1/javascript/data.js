@@ -6,9 +6,11 @@
  */
 
 const fs = require("fs");
+const path = require("path");
 const { DefaultAzureCredential } = require("@azure/identity");
 const { CreatorClient } = require("@azure/maps-creator");
-require("dotenv").config();
+const dotenv = require("dotenv");
+dotenv.config();
 
 const wait = (ms) => new Promise((res) => setTimeout(res, ms));
 
@@ -18,7 +20,7 @@ const wait = (ms) => new Promise((res) => setTimeout(res, ms));
  *
  * @param operation The operation that would be polled for the status.
  */
-async function pollUntilOperationIsDone(operation) {
+export async function pollUntilOperationIsDone(operation) {
   let operationResponse = await operation();
   console.log(operationResponse);
   while (operationResponse.status == "NotStarted" || operationResponse.status == "Running") {
@@ -28,20 +30,15 @@ async function pollUntilOperationIsDone(operation) {
     console.log(operationResponse);
   }
   if (operationResponse.status == "Failed") {
-    const operationError = operationResponse.error;
-    if (operationError !== null && operationError !== void 0) {
-      console.log(operationError.details);
-      if (operationError.details) console.log(operationError.details[0].details);
-    }
+    console.log(operationResponse.error?.details);
+    if (operationResponse.error?.details) console.log(operationResponse.error?.details[0].details);
     throw "Failed operation!";
   }
 
   // get resource ID from the response header "Resource-Location"
-  const resourceLocation = operationResponse.resourceLocation;
-  if (resourceLocation === null || resourceLocation === void 0) return Promise.resolve(void 0);
-  const resourceId = resourceLocation.match("[0-9A-Fa-f-]{36}");
-  if (resourceId === null || resourceId === void 0) return Promise.resolve(void 0);
-  return Promise.resolve(resourceId.join());
+  const resourceId = operationResponse.resourceLocation?.match("[0-9A-Fa-f-]{36}")?.join();
+
+  return Promise.resolve(resourceId);
 }
 
 /**
@@ -89,19 +86,21 @@ async function main() {
 
   const data = new CreatorClient(credential).data;
 
-  const filePathForUpload = "../../resources/data_sample_upload.json";
-  const filePathForZipUpload = "../../resources/data_sample_upload.zip";
-  const filePathForUpdate = "../../resources/data_sample_update.json";
+  const filePathForUpload = "./resources/data_sample_upload.json";
+  const filePathForZipUpload = "./resources/data_sample_upload.zip";
+  const filePathForUpdate = "./resources/data_sample_update.json";
 
   // This will upload new resource for Creator returning unique ID (udid) that might be used for other
   // Creator's services: Alias, Conversion, etc. Please put it in the env CREATOR_DWG_ZIP_UDID or CREATOR_GEOJSON_UDID.
 
   // Upload GeoJson:
 
-  const geoJsonUpload = JSON.parse(fs.readFileSync(filePathForUpload, "utf8"));
+  const geoJsonUpload = JSON.parse(
+    fs.readFileSync(path.resolve(__dirname, filePathForUpload), "utf8")
+  );
 
   console.log(" --- Begin the upload Data (single JSON file):");
-  const uploadResult = await data.beginUploadPreviewAndWait(
+  const uploadResult = await data.beginUploadAndWait(
     "geojson",
     "application/json",
     geoJsonUpload,
@@ -109,11 +108,11 @@ async function main() {
   );
   console.log(uploadResult);
   const udid = await pollUntilOperationIsDone(() =>
-    data.getOperationPreview(uploadResult.operationId, operationOptions)
+    data.getOperation(uploadResult.operationId, operationOptions)
   );
 
   console.log(" --- Download the uploaded Data:");
-  let result = await data.downloadPreview(udid, operationOptions);
+  let result = await data.download(udid, operationOptions);
   console.log("Done (content type: " + result.contentType + ")");
   // use result.blobBody for Browser, readableStreamBody for Node.js:
   console.log(
@@ -123,17 +122,19 @@ async function main() {
 
   // Update GeoJson:
 
-  const geoJsonUpdate = JSON.parse(fs.readFileSync(filePathForUpdate, "utf8"));
+  const geoJsonUpdate = JSON.parse(
+    fs.readFileSync(path.resolve(__dirname, filePathForUpdate), "utf8")
+  );
 
   console.log(" --- Begin the update Data (single JSON file):");
-  const updateResult = await data.beginUpdatePreviewAndWait(udid, geoJsonUpdate, operationOptions);
+  const updateResult = await data.beginUpdateAndWait(udid, geoJsonUpdate, operationOptions);
   console.log(updateResult);
   await pollUntilOperationIsDone(() =>
-    data.getOperationPreview(updateResult.operationId, operationOptions)
+    data.getOperation(updateResult.operationId, operationOptions)
   );
 
   console.log(" --- Download the updated Data:");
-  result = await data.downloadPreview(udid, operationOptions);
+  result = await data.download(udid, operationOptions);
   console.log("Done (content type: " + result.contentType + ")");
   // use result.blobBody for Browser, readableStreamBody for Node.js:
   console.log(
@@ -144,27 +145,27 @@ async function main() {
   // Delete the data (cleanup)
 
   console.log(" --- Delete the created Data item:");
-  await data.deletePreview(udid, operationOptions);
+  await data.delete(udid, operationOptions);
   console.log("Done (no response body)");
 
   // Upload ZIP with DWG files:
 
   console.log(" --- Begin the upload Data (single ZIP file):");
-  const uploadZipResult = await data.beginUploadPreviewAndWait(
+  const uploadZipResult = await data.beginUploadAndWait(
     "dwgzippackage",
     "application/octet-stream",
-    fs.readFileSync(filePathForZipUpload),
+    fs.readFileSync(path.resolve(__dirname, filePathForZipUpload)),
     operationOptions
   );
   console.log(uploadZipResult);
   const zipUdid = await pollUntilOperationIsDone(() =>
-    data.getOperationPreview(uploadZipResult.operationId, operationOptions)
+    data.getOperation(uploadZipResult.operationId, operationOptions)
   );
 
   if (!fs.existsSync("tmp")) fs.mkdirSync("tmp");
 
   console.log(" --- Download the uploaded Data:");
-  let zipResult = await data.downloadPreview(zipUdid, operationOptions);
+  let zipResult = await data.download(zipUdid, operationOptions);
   console.log("Done (content type: " + zipResult.contentType + ")");
   // use result.blobBody for Browser, readableStreamBody for Node.js:
   zipResult.readableStreamBody?.pipe(fs.createWriteStream("tmp/Data_uploaded.zip"));
@@ -172,13 +173,13 @@ async function main() {
   // Delete the data (cleanup)
 
   console.log(" --- Delete the created Data item:");
-  await data.deletePreview(zipUdid, operationOptions);
+  await data.delete(zipUdid, operationOptions);
   console.log("Done (no response body)");
 
   // List all the data
 
   console.log(" --- List all the Data uploaded:");
-  (await data.listPreview(operationOptions)).mapDataList?.forEach((dataItem) => {
+  (await data.list(operationOptions)).mapDataList?.forEach((dataItem) => {
     console.log(dataItem);
   });
 }

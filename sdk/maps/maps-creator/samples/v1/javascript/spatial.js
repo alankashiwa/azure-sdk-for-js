@@ -6,9 +6,11 @@
  */
 
 const fs = require("fs");
+const path = require("path");
 const { DefaultAzureCredential } = require("@azure/identity");
 const { CreatorClient } = require("@azure/maps-creator");
-require("dotenv").config();
+const dotenv = require("dotenv");
+dotenv.config();
 
 /**
  * Azure Maps supports two ways to authenticate requests:
@@ -55,12 +57,11 @@ async function main() {
 
   const spatial = new CreatorClient(credential).spatial;
 
-  const filePathForPostSpatialBuffer = "../../resources/spatial_buffer_request_body.json";
-  const filePathForPostSpatialClosestPoint =
-    "../../resources/spatial_closest_point_request_body.json";
-  const filePathForPostSpatialGeofence = "../../resources/spatial_geofence_request_body.json";
+  const filePathForPostSpatialBuffer = "./resources/spatial_buffer_request_body.json";
+  const filePathForPostSpatialClosestPoint = "./resources/spatial_closest_point_request_body.json";
+  const filePathForPostSpatialGeofence = "./resources/spatial_geofence_request_body.json";
   const filePathForPostSpatialPointInPolygon =
-    "../../resources/spatial_point_in_polygon_request_body.json";
+    "./resources/spatial_point_in_polygon_request_body.json";
 
   // TO USE need to have some GeoJson Data uploaded already - please use env CREATOR_GEOJSON_UDID
   const udid = process.env.CREATOR_GEOJSON_UDID;
@@ -70,12 +71,16 @@ async function main() {
 
   console.log(" --- Get buffer:");
   const res = await spatial.getBuffer("json", udid, "176.3", operationOptions);
-  console.log(res);
-  console.log(res.result?.features);
+  console.log(res?.features);
 
   console.log(" --- Get closest point:");
   console.log(
-    await spatial.getClosestPoint("json", udid, 47.622942, -122.316456, operationOptions)
+    await spatial.getClosestPoint(
+      "json",
+      udid,
+      { latitude: 47.622942, longitude: -122.316456 },
+      operationOptions
+    )
   );
 
   console.log(" --- Get geofence:");
@@ -85,10 +90,16 @@ async function main() {
     mode: "EnterAndExit"
   };
   console.log(
-    await spatial.getGeofence("json", "unique_device_name_under_account", udid, 48.36, -124.63, {
-      ...spatialGeofenceParams,
-      ...operationOptions
-    })
+    await spatial.getGeofence(
+      "json",
+      "unique_device_name_under_account",
+      udid,
+      { latitude: 48.36, longitude: -124.63 },
+      {
+        ...spatialGeofenceParams,
+        ...operationOptions
+      }
+    )
   );
 
   console.log(" --- Get great circle distance:");
@@ -101,54 +112,51 @@ async function main() {
   );
 
   /* TODO: use udid with some Polygon as a "geometry" of the Feature
-    console.log(" --- Get point in polygon:");
-    console.log(await spatial.getPointInPolygon("json", udid, 47.622942, -122.316456, operationOptions));*/
+      console.log(" --- Get point in polygon:");
+      console.log(await spatial.getPointInPolygon("json", udid, 47.622942, -122.316456, operationOptions));*/
 
   console.log(" --- Post buffer:");
   const postSpatialBufferPayload = JSON.parse(
-    fs.readFileSync(filePathForPostSpatialBuffer, "utf8")
+    fs.readFileSync(path.resolve(__dirname, filePathForPostSpatialBuffer), "utf8")
   );
   console.log(await spatial.postBuffer("json", postSpatialBufferPayload, operationOptions));
 
   console.log(" --- Post closest point:");
   const postSpatialClosestPointPayload = JSON.parse(
-    fs.readFileSync(filePathForPostSpatialClosestPoint, "utf8")
+    fs.readFileSync(path.resolve(__dirname, filePathForPostSpatialClosestPoint), "utf8")
   );
   console.log(
     await spatial.postClosestPoint(
       "json",
-      47.622942,
-      -122.316456,
       postSpatialClosestPointPayload,
+      { latitude: 47.622942, longitude: -122.316456 },
       operationOptions
     )
   );
 
   console.log(" --- Post geofence:");
   const postSpatialGeofencePayload = JSON.parse(
-    fs.readFileSync(filePathForPostSpatialGeofence, "utf8")
+    fs.readFileSync(path.resolve(__dirname, filePathForPostSpatialGeofence), "utf8")
   );
   console.log(
     await spatial.postGeofence(
       "json",
       "unique_device_name_under_account",
-      48.36,
-      -124.63,
       postSpatialGeofencePayload,
+      { latitude: 48.36, longitude: -124.63 },
       { ...spatialGeofenceParams, ...operationOptions }
     )
   );
 
   console.log(" --- Post point in polygon:");
   const postSpatialPointInPolygonPayload = JSON.parse(
-    fs.readFileSync(filePathForPostSpatialPointInPolygon, "utf8")
+    fs.readFileSync(path.resolve(__dirname, filePathForPostSpatialPointInPolygon), "utf8")
   );
   console.log(
     await spatial.postPointInPolygon(
       "json",
-      48.36,
-      -124.63,
       postSpatialPointInPolygonPayload,
+      { latitude: 48.36, longitude: -124.63 },
       operationOptions
     )
   );

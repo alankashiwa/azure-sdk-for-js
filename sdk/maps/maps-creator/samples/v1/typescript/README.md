@@ -4,6 +4,8 @@ languages:
   - typescript
 products:
   - azure
+  - azure-maps
+  - creator
 urlFragment: maps-creator-typescript
 ---
 
@@ -11,20 +13,20 @@ urlFragment: maps-creator-typescript
 
 These sample programs show how to use the TypeScript client libraries for Azure Maps Creator in some common scenarios.
 
-| **File Name**                   | **Description**                                                                                                                      |
-| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| [alias.ts][alias]               | Manages aliases of the data uploaded using [Data API][data].                                                                         |
-| [conversion.ts][conversion]     | Converts DWG ZIP packages uploaded using [Data API][data].                                                                           |
-| [data.ts][data]                 | Uploads both GeoJSON files for [Spatial API][spatial] and DWG ZIP packages for [Conversion][conversion] and [Dataset][dataset] APIs. |
-| [dataset.ts][dataset]           | Creates dataset from converted DWG ZIP file.                                                                                         |
-| [featurestate.ts][featurestate] | Manages states of the features of the given dataset.                                                                                 |
-| [spatial.ts][spatial]           | Operations for geospatial calculations.                                                                                              |
-| [tileset.ts][tileset]           | Manages tileset used for rendering the dataset.                                                                                      |
-| [wfs.ts][wfs]                   | The Web Feature Service API that manages features and feature collections within the dataset.                                        |
+| **File Name**                   | **Description**                                                             |
+| ------------------------------- | --------------------------------------------------------------------------- |
+| [alias.ts][alias]               | Demonstrates Alias API usage. Simple CRUD operations are performed.         |
+| [conversion.ts][conversion]     | Demonstrates Conversion API usage. Simple CRUD operations are performed.    |
+| [data.ts][data]                 | Demonstrates Data API usage. Simple CRUD operations are performed.          |
+| [dataset.ts][dataset]           | Demonstrates Dataset API usage. Simple CRUD operations are performed.       |
+| [featurestate.ts][featurestate] | Demonstrates Feature State API usage. Simple CRUD operations are performed. |
+| [spatial.ts][spatial]           | Demonstrates Spatial API usage. Simple queries are performed.               |
+| [tileset.ts][tileset]           | Demonstrates Tileset API usage. Simple queries are performed.               |
+| [wfs.ts][wfs]                   | Demonstrates WFS API usage. Simple queries are performed.                   |
 
 ## Prerequisites
 
-The sample programs are compatible with Node.js >=12.0.0.
+The sample programs are compatible with [LTS versions of Node.js](https://nodejs.org/about/releases/).
 
 Before running the samples in Node, they must be compiled to JavaScript using the TypeScript compiler. For more information on TypeScript, see the [TypeScript documentation][typescript]. Install the TypeScript compiler using:
 
@@ -32,7 +34,9 @@ Before running the samples in Node, they must be compiled to JavaScript using th
 npm install -g typescript
 ```
 
-You need [an Azure subscription][freesub] to run these sample programs.
+You need [an Azure subscription][freesub] and the following Azure resources to run these sample programs:
+
+- [Azure Maps Resource][createinstance_azuremapsresource]
 
 Samples retrieve credentials to access the service endpoint from environment variables. Alternatively, edit the source code to include the appropriate credentials. See each individual sample for details on which environment variables/credentials it requires to function.
 
@@ -59,23 +63,29 @@ npm run build
 4. Run whichever samples you like (note that some samples may require additional setup, see the table above):
 
 ```bash
-node dist/data.js
+node dist/alias.js
 ```
 
 Alternatively, run a single sample with the correct environment variables set (setting up the `.env` file is not required if you do this), for example (cross-platform):
 
 ```bash
-npx cross-env MAPS_SUBSCRIPTION_KEY="<subscription-key>" node dist/data.js
+npx cross-env MAPS_SUBSCRIPTION_KEY="<maps subscription key>" MAPS_SUBSCRIPTION_KEY="<maps subscription key>" MAPS_CLIENT_ID="<maps client id>" MAPS_CLIENT_ID="<maps client id>" CREATOR_DWG_ZIP_UDID="<creator dwg zip udid>" node dist/alias.js
 ```
 
-[alias]: https://github.com/Azure/azure-sdk-for-js/blob/master/sdk/maps/maps-creator/samples/v1/typescript/src/alias.ts
-[conversion]: https://github.com/Azure/azure-sdk-for-js/blob/master/sdk/maps/maps-creator/samples/v1/typescript/src/conversion.ts
-[data]: https://github.com/Azure/azure-sdk-for-js/blob/master/sdk/maps/maps-creator/samples/v1/typescript/src/data.ts
-[dataset]: https://github.com/Azure/azure-sdk-for-js/blob/master/sdk/maps/maps-creator/samples/v1/typescript/src/dataset.ts
-[featurestate]: https://github.com/Azure/azure-sdk-for-js/blob/master/sdk/maps/maps-creator/samples/v1/typescript/src/featurestate.ts
-[spatial]: https://github.com/Azure/azure-sdk-for-js/blob/master/sdk/maps/maps-creator/samples/v1/typescript/src/spatial.ts
-[tileset]: https://github.com/Azure/azure-sdk-for-js/blob/master/sdk/maps/maps-creator/samples/v1/typescript/src/tileset.ts
-[wfs]: https://github.com/Azure/azure-sdk-for-js/blob/master/sdk/maps/maps-creator/samples/v1/typescript/src/wfs.ts
+## Next Steps
+
+Take a look at our [API Documentation][apiref] for more information about the APIs that are available in the clients.
+
+[alias]: https://github.com/Azure/azure-sdk-for-js/blob/main/sdk/maps/maps-creator/samples/v1/typescript/src/alias.ts
+[conversion]: https://github.com/Azure/azure-sdk-for-js/blob/main/sdk/maps/maps-creator/samples/v1/typescript/src/conversion.ts
+[data]: https://github.com/Azure/azure-sdk-for-js/blob/main/sdk/maps/maps-creator/samples/v1/typescript/src/data.ts
+[dataset]: https://github.com/Azure/azure-sdk-for-js/blob/main/sdk/maps/maps-creator/samples/v1/typescript/src/dataset.ts
+[featurestate]: https://github.com/Azure/azure-sdk-for-js/blob/main/sdk/maps/maps-creator/samples/v1/typescript/src/featurestate.ts
+[spatial]: https://github.com/Azure/azure-sdk-for-js/blob/main/sdk/maps/maps-creator/samples/v1/typescript/src/spatial.ts
+[tileset]: https://github.com/Azure/azure-sdk-for-js/blob/main/sdk/maps/maps-creator/samples/v1/typescript/src/tileset.ts
+[wfs]: https://github.com/Azure/azure-sdk-for-js/blob/main/sdk/maps/maps-creator/samples/v1/typescript/src/wfs.ts
+[apiref]: https://docs.microsoft.com/javascript/api/@azure/maps-creator
 [freesub]: https://azure.microsoft.com/free/
-[package]: https://github.com/Azure/azure-sdk-for-js/tree/master/sdk/maps/maps-creator/README.md
+[createinstance_azuremapsresource]: https://docs.microsoft.com/azure/azure-maps/how-to-create-template
+[package]: https://github.com/Azure/azure-sdk-for-js/tree/main/sdk/maps/maps-creator/README.md
 [typescript]: https://www.typescriptlang.org/docs/home.html

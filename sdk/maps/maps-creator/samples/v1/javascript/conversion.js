@@ -7,7 +7,8 @@
 
 const { DefaultAzureCredential } = require("@azure/identity");
 const { CreatorClient } = require("@azure/maps-creator");
-require("dotenv").config();
+const dotenv = require("dotenv");
+dotenv.config();
 
 const wait = (ms) => new Promise((res) => setTimeout(res, ms));
 
@@ -17,7 +18,7 @@ const wait = (ms) => new Promise((res) => setTimeout(res, ms));
  *
  * @param operation The operation that would be polled for the status.
  */
-async function pollUntilOperationIsDone(operation) {
+export async function pollUntilOperationIsDone(operation) {
   let operationResponse = await operation();
   console.log(operationResponse);
   while (operationResponse.status == "NotStarted" || operationResponse.status == "Running") {
@@ -27,20 +28,15 @@ async function pollUntilOperationIsDone(operation) {
     console.log(operationResponse);
   }
   if (operationResponse.status == "Failed") {
-    const operationError = operationResponse.error;
-    if (operationError !== null && operationError !== void 0) {
-      console.log(operationError.details);
-      if (operationError.details) console.log(operationError.details[0].details);
-    }
+    console.log(operationResponse.error?.details);
+    if (operationResponse.error?.details) console.log(operationResponse.error?.details[0].details);
     throw "Failed operation!";
   }
 
   // get resource ID from the response header "Resource-Location"
-  const resourceLocation = operationResponse.resourceLocation;
-  if (resourceLocation === null || resourceLocation === void 0) return Promise.resolve(void 0);
-  const resourceId = resourceLocation.match("[0-9A-Fa-f-]{36}");
-  if (resourceId === null || resourceId === void 0) return Promise.resolve(void 0);
-  return Promise.resolve(resourceId.join());
+  const resourceId = operationResponse.resourceLocation?.match("[0-9A-Fa-f-]{36}")?.join();
+
+  return Promise.resolve(resourceId);
 }
 
 /**
@@ -86,7 +82,7 @@ async function main() {
     }
   }
 
-  const conversion = new CreatorClient(credential).conversion;
+  const conversion = new CreatorClient(credential).conversionOperations;
 
   // TO USE need to have some DWG data uploaded already - please use env CREATOR_DWG_ZIP_UDID
   const udid = process.env.CREATOR_DWG_ZIP_UDID;
@@ -115,9 +111,9 @@ async function main() {
   console.log("Done (no response body)");
 
   console.log(" --- List all the Conversions:");
-  for await (const conversionItem of conversion.list(operationOptions)) {
+  (await conversion.list(operationOptions)).conversions?.forEach((conversionItem) => {
     console.log(conversionItem);
-  }
+  });
 }
 
 main();

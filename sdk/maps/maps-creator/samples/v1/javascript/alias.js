@@ -7,7 +7,8 @@
 
 const { DefaultAzureCredential } = require("@azure/identity");
 const { CreatorClient } = require("@azure/maps-creator");
-require("dotenv").config();
+const dotenv = require("dotenv");
+dotenv.config();
 
 /**
  * Azure Maps supports two ways to authenticate requests:
@@ -52,7 +53,7 @@ async function main() {
     }
   }
 
-  const alias = new CreatorClient(credential).alias;
+  const alias = new CreatorClient(credential).aliasOperations;
 
   console.log(" --- Create Alias:");
   const aliasCreateResponse = await alias.create(operationOptions);
@@ -67,16 +68,14 @@ async function main() {
   }
 
   console.log(" --- Get details about the created Alias:");
-  console.log(await alias.getDetails(aliasId, operationOptions));
+  console.log(await alias.get(aliasId, operationOptions));
 
   console.log(" --- Delete the created Alias:");
   await alias.delete(aliasId, operationOptions);
   console.log("Done (no response body)");
 
   console.log(" --- List all the created Aliases:");
-  for await (const aliasItem of alias.list(operationOptions)) {
-    console.log(aliasItem);
-  }
+  console.log(await alias.list(operationOptions));
 }
 
 main();
