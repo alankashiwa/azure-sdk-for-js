@@ -1,6 +1,6 @@
 {
   "name": "@azure/maps-creator",
-  "version": "1.0.0",
+  "version": "1.0.0-beta.1",
   "description": "A client library for Azure Maps maps-creator",
   "sdk-type": "client",
   "main": "dist/index.js",

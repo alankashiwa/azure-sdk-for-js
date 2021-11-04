@@ -1,6 +1,6 @@
 {
   "name": "@azure/maps-traffic",
-  "version": "1.0.0",
+  "version": "1.0.0-beta.1",
   "description": "A client library for Azure Maps maps-traffic",
   "sdk-type": "client",
   "main": "dist/index.js",

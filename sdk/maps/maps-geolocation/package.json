@@ -1,6 +1,6 @@
 {
   "name": "@azure/maps-geolocation",
-  "version": "1.0.0",
+  "version": "1.0.0-beta.1",
   "description": "A client library for Azure Maps maps-geolocation",
   "sdk-type": "client",
   "main": "dist/index.js",
