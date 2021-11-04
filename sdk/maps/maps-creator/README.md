@@ -93,8 +93,8 @@ const operationOptions = {
 const dataClient = new CreatorClient(credential).data;
 
 // Perform the data upload
-const filePathForZipUpload = "<dwg-zip-package>";
-const response = await dataClient.beginUploadPreviewAndWait(
+const filePathForZipUpload = "<dwg-zip-package-path>";
+const response = await dataClient.beginUploadAndWait(
   "dwgzippackage",
   "application/octet-stream",
   fs.readFileSync(filePathForZipUpload),
@@ -103,7 +103,7 @@ const response = await dataClient.beginUploadPreviewAndWait(
 
 // Get the udid when the upload is complete
 const zipUdid = await pollUntilOperationIsDone(() =>
-  dataClient.getOperationPreview(uploadZipResult.operationId!, operationOptions)
+  dataClient.getOperation(uploadZipResult.operationId!, operationOptions)
 );
 ```
 
@@ -245,7 +245,7 @@ const datasetId = "<dataset-id-from-dataset-creation>";
 const createResult = await featureStateClient.createStateset(
   datasetId,
   {
-    styles: [
+    styleRules: [
       {
         keyName: "occupied",
         type: "boolean",
