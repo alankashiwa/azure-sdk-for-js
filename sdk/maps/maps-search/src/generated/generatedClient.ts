@@ -6,7 +6,6 @@
  * Changes may cause incorrect behavior and will be lost if the code is regenerated.
  */
 
-import * as coreAuth from "@azure/core-auth";
 import { SearchImpl } from "./operations";
 import { Search } from "./operationsInterfaces";
 import { GeneratedClientContext } from "./generatedClientContext";
@@ -16,14 +15,10 @@ import { GeneratedClientOptionalParams } from "./models";
 export class GeneratedClient extends GeneratedClientContext {
   /**
    * Initializes a new instance of the GeneratedClient class.
-   * @param credentials Subscription credentials which uniquely identify client subscription.
    * @param options The parameter options
    */
-  constructor(
-    credentials: coreAuth.TokenCredential,
-    options?: GeneratedClientOptionalParams
-  ) {
-    super(credentials, options);
+  constructor(options?: GeneratedClientOptionalParams) {
+    super(options);
     this.search = new SearchImpl(this);
   }
 

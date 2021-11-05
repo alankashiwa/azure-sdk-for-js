@@ -6,16 +6,15 @@
  */
 
 import { DefaultAzureCredential } from "@azure/identity";
-import * as coreAuth from "@azure/core-auth";
-import * as coreClient from "@azure/core-client";
+import { TokenCredential, AzureKeyCredential } from "@azure/core-auth";
 import {
   SearchClient,
-  SearchAlongRouteRequest,
-  SearchInsideGeometryRequest
+  Coordinate,
+  GeoJsonLineString,
+  GeoJsonObjectUnion
 } from "@azure/maps-search";
 import * as dotenv from "dotenv";
 dotenv.config();
-
 /**
  * Azure Maps supports two ways to authenticate requests:
  * - Shared Key authentication (subscription-key)
@@ -27,126 +26,137 @@ dotenv.config();
  * More info is available at https://docs.microsoft.com/en-us/azure/azure-maps/azure-maps-authentication.
  */
 
-/**
- * Empty token class definition. To be used with AzureKey credentials.
- */
-class EmptyTokenCredential implements coreAuth.TokenCredential {
-  async getToken(
-    _scopes: string | string[],
-    _options?: coreAuth.GetTokenOptions
-  ): Promise<coreAuth.AccessToken | null> {
-    return {
-      token: "token",
-      expiresOnTimestamp: Date.now() + 60 * 60 * 1000
-    };
-  }
-}
-
 async function main() {
-  let credential: coreAuth.TokenCredential;
-  let operationOptions: coreClient.OperationOptions = {};
+  let credential: TokenCredential | AzureKeyCredential;
+  let mapsClientId: string | undefined;
 
   if (process.env.MAPS_SUBSCRIPTION_KEY) {
     // Use subscription key authentication
-    credential = new EmptyTokenCredential();
-    operationOptions.requestOptions = {
-      customHeaders: { "subscription-key": process.env.MAPS_SUBSCRIPTION_KEY }
-    };
+    credential = new AzureKeyCredential(process.env.MAPS_SUBSCRIPTION_KEY);
   } else {
     // Use Azure AD authentication
     credential = new DefaultAzureCredential();
-    if (process.env.MAPS_CLIENT_ID) {
-      operationOptions.requestOptions = {
-        customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
-      };
-    }
+    mapsClientId = process.env.MAPS_CLIENT_ID;
   }
 
-  const search = new SearchClient(credential).search;
+  const client = new SearchClient(credential, { clientId: mapsClientId });
 
-  console.log(" --- Get search address:");
-  console.log(await search.searchAddress("json", "400 Broad, Seattle", operationOptions));
+  console.log(" --- Geocode address:");
+  console.log(await client.searchAddress("400 Broad, Seattle"));
 
-  console.log(" --- Get search address reverse:");
-  console.log(await search.reverseSearchAddress("json", [47.59118, -122.3327], operationOptions));
+  console.log(" --- Reverse-geocode coordinate to address:");
+  const coordinate: Coordinate = {
+    latitude: 47.59118,
+    longitude: -122.3327
+  };
+  console.log(await client.reverseSearchAddress(coordinate));
 
-  console.log(" --- Get search address reverse cross street:");
-  console.log(
-    await search.reverseSearchCrossStreetAddress("json", [47.59118, -122.3327], operationOptions)
-  );
+  console.log(" --- Reverse-geocode coordinate to cross street address:");
+  console.log(await client.reverseSearchCrossStreetAddress(coordinate));
 
-  console.log(" --- Get search address structured:");
+  console.log(" --- Geocode structured address:");
+  const countryCode = "US";
   const searchAddressStructuredOptions = {
-    countryCode: "US",
     streetNumber: "15127",
     streetName: "NE 24th Street",
     municipality: "Redmond",
     countrySubdivision: "WA",
     postalCode: "98052"
   };
-  console.log(
-    await search.searchStructuredAddress("json", {
-      ...searchAddressStructuredOptions,
-      ...operationOptions
-    })
-  );
+  console.log(await client.searchStructuredAddress(countryCode, searchAddressStructuredOptions));
 
-  console.log(" --- Get search fuzzy:");
-  const fuzzyResult = await search.fuzzySearch("json", "pizza", {
-    countryFilter: ["Brazil"],
-    ...operationOptions
+  console.log(" --- Perform a fuzzy search:");
+  const fuzzyResult = await client.fuzzySearch("pizza", {
+    countryFilter: ["Brazil"]
   });
   console.log(fuzzyResult);
 
   // let's save geometry IDs from the fuzzy search for the getSearchPolygon example
-  let geometries: string[] = [];
-  fuzzyResult.results?.forEach((res) => geometries.push(res.dataSources?.geometry?.id!));
-
-  console.log(" --- Get search nearby:");
-  const searchNearbyOptions = { radius: 8046 };
-  console.log(
-    await search.searchNearbyPointOfInterest("json", 40.70627, -74.011454, {
-      ...searchNearbyOptions,
-      ...operationOptions
-    })
-  );
-
-  console.log(" --- Get search POI:");
-  const searchPOIOptions = {
-    limit: 5,
-    lat: 47.606038,
-    lon: -122.333345,
-    radius: 8046
+  let geometryIds: string[] = [];
+  fuzzyResult.results?.forEach((res) => geometryIds.push(res.dataSources?.geometry?.id!));
+  console.log(" --- Search nearby POI:");
+  const searchNearbyCoordinate: Coordinate = {
+    latitude: 40.70627,
+    longitude: -74.011454
   };
+  const searchNearbyOptions = { radiusInMeters: 8046 };
   console.log(
-    await search.searchPointOfInterest("json", "juice bars", {
-      ...searchPOIOptions,
-      ...operationOptions
-    })
+    await client.searchNearbyPointOfInterest(searchNearbyCoordinate, searchNearbyOptions)
   );
 
-  console.log(" --- Get search POI category:");
+  console.log(" --- Search POI:");
+  const searchPOIQuery = "juice bars";
+  const searchPOIOptions = {
+    top: 5,
+    coordinate: { latitude: 47.606038, longitude: -122.333345 },
+    radiusInMeters: 8046
+  };
+  console.log(await client.searchPointOfInterest(searchPOIQuery, searchPOIOptions));
+
+  console.log(" --- Search POI category:");
+  const searchPOICategoryQuery = "atm";
   const searchPOICategoryOptions = {
     skip: 5,
-    lat: 47.606038,
-    lon: -122.333345,
+    coordinate: { latitude: 47.606038, longitude: -122.333345 },
     radiusInMeters: 8046
   };
   console.log(
-    await search.searchPointOfInterestCategory("json", "atm", {
-      ...searchPOICategoryOptions,
-      ...operationOptions
-    })
+    await client.searchPointOfInterestCategory(searchPOICategoryQuery, searchPOICategoryOptions)
   );
 
   console.log(" --- Get search POI category tree:");
-  console.log(await search.getPointOfInterestCategoryTree("json", operationOptions));
+  console.log(await client.getPointOfInterestCategoryTree());
 
-  console.log(" --- Get search polygon:");
-  console.log(await search.getPolygon("json", geometries, operationOptions));
+  console.log(" --- List polygons by geometry IDs:");
+  console.log(await client.listPolygons(geometryIds));
 
-  console.log(" --- Post search address batch:");
-  const searchAddressBatchRequestBody = {
+  console.log(" --- Search along route:");
+  const searchALongRouteQuery = "burger";
+  const maxDetourTime = 1000;
+
+  const searchAlongRoute: GeoJsonLineString = {
+    type: "LineString",
+    coordinates: [
+      [-122.143035, 47.653536],
+      [-122.187164, 47.617556],
+      [-122.114981, 47.570599],
+      [-122.132756, 47.654009]
+    ]
+  };
+  const searchAlongRouteOptions = { top: 2 };
+  console.log(
+    await client.searchAlongRoute(
+      searchALongRouteQuery,
+      maxDetourTime,
+      searchAlongRoute,
+      searchAlongRouteOptions
+    )
+  );
+
+  console.log(" --- Search inside geometry:");
+  const searchInsideGeometryQuery = "burger";
+  const searchGeometry: GeoJsonObjectUnion = {
+    type: "Polygon",
+    coordinates: [
+      [
+        [-122.43576049804686, 37.7524152343544],
+        [-122.43301391601562, 37.70660472542312],
+        [-122.36434936523438, 37.712059855877314],
+        [-122.43576049804686, 37.7524152343544]
+      ]
+    ]
+  };
+  const searchInsideGeometryOptions = { top: 2 };
+  console.log(
+    await client.searchInsideGeometry(
+      searchInsideGeometryQuery,
+      searchGeometry,
+      searchInsideGeometryOptions
+    )
+  );
+
+  console.log(" --- Search address batch:");
+  const searchAddressBatchRequest = {
     batchItems: [
       {
         query: "?query=400 Broad St, Seattle, WA 98109&limit=3"
@@ -159,16 +169,11 @@ async function main() {
       }
     ]
   };
-  console.log(
-    await search.beginSearchAddressBatchAndWait(
-      "json",
-      searchAddressBatchRequestBody,
-      operationOptions
-    )
-  );
+  let poller = await client.beginSearchAddressBatch(searchAddressBatchRequest);
+  console.log(await poller.pollUntilDone());
 
-  console.log(" --- Post search address reverse batch:");
-  const searchAddressReverseBatchRequestBody = {
+  console.log(" --- Search address reverse batch:");
+  const searchAddressReverseBatchRequest = {
     batchItems: [
       {
         query: "?query=48.858561,2.294911"
@@ -181,16 +186,11 @@ async function main() {
       }
     ]
   };
-  console.log(
-    await search.beginReverseSearchAddressBatchAndWait(
-      "json",
-      searchAddressReverseBatchRequestBody,
-      operationOptions
-    )
-  );
+  poller = await client.beginReverseSearchAddressBatch(searchAddressReverseBatchRequest);
+  console.log(await poller.pollUntilDone());
 
-  console.log(" --- Post search fuzzy batch:");
-  const searchFuzzyBatchRequestBody = {
+  console.log(" --- Search fuzzy batch:");
+  const searchFuzzyBatchRequest = {
     batchItems: [
       {
         query: "?query=atm&lat=47.639769&lon=-122.128362&radius=5000&limit=5"
@@ -203,51 +203,8 @@ async function main() {
       }
     ]
   };
-  console.log(
-    await search.beginFuzzySearchBatchAndWait("json", searchFuzzyBatchRequestBody, operationOptions)
-  );
-
-  console.log(" --- Post search along route:");
-  const searchAlongRouteOptions = { limit: 2 };
-  const searchAlongRouteRequest: SearchAlongRouteRequest = {
-    route: {
-      type: "LineString",
-      coordinates: [
-        [-122.143035, 47.653536],
-        [-122.187164, 47.617556],
-        [-122.114981, 47.570599],
-        [-122.132756, 47.654009]
-      ]
-    }
-  };
-  console.log(
-    await search.searchAlongRoute("json", "burger", 1000, searchAlongRouteRequest, {
-      ...searchAlongRouteOptions,
-      ...operationOptions
-    })
-  );
-
-  console.log(" --- Post search inside geometry:");
-  const searchInsideGeometryOptions = { limit: 2 };
-  const searchInsideGeometryRequest: SearchInsideGeometryRequest = {
-    geometry: {
-      type: "Polygon",
-      coordinates: [
-        [
-          [-122.43576049804686, 37.7524152343544],
-          [-122.43301391601562, 37.70660472542312],
-          [-122.36434936523438, 37.712059855877314],
-          [-122.43576049804686, 37.7524152343544]
-        ]
-      ]
-    }
-  };
-  console.log(
-    await search.searchInsideGeometry("json", "burger", searchInsideGeometryRequest, {
-      ...searchInsideGeometryOptions,
-      ...operationOptions
-    })
-  );
+  poller = await client.beginFuzzySearchBatch(searchFuzzyBatchRequest);
+  console.log(await poller.pollUntilDone());
 }
 
 main();

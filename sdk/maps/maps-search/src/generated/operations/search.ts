@@ -15,8 +15,8 @@ import { PollerLike, PollOperationState, LroEngine } from "@azure/core-lro";
 import { LroImpl } from "../lroImpl";
 import {
   JsonFormat,
-  SearchGetPolygonOptionalParams,
-  SearchGetPolygonResponse,
+  SearchListPolygonsOptionalParams,
+  SearchListPolygonsResponse,
   ResponseFormat,
   SearchFuzzySearchOptionalParams,
   SearchFuzzySearchResponse,
@@ -97,14 +97,14 @@ export class SearchImpl implements Search {
    *                    Search request.
    * @param options The options parameters.
    */
-  getPolygon(
+  listPolygons(
     format: JsonFormat,
     geometryIds: string[],
-    options?: SearchGetPolygonOptionalParams
-  ): Promise<SearchGetPolygonResponse> {
+    options?: SearchListPolygonsOptionalParams
+  ): Promise<SearchListPolygonsResponse> {
     return this.client.sendOperationRequest(
       { format, geometryIds, options },
-      getPolygonOperationSpec
+      listPolygonsOperationSpec
     );
   }
 
@@ -341,14 +341,17 @@ export class SearchImpl implements Search {
    * handle everything from exact  street addresses or street or intersections as well as higher level
    * geographies such as city centers,  counties, states etc.
    * @param format Desired format of the response. Value can be either _json_ or _xml_.
+   * @param countryCode The 2 or 3 letter [ISO3166-1](https://www.iso.org/iso-3166-country-codes.html)
+   *                    country code portion of an address. E.g. US.
    * @param options The options parameters.
    */
   searchStructuredAddress(
     format: ResponseFormat,
+    countryCode: string,
     options?: SearchSearchStructuredAddressOptionalParams
   ): Promise<SearchSearchStructuredAddressResponse> {
     return this.client.sendOperationRequest(
-      { format, options },
+      { format, countryCode, options },
       searchStructuredAddressOperationSpec
     );
   }
@@ -626,17 +629,17 @@ export class SearchImpl implements Search {
    * }
    * ```
    * @param format Desired format of the response. Only `json` format is supported.
-   * @param searchFuzzyBatchRequestBody The list of search fuzzy queries/requests to process. The list
-   *                                    can contain  a max of 10,000 queries and must contain at least 1 query.
+   * @param batchRequest The list of search fuzzy queries/requests to process. The list can contain  a
+   *                     max of 10,000 queries and must contain at least 1 query.
    * @param options The options parameters.
    */
   fuzzySearchBatchSync(
     format: JsonFormat,
-    searchFuzzyBatchRequestBody: BatchRequest,
+    batchRequest: BatchRequest,
     options?: SearchFuzzySearchBatchSyncOptionalParams
   ): Promise<SearchFuzzySearchBatchSyncResponse> {
     return this.client.sendOperationRequest(
-      { format, searchFuzzyBatchRequestBody, options },
+      { format, batchRequest, options },
       fuzzySearchBatchSyncOperationSpec
     );
   }
@@ -832,13 +835,13 @@ export class SearchImpl implements Search {
    * }
    * ```
    * @param format Desired format of the response. Only `json` format is supported.
-   * @param searchFuzzyBatchRequestBody The list of search fuzzy queries/requests to process. The list
-   *                                    can contain a max of 10,000 queries and must contain at least 1 query.
+   * @param batchRequest The list of search fuzzy queries/requests to process. The list can contain a max
+   *                     of 10,000 queries and must contain at least 1 query.
    * @param options The options parameters.
    */
   async beginFuzzySearchBatch(
     format: JsonFormat,
-    searchFuzzyBatchRequestBody: BatchRequest,
+    batchRequest: BatchRequest,
     options?: SearchFuzzySearchBatchOptionalParams
   ): Promise<
     PollerLike<
@@ -887,7 +890,7 @@ export class SearchImpl implements Search {
 
     const lro = new LroImpl(
       sendOperation,
-      { format, searchFuzzyBatchRequestBody, options },
+      { format, batchRequest, options },
       fuzzySearchBatchOperationSpec
     );
     return new LroEngine(lro, {
@@ -1088,18 +1091,18 @@ export class SearchImpl implements Search {
    * }
    * ```
    * @param format Desired format of the response. Only `json` format is supported.
-   * @param searchFuzzyBatchRequestBody The list of search fuzzy queries/requests to process. The list
-   *                                    can contain a max of 10,000 queries and must contain at least 1 query.
+   * @param batchRequest The list of search fuzzy queries/requests to process. The list can contain a max
+   *                     of 10,000 queries and must contain at least 1 query.
    * @param options The options parameters.
    */
   async beginFuzzySearchBatchAndWait(
     format: JsonFormat,
-    searchFuzzyBatchRequestBody: BatchRequest,
+    batchRequest: BatchRequest,
     options?: SearchFuzzySearchBatchOptionalParams
   ): Promise<SearchFuzzySearchBatchResponse> {
     const poller = await this.beginFuzzySearchBatch(
       format,
-      searchFuzzyBatchRequestBody,
+      batchRequest,
       options
     );
     return poller.pollUntilDone();
@@ -1741,17 +1744,17 @@ export class SearchImpl implements Search {
    * }
    * ```
    * @param format Desired format of the response. Only `json` format is supported.
-   * @param searchAddressBatchRequestBody The list of address geocoding queries/requests to process. The
-   *                                      list can contain  a max of 10,000 queries and must contain at least 1 query.
+   * @param batchRequest The list of address geocoding queries/requests to process. The list can contain
+   *                     a max of 10,000 queries and must contain at least 1 query.
    * @param options The options parameters.
    */
   searchAddressBatchSync(
     format: JsonFormat,
-    searchAddressBatchRequestBody: BatchRequest,
+    batchRequest: BatchRequest,
     options?: SearchSearchAddressBatchSyncOptionalParams
   ): Promise<SearchSearchAddressBatchSyncResponse> {
     return this.client.sendOperationRequest(
-      { format, searchAddressBatchRequestBody, options },
+      { format, batchRequest, options },
       searchAddressBatchSyncOperationSpec
     );
   }
@@ -1938,13 +1941,13 @@ export class SearchImpl implements Search {
    * }
    * ```
    * @param format Desired format of the response. Only `json` format is supported.
-   * @param searchAddressBatchRequestBody The list of address geocoding queries/requests to process. The
-   *                                      list can contain  a max of 10,000 queries and must contain at least 1 query.
+   * @param batchRequest The list of address geocoding queries/requests to process. The list can contain
+   *                     a max of 10,000 queries and must contain at least 1 query.
    * @param options The options parameters.
    */
   async beginSearchAddressBatch(
     format: JsonFormat,
-    searchAddressBatchRequestBody: BatchRequest,
+    batchRequest: BatchRequest,
     options?: SearchSearchAddressBatchOptionalParams
   ): Promise<
     PollerLike<
@@ -1993,7 +1996,7 @@ export class SearchImpl implements Search {
 
     const lro = new LroImpl(
       sendOperation,
-      { format, searchAddressBatchRequestBody, options },
+      { format, batchRequest, options },
       searchAddressBatchOperationSpec
     );
     return new LroEngine(lro, {
@@ -2185,18 +2188,18 @@ export class SearchImpl implements Search {
    * }
    * ```
    * @param format Desired format of the response. Only `json` format is supported.
-   * @param searchAddressBatchRequestBody The list of address geocoding queries/requests to process. The
-   *                                      list can contain  a max of 10,000 queries and must contain at least 1 query.
+   * @param batchRequest The list of address geocoding queries/requests to process. The list can contain
+   *                     a max of 10,000 queries and must contain at least 1 query.
    * @param options The options parameters.
    */
   async beginSearchAddressBatchAndWait(
     format: JsonFormat,
-    searchAddressBatchRequestBody: BatchRequest,
+    batchRequest: BatchRequest,
     options?: SearchSearchAddressBatchOptionalParams
   ): Promise<SearchSearchAddressBatchResponse> {
     const poller = await this.beginSearchAddressBatch(
       format,
-      searchAddressBatchRequestBody,
+      batchRequest,
       options
     );
     return poller.pollUntilDone();
@@ -2824,17 +2827,17 @@ export class SearchImpl implements Search {
    * }
    * ```
    * @param format Desired format of the response. Only `json` format is supported.
-   * @param searchAddressReverseBatchRequestBody The list of reverse geocoding queries/requests to
-   *                                             process. The list can contain  a max of 10,000 queries and must contain at least 1 query.
+   * @param batchRequest The list of reverse geocoding queries/requests to process. The list can contain
+   *                     a max of 10,000 queries and must contain at least 1 query.
    * @param options The options parameters.
    */
   reverseSearchAddressBatchSync(
     format: JsonFormat,
-    searchAddressReverseBatchRequestBody: BatchRequest,
+    batchRequest: BatchRequest,
     options?: SearchReverseSearchAddressBatchSyncOptionalParams
   ): Promise<SearchReverseSearchAddressBatchSyncResponse> {
     return this.client.sendOperationRequest(
-      { format, searchAddressReverseBatchRequestBody, options },
+      { format, batchRequest, options },
       reverseSearchAddressBatchSyncOperationSpec
     );
   }
@@ -3025,13 +3028,13 @@ export class SearchImpl implements Search {
    * }
    * ```
    * @param format Desired format of the response. Only `json` format is supported.
-   * @param searchAddressReverseBatchRequestBody The list of reverse geocoding queries/requests to
-   *                                             process. The list can contain  a max of 10,000 queries and must contain at least 1 query.
+   * @param batchRequest The list of reverse geocoding queries/requests to process. The list can contain
+   *                     a max of 10,000 queries and must contain at least 1 query.
    * @param options The options parameters.
    */
   async beginReverseSearchAddressBatch(
     format: JsonFormat,
-    searchAddressReverseBatchRequestBody: BatchRequest,
+    batchRequest: BatchRequest,
     options?: SearchReverseSearchAddressBatchOptionalParams
   ): Promise<
     PollerLike<
@@ -3080,7 +3083,7 @@ export class SearchImpl implements Search {
 
     const lro = new LroImpl(
       sendOperation,
-      { format, searchAddressReverseBatchRequestBody, options },
+      { format, batchRequest, options },
       reverseSearchAddressBatchOperationSpec
     );
     return new LroEngine(lro, {
@@ -3276,18 +3279,18 @@ export class SearchImpl implements Search {
    * }
    * ```
    * @param format Desired format of the response. Only `json` format is supported.
-   * @param searchAddressReverseBatchRequestBody The list of reverse geocoding queries/requests to
-   *                                             process. The list can contain  a max of 10,000 queries and must contain at least 1 query.
+   * @param batchRequest The list of reverse geocoding queries/requests to process. The list can contain
+   *                     a max of 10,000 queries and must contain at least 1 query.
    * @param options The options parameters.
    */
   async beginReverseSearchAddressBatchAndWait(
     format: JsonFormat,
-    searchAddressReverseBatchRequestBody: BatchRequest,
+    batchRequest: BatchRequest,
     options?: SearchReverseSearchAddressBatchOptionalParams
   ): Promise<SearchReverseSearchAddressBatchResponse> {
     const poller = await this.beginReverseSearchAddressBatch(
       format,
-      searchAddressReverseBatchRequestBody,
+      batchRequest,
       options
     );
     return poller.pollUntilDone();
@@ -3743,7 +3746,7 @@ export class SearchImpl implements Search {
 // Operation Specifications
 const serializer = coreClient.createSerializer(Mappers, /* isXml */ false);
 
-const getPolygonOperationSpec: coreClient.OperationSpec = {
+const listPolygonsOperationSpec: coreClient.OperationSpec = {
   path: "/search/polygon/{format}",
   httpMethod: "GET",
   responses: {
@@ -3787,7 +3790,7 @@ const fuzzySearchOperationSpec: coreClient.OperationSpec = {
     Parameters.extendedPostalCodesFor,
     Parameters.minFuzzyLevel,
     Parameters.maxFuzzyLevel,
-    Parameters.idxSet,
+    Parameters.indexFilter,
     Parameters.brandFilter,
     Parameters.electricVehicleConnectorFilter,
     Parameters.entityType,
@@ -4053,7 +4056,7 @@ const searchInsideGeometryOperationSpec: coreClient.OperationSpec = {
     Parameters.categoryFilter,
     Parameters.language,
     Parameters.extendedPostalCodesFor,
-    Parameters.idxSet,
+    Parameters.indexFilter,
     Parameters.localizedMapView,
     Parameters.operatingHours
   ],
@@ -4103,7 +4106,7 @@ const fuzzySearchBatchSyncOperationSpec: coreClient.OperationSpec = {
   httpMethod: "POST",
   responses: {
     200: {
-      bodyMapper: Mappers.SearchAddressBatchProcessResult
+      bodyMapper: Mappers.SearchAddressBatchResult
     },
     408: {
       bodyMapper: Mappers.ErrorResponse,
@@ -4113,7 +4116,7 @@ const fuzzySearchBatchSyncOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.ErrorResponse
     }
   },
-  requestBody: Parameters.searchFuzzyBatchRequestBody,
+  requestBody: Parameters.batchRequest,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [Parameters.$host, Parameters.format],
   headerParameters: [
@@ -4129,22 +4132,22 @@ const fuzzySearchBatchOperationSpec: coreClient.OperationSpec = {
   httpMethod: "POST",
   responses: {
     200: {
-      bodyMapper: Mappers.SearchAddressBatchProcessResult
+      bodyMapper: Mappers.SearchAddressBatchResult
     },
     201: {
-      bodyMapper: Mappers.SearchAddressBatchProcessResult
+      bodyMapper: Mappers.SearchAddressBatchResult
     },
     202: {
-      bodyMapper: Mappers.SearchAddressBatchProcessResult
+      bodyMapper: Mappers.SearchAddressBatchResult
     },
     204: {
-      bodyMapper: Mappers.SearchAddressBatchProcessResult
+      bodyMapper: Mappers.SearchAddressBatchResult
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
     }
   },
-  requestBody: Parameters.searchFuzzyBatchRequestBody,
+  requestBody: Parameters.batchRequest,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [Parameters.$host, Parameters.format],
   headerParameters: [
@@ -4160,16 +4163,16 @@ const getFuzzySearchBatchOperationSpec: coreClient.OperationSpec = {
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.SearchAddressBatchProcessResult
+      bodyMapper: Mappers.SearchAddressBatchResult
     },
     201: {
-      bodyMapper: Mappers.SearchAddressBatchProcessResult
+      bodyMapper: Mappers.SearchAddressBatchResult
     },
     202: {
-      bodyMapper: Mappers.SearchAddressBatchProcessResult
+      bodyMapper: Mappers.SearchAddressBatchResult
     },
     204: {
-      bodyMapper: Mappers.SearchAddressBatchProcessResult
+      bodyMapper: Mappers.SearchAddressBatchResult
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
@@ -4185,7 +4188,7 @@ const searchAddressBatchSyncOperationSpec: coreClient.OperationSpec = {
   httpMethod: "POST",
   responses: {
     200: {
-      bodyMapper: Mappers.SearchAddressBatchProcessResult
+      bodyMapper: Mappers.SearchAddressBatchResult
     },
     408: {
       bodyMapper: Mappers.ErrorResponse,
@@ -4195,7 +4198,7 @@ const searchAddressBatchSyncOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.ErrorResponse
     }
   },
-  requestBody: Parameters.searchAddressBatchRequestBody,
+  requestBody: Parameters.batchRequest,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [Parameters.$host, Parameters.format],
   headerParameters: [
@@ -4211,22 +4214,22 @@ const searchAddressBatchOperationSpec: coreClient.OperationSpec = {
   httpMethod: "POST",
   responses: {
     200: {
-      bodyMapper: Mappers.SearchAddressBatchProcessResult
+      bodyMapper: Mappers.SearchAddressBatchResult
     },
     201: {
-      bodyMapper: Mappers.SearchAddressBatchProcessResult
+      bodyMapper: Mappers.SearchAddressBatchResult
     },
     202: {
-      bodyMapper: Mappers.SearchAddressBatchProcessResult
+      bodyMapper: Mappers.SearchAddressBatchResult
     },
     204: {
-      bodyMapper: Mappers.SearchAddressBatchProcessResult
+      bodyMapper: Mappers.SearchAddressBatchResult
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
     }
   },
-  requestBody: Parameters.searchAddressBatchRequestBody,
+  requestBody: Parameters.batchRequest,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [Parameters.$host, Parameters.format],
   headerParameters: [
@@ -4242,16 +4245,16 @@ const getSearchAddressBatchOperationSpec: coreClient.OperationSpec = {
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.SearchAddressBatchProcessResult
+      bodyMapper: Mappers.SearchAddressBatchResult
     },
     201: {
-      bodyMapper: Mappers.SearchAddressBatchProcessResult
+      bodyMapper: Mappers.SearchAddressBatchResult
     },
     202: {
-      bodyMapper: Mappers.SearchAddressBatchProcessResult
+      bodyMapper: Mappers.SearchAddressBatchResult
     },
     204: {
-      bodyMapper: Mappers.SearchAddressBatchProcessResult
+      bodyMapper: Mappers.SearchAddressBatchResult
     },
     default: {
       bodyMapper: Mappers.ErrorResponse
@@ -4277,7 +4280,7 @@ const reverseSearchAddressBatchSyncOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.ErrorResponse
     }
   },
-  requestBody: Parameters.searchAddressReverseBatchRequestBody,
+  requestBody: Parameters.batchRequest,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [Parameters.$host, Parameters.format],
   headerParameters: [
@@ -4308,7 +4311,7 @@ const reverseSearchAddressBatchOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.ErrorResponse
     }
   },
-  requestBody: Parameters.searchAddressReverseBatchRequestBody,
+  requestBody: Parameters.batchRequest,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [Parameters.$host, Parameters.format],
   headerParameters: [

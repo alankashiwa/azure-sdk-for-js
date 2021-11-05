@@ -38,11 +38,6 @@ export interface Polygon {
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly providerID?: string;
-  /**
-   * Reason for the failure to obtain data for this provider.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly error?: string;
   /** Geometry data in GeoJSON format. Please refer to [RFC 7946](https://tools.ietf.org/html/rfc7946) for details. Present only if "error" is not present. */
   geometryData?: GeoJsonObjectUnion;
 }
@@ -233,7 +228,7 @@ export interface SearchAddressResultItem {
    * The viewport that covers the result represented by the top-left and bottom-right coordinates of the viewport.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly viewport?: Viewport;
+  readonly viewport?: BoundingBox;
   /**
    * Array of EntryPoints. Those describe the types of entrances available at the location. The type can be "main" for main entrances such as a front door, or a lobby, and "minor", for side and back doors.
    * NOTE: This property will not be serialized. It can only be populated by the server.
@@ -248,7 +243,7 @@ export interface SearchAddressResultItem {
    * Optional section. Reference geometry id for use with the [Get Search Polygon](https://docs.microsoft.com/rest/api/maps/search/getsearchpolygon) API.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly dataSources?: DataSources;
+  readonly dataSources?: DataSource;
   /**
    * Information on the type of match.
    *
@@ -499,11 +494,11 @@ export interface Address {
 }
 
 /** The viewport that covers the result represented by the top-left and bottom-right coordinates of the viewport. */
-export interface Viewport {
+export interface BoundingBox {
   /** A location represented as a latitude and longitude using short names 'lat' & 'lon'. */
-  topLeftPoint?: LatLongPairAbbreviated;
+  topLeft?: LatLongPairAbbreviated;
   /** A location represented as a latitude and longitude using short names 'lat' & 'lon'. */
-  btmRightPoint?: LatLongPairAbbreviated;
+  bottomRight?: LatLongPairAbbreviated;
 }
 
 /** The entry point for the POI being returned. */
@@ -530,13 +525,13 @@ export interface AddressRanges {
 }
 
 /** Optional section. Reference ids for use with the [Get Search Polygon](https://docs.microsoft.com/rest/api/maps/search/getsearchpolygon) API. */
-export interface DataSources {
+export interface DataSource {
   /** Information about the geometric shape of the result. Only present if type == Geography. */
-  geometry?: Geometry;
+  geometry?: GeometryIdentifier;
 }
 
 /** Information about the geometric shape of the result. Only present if type == Geography. */
-export interface Geometry {
+export interface GeometryIdentifier {
   /**
    * Pass this as geometryId to the [Get Search Polygon](https://docs.microsoft.com/rest/api/maps/search/getsearchpolygon) API to fetch geometry information for this result.
    * NOTE: This property will not be serialized. It can only be populated by the server.
@@ -707,11 +702,11 @@ export interface BatchResultItem {
 }
 
 /** The viewport that covers the result represented by the top-left and bottom-right coordinates of the viewport. */
-export interface BoundingBox {
+export interface Viewport {
   /** A location represented as a latitude and longitude using short names 'lat' & 'lon'. */
-  topLeft?: LatLongPairAbbreviated;
+  topLeftPoint?: LatLongPairAbbreviated;
   /** A location represented as a latitude and longitude using short names 'lat' & 'lon'. */
-  bottomRight?: LatLongPairAbbreviated;
+  btmRightPoint?: LatLongPairAbbreviated;
 }
 
 /** Data contained by a `GeoJson Point`. */
@@ -802,7 +797,7 @@ export type ReverseSearchAddressBatchItemResponse = ReverseSearchAddressResult &
 export type GeoJsonLineString = GeoJsonGeometry & GeoJsonLineStringData & {};
 
 /** This object is returned from a successful Search Address Batch service call. */
-export type SearchAddressBatchProcessResult = BatchResult & {
+export type SearchAddressBatchResult = BatchResult & {
   /**
    * Array containing the batch results.
    * NOTE: This property will not be serialized. It can only be populated by the server.
@@ -1245,11 +1240,11 @@ export type GeoJsonObjectType =
   | "FeatureCollection";
 
 /** Optional parameters. */
-export interface SearchGetPolygonOptionalParams
+export interface SearchListPolygonsOptionalParams
   extends coreClient.OperationOptions {}
 
-/** Contains response data for the getPolygon operation. */
-export type SearchGetPolygonResponse = PolygonResult;
+/** Contains response data for the listPolygons operation. */
+export type SearchListPolygonsResponse = PolygonResult;
 
 /** Optional parameters. */
 export interface SearchFuzzySearchOptionalParams
@@ -1351,7 +1346,7 @@ export interface SearchFuzzySearchOptionalParams
    */
   maxFuzzyLevel?: number;
   /** A comma separated list of indexes which should be utilized for the search. Item order does not matter. Available indexes are: Addr = Address range interpolation, Geo = Geographies, PAD = Point Addresses, POI = Points of interest, Str = Streets, Xstr = Cross Streets (intersections) */
-  idxSet?: SearchIndexes[];
+  indexFilter?: SearchIndexes[];
   /**
    * A comma-separated list of brand names which could be used to restrict the result to specific brands. Item order does not matter. When multiple brands are provided, only results that belong to (at least) one of the provided list will be returned. Brands that contain a "," in their name should be put into quotes.
    *
@@ -1972,8 +1967,6 @@ export interface SearchSearchStructuredAddressOptionalParams
    * Please refer to [Supported Views](https://aka.ms/AzureMapsLocalizationViews) for details and to see the available Views.
    */
   localizedMapView?: LocalizedMapView;
-  /** The 2 or 3 letter [ISO3166-1](https://www.iso.org/iso-3166-country-codes.html) country code portion of an address. E.g. US. */
-  countryCode?: string;
   /** The street number portion of an address */
   streetNumber?: string;
   /** The street name portion of an address */
@@ -2049,7 +2042,7 @@ export interface SearchSearchInsideGeometryOptionalParams
    */
   extendedPostalCodesFor?: SearchIndexes[];
   /** A comma separated list of indexes which should be utilized for the search. Item order does not matter. Available indexes are: Addr = Address range interpolation, Geo = Geographies, PAD = Point Addresses, POI = Points of interest, Str = Streets, Xstr = Cross Streets (intersections) */
-  idxSet?: SearchIndexes[];
+  indexFilter?: SearchIndexes[];
   /**
    * The View parameter (also called the "user region" parameter) allows you to show the correct maps for a certain country/region for geopolitically disputed regions. Different countries have different views of such regions, and the View parameter allows your application to comply with the view required by the country your application will be serving. By default, the View parameter is set to “Unified” even if you haven’t defined it in  the request. It is your responsibility to determine the location of your users, and then set the View parameter correctly for that location. Alternatively, you have the option to set ‘View=Auto’, which will return the map data based on the IP  address of the request. The View parameter in Azure Maps must be used in compliance with applicable laws, including those  regarding mapping, of the country where maps, images and other data and third party content that you are authorized to  access via Azure Maps is made available. Example: view=IN.
    *
@@ -2134,7 +2127,7 @@ export interface SearchFuzzySearchBatchSyncOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the fuzzySearchBatchSync operation. */
-export type SearchFuzzySearchBatchSyncResponse = SearchAddressBatchProcessResult;
+export type SearchFuzzySearchBatchSyncResponse = SearchAddressBatchResult;
 
 /** Optional parameters. */
 export interface SearchFuzzySearchBatchOptionalParams
@@ -2146,7 +2139,7 @@ export interface SearchFuzzySearchBatchOptionalParams
 }
 
 /** Contains response data for the fuzzySearchBatch operation. */
-export type SearchFuzzySearchBatchResponse = SearchAddressBatchProcessResult;
+export type SearchFuzzySearchBatchResponse = SearchAddressBatchResult;
 
 /** Optional parameters. */
 export interface SearchGetFuzzySearchBatchOptionalParams
@@ -2158,14 +2151,14 @@ export interface SearchGetFuzzySearchBatchOptionalParams
 }
 
 /** Contains response data for the getFuzzySearchBatch operation. */
-export type SearchGetFuzzySearchBatchResponse = SearchAddressBatchProcessResult;
+export type SearchGetFuzzySearchBatchResponse = SearchAddressBatchResult;
 
 /** Optional parameters. */
 export interface SearchSearchAddressBatchSyncOptionalParams
   extends coreClient.OperationOptions {}
 
 /** Contains response data for the searchAddressBatchSync operation. */
-export type SearchSearchAddressBatchSyncResponse = SearchAddressBatchProcessResult;
+export type SearchSearchAddressBatchSyncResponse = SearchAddressBatchResult;
 
 /** Optional parameters. */
 export interface SearchSearchAddressBatchOptionalParams
@@ -2177,7 +2170,7 @@ export interface SearchSearchAddressBatchOptionalParams
 }
 
 /** Contains response data for the searchAddressBatch operation. */
-export type SearchSearchAddressBatchResponse = SearchAddressBatchProcessResult;
+export type SearchSearchAddressBatchResponse = SearchAddressBatchResult;
 
 /** Optional parameters. */
 export interface SearchGetSearchAddressBatchOptionalParams
@@ -2189,7 +2182,7 @@ export interface SearchGetSearchAddressBatchOptionalParams
 }
 
 /** Contains response data for the getSearchAddressBatch operation. */
-export type SearchGetSearchAddressBatchResponse = SearchAddressBatchProcessResult;
+export type SearchGetSearchAddressBatchResponse = SearchAddressBatchResult;
 
 /** Optional parameters. */
 export interface SearchReverseSearchAddressBatchSyncOptionalParams

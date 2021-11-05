@@ -287,8 +287,8 @@ export const maxFuzzyLevel: OperationQueryParameter = {
   }
 };
 
-export const idxSet: OperationQueryParameter = {
-  parameterPath: ["options", "idxSet"],
+export const indexFilter: OperationQueryParameter = {
+  parameterPath: ["options", "indexFilter"],
   mapper: {
     serializedName: "idxSet",
     type: {
@@ -508,10 +508,11 @@ export const includeMatchType: OperationQueryParameter = {
 };
 
 export const countryCode: OperationQueryParameter = {
-  parameterPath: ["options", "countryCode"],
+  parameterPath: "countryCode",
   mapper: {
     defaultValue: "US",
     serializedName: "countryCode",
+    required: true,
     type: {
       name: "String"
     }
@@ -657,8 +658,8 @@ export const top1: OperationQueryParameter = {
   }
 };
 
-export const searchFuzzyBatchRequestBody: OperationParameter = {
-  parameterPath: "searchFuzzyBatchRequestBody",
+export const batchRequest: OperationParameter = {
+  parameterPath: "batchRequest",
   mapper: BatchRequestMapper
 };
 
@@ -671,14 +672,4 @@ export const batchId: OperationURLParameter = {
       name: "String"
     }
   }
-};
-
-export const searchAddressBatchRequestBody: OperationParameter = {
-  parameterPath: "searchAddressBatchRequestBody",
-  mapper: BatchRequestMapper
-};
-
-export const searchAddressReverseBatchRequestBody: OperationParameter = {
-  parameterPath: "searchAddressReverseBatchRequestBody",
-  mapper: BatchRequestMapper
 };

@@ -6,6 +6,5 @@
  * Changes may cause incorrect behavior and will be lost if the code is regenerated.
  */
 
-export * from "./generated/models";
-export { GeneratedClient as SearchClient } from "./generated/generatedClient";
-export * from "./generated/operationsInterfaces";
+export * from "./searchClient";
+export * from "./models";

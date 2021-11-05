@@ -1,6 +1,14 @@
 {
   "extends": "../../../tsconfig.package",
   "compilerOptions": {
+    "strict": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "es6",
+    "sourceMap": true,
+    "declarationMap": true,
+    "importHelpers": true,
     "outDir": "./dist-esm",
     "declarationDir": "./types",
     "baseUrl": "./",
@@ -8,5 +16,6 @@
       "@azure/maps-search": ["./src/index"]
     }
   },
-  "include": ["src/**/*.ts", "test/**/*.ts", "samples-dev/**/*.ts"]
+  "include": ["src/**/*.ts", "test/**/*.ts", "samples-dev/**/*.ts"],
+  "exclude": ["node_modules"]
 }

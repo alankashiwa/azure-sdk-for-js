@@ -9,8 +9,8 @@
 import { PollerLike, PollOperationState } from "@azure/core-lro";
 import {
   JsonFormat,
-  SearchGetPolygonOptionalParams,
-  SearchGetPolygonResponse,
+  SearchListPolygonsOptionalParams,
+  SearchListPolygonsResponse,
   ResponseFormat,
   SearchFuzzySearchOptionalParams,
   SearchFuzzySearchResponse,
@@ -81,11 +81,11 @@ export interface Search {
    *                    Search request.
    * @param options The options parameters.
    */
-  getPolygon(
+  listPolygons(
     format: JsonFormat,
     geometryIds: string[],
-    options?: SearchGetPolygonOptionalParams
-  ): Promise<SearchGetPolygonResponse>;
+    options?: SearchListPolygonsOptionalParams
+  ): Promise<SearchListPolygonsResponse>;
   /**
    * **Free Form Search**
    *
@@ -271,10 +271,13 @@ export interface Search {
    * handle everything from exact  street addresses or street or intersections as well as higher level
    * geographies such as city centers,  counties, states etc.
    * @param format Desired format of the response. Value can be either _json_ or _xml_.
+   * @param countryCode The 2 or 3 letter [ISO3166-1](https://www.iso.org/iso-3166-country-codes.html)
+   *                    country code portion of an address. E.g. US.
    * @param options The options parameters.
    */
   searchStructuredAddress(
     format: ResponseFormat,
+    countryCode: string,
     options?: SearchSearchStructuredAddressOptionalParams
   ): Promise<SearchSearchStructuredAddressResponse>;
   /**
@@ -538,13 +541,13 @@ export interface Search {
    * }
    * ```
    * @param format Desired format of the response. Only `json` format is supported.
-   * @param searchFuzzyBatchRequestBody The list of search fuzzy queries/requests to process. The list
-   *                                    can contain  a max of 10,000 queries and must contain at least 1 query.
+   * @param batchRequest The list of search fuzzy queries/requests to process. The list can contain  a
+   *                     max of 10,000 queries and must contain at least 1 query.
    * @param options The options parameters.
    */
   fuzzySearchBatchSync(
     format: JsonFormat,
-    searchFuzzyBatchRequestBody: BatchRequest,
+    batchRequest: BatchRequest,
     options?: SearchFuzzySearchBatchSyncOptionalParams
   ): Promise<SearchFuzzySearchBatchSyncResponse>;
   /**
@@ -738,13 +741,13 @@ export interface Search {
    * }
    * ```
    * @param format Desired format of the response. Only `json` format is supported.
-   * @param searchFuzzyBatchRequestBody The list of search fuzzy queries/requests to process. The list
-   *                                    can contain a max of 10,000 queries and must contain at least 1 query.
+   * @param batchRequest The list of search fuzzy queries/requests to process. The list can contain a max
+   *                     of 10,000 queries and must contain at least 1 query.
    * @param options The options parameters.
    */
   beginFuzzySearchBatch(
     format: JsonFormat,
-    searchFuzzyBatchRequestBody: BatchRequest,
+    batchRequest: BatchRequest,
     options?: SearchFuzzySearchBatchOptionalParams
   ): Promise<
     PollerLike<
@@ -943,13 +946,13 @@ export interface Search {
    * }
    * ```
    * @param format Desired format of the response. Only `json` format is supported.
-   * @param searchFuzzyBatchRequestBody The list of search fuzzy queries/requests to process. The list
-   *                                    can contain a max of 10,000 queries and must contain at least 1 query.
+   * @param batchRequest The list of search fuzzy queries/requests to process. The list can contain a max
+   *                     of 10,000 queries and must contain at least 1 query.
    * @param options The options parameters.
    */
   beginFuzzySearchBatchAndWait(
     format: JsonFormat,
-    searchFuzzyBatchRequestBody: BatchRequest,
+    batchRequest: BatchRequest,
     options?: SearchFuzzySearchBatchOptionalParams
   ): Promise<SearchFuzzySearchBatchResponse>;
   /**
@@ -1533,13 +1536,13 @@ export interface Search {
    * }
    * ```
    * @param format Desired format of the response. Only `json` format is supported.
-   * @param searchAddressBatchRequestBody The list of address geocoding queries/requests to process. The
-   *                                      list can contain  a max of 10,000 queries and must contain at least 1 query.
+   * @param batchRequest The list of address geocoding queries/requests to process. The list can contain
+   *                     a max of 10,000 queries and must contain at least 1 query.
    * @param options The options parameters.
    */
   searchAddressBatchSync(
     format: JsonFormat,
-    searchAddressBatchRequestBody: BatchRequest,
+    batchRequest: BatchRequest,
     options?: SearchSearchAddressBatchSyncOptionalParams
   ): Promise<SearchSearchAddressBatchSyncResponse>;
   /**
@@ -1724,13 +1727,13 @@ export interface Search {
    * }
    * ```
    * @param format Desired format of the response. Only `json` format is supported.
-   * @param searchAddressBatchRequestBody The list of address geocoding queries/requests to process. The
-   *                                      list can contain  a max of 10,000 queries and must contain at least 1 query.
+   * @param batchRequest The list of address geocoding queries/requests to process. The list can contain
+   *                     a max of 10,000 queries and must contain at least 1 query.
    * @param options The options parameters.
    */
   beginSearchAddressBatch(
     format: JsonFormat,
-    searchAddressBatchRequestBody: BatchRequest,
+    batchRequest: BatchRequest,
     options?: SearchSearchAddressBatchOptionalParams
   ): Promise<
     PollerLike<
@@ -1920,13 +1923,13 @@ export interface Search {
    * }
    * ```
    * @param format Desired format of the response. Only `json` format is supported.
-   * @param searchAddressBatchRequestBody The list of address geocoding queries/requests to process. The
-   *                                      list can contain  a max of 10,000 queries and must contain at least 1 query.
+   * @param batchRequest The list of address geocoding queries/requests to process. The list can contain
+   *                     a max of 10,000 queries and must contain at least 1 query.
    * @param options The options parameters.
    */
   beginSearchAddressBatchAndWait(
     format: JsonFormat,
-    searchAddressBatchRequestBody: BatchRequest,
+    batchRequest: BatchRequest,
     options?: SearchSearchAddressBatchOptionalParams
   ): Promise<SearchSearchAddressBatchResponse>;
   /**
@@ -2496,13 +2499,13 @@ export interface Search {
    * }
    * ```
    * @param format Desired format of the response. Only `json` format is supported.
-   * @param searchAddressReverseBatchRequestBody The list of reverse geocoding queries/requests to
-   *                                             process. The list can contain  a max of 10,000 queries and must contain at least 1 query.
+   * @param batchRequest The list of reverse geocoding queries/requests to process. The list can contain
+   *                     a max of 10,000 queries and must contain at least 1 query.
    * @param options The options parameters.
    */
   reverseSearchAddressBatchSync(
     format: JsonFormat,
-    searchAddressReverseBatchRequestBody: BatchRequest,
+    batchRequest: BatchRequest,
     options?: SearchReverseSearchAddressBatchSyncOptionalParams
   ): Promise<SearchReverseSearchAddressBatchSyncResponse>;
   /**
@@ -2691,13 +2694,13 @@ export interface Search {
    * }
    * ```
    * @param format Desired format of the response. Only `json` format is supported.
-   * @param searchAddressReverseBatchRequestBody The list of reverse geocoding queries/requests to
-   *                                             process. The list can contain  a max of 10,000 queries and must contain at least 1 query.
+   * @param batchRequest The list of reverse geocoding queries/requests to process. The list can contain
+   *                     a max of 10,000 queries and must contain at least 1 query.
    * @param options The options parameters.
    */
   beginReverseSearchAddressBatch(
     format: JsonFormat,
-    searchAddressReverseBatchRequestBody: BatchRequest,
+    batchRequest: BatchRequest,
     options?: SearchReverseSearchAddressBatchOptionalParams
   ): Promise<
     PollerLike<
@@ -2891,13 +2894,13 @@ export interface Search {
    * }
    * ```
    * @param format Desired format of the response. Only `json` format is supported.
-   * @param searchAddressReverseBatchRequestBody The list of reverse geocoding queries/requests to
-   *                                             process. The list can contain  a max of 10,000 queries and must contain at least 1 query.
+   * @param batchRequest The list of reverse geocoding queries/requests to process. The list can contain
+   *                     a max of 10,000 queries and must contain at least 1 query.
    * @param options The options parameters.
    */
   beginReverseSearchAddressBatchAndWait(
     format: JsonFormat,
-    searchAddressReverseBatchRequestBody: BatchRequest,
+    batchRequest: BatchRequest,
     options?: SearchReverseSearchAddressBatchOptionalParams
   ): Promise<SearchReverseSearchAddressBatchResponse>;
   /**

@@ -42,13 +42,6 @@ export const Polygon: coreClient.CompositeMapper = {
           name: "String"
         }
       },
-      error: {
-        serializedName: "error",
-        readOnly: true,
-        type: {
-          name: "String"
-        }
-      },
       geometryData: {
         serializedName: "geometryData",
         type: {
@@ -381,7 +374,7 @@ export const SearchAddressResultItem: coreClient.CompositeMapper = {
         serializedName: "viewport",
         type: {
           name: "Composite",
-          className: "Viewport"
+          className: "BoundingBox"
         }
       },
       entryPoints: {
@@ -408,7 +401,7 @@ export const SearchAddressResultItem: coreClient.CompositeMapper = {
         serializedName: "dataSources",
         type: {
           name: "Composite",
-          className: "DataSources"
+          className: "DataSource"
         }
       },
       matchType: {
@@ -833,19 +826,19 @@ export const Address: coreClient.CompositeMapper = {
   }
 };
 
-export const Viewport: coreClient.CompositeMapper = {
+export const BoundingBox: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
-    className: "Viewport",
+    className: "BoundingBox",
     modelProperties: {
-      topLeftPoint: {
+      topLeft: {
         serializedName: "topLeftPoint",
         type: {
           name: "Composite",
           className: "LatLongPairAbbreviated"
         }
       },
-      btmRightPoint: {
+      bottomRight: {
         serializedName: "btmRightPoint",
         type: {
           name: "Composite",
@@ -914,26 +907,26 @@ export const AddressRanges: coreClient.CompositeMapper = {
   }
 };
 
-export const DataSources: coreClient.CompositeMapper = {
+export const DataSource: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
-    className: "DataSources",
+    className: "DataSource",
     modelProperties: {
       geometry: {
         serializedName: "geometry",
         type: {
           name: "Composite",
-          className: "Geometry"
+          className: "GeometryIdentifier"
         }
       }
     }
   }
 };
 
-export const Geometry: coreClient.CompositeMapper = {
+export const GeometryIdentifier: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
-    className: "Geometry",
+    className: "GeometryIdentifier",
     modelProperties: {
       id: {
         serializedName: "id",
@@ -1287,19 +1280,19 @@ export const BatchResultItem: coreClient.CompositeMapper = {
   }
 };
 
-export const BoundingBox: coreClient.CompositeMapper = {
+export const Viewport: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
-    className: "BoundingBox",
+    className: "Viewport",
     modelProperties: {
-      topLeft: {
+      topLeftPoint: {
         serializedName: "topLeftPoint",
         type: {
           name: "Composite",
           className: "LatLongPairAbbreviated"
         }
       },
-      bottomRight: {
+      btmRightPoint: {
         serializedName: "btmRightPoint",
         type: {
           name: "Composite",
@@ -1615,10 +1608,10 @@ export const GeoJsonLineString: coreClient.CompositeMapper = {
   }
 };
 
-export const SearchAddressBatchProcessResult: coreClient.CompositeMapper = {
+export const SearchAddressBatchResult: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
-    className: "SearchAddressBatchProcessResult",
+    className: "SearchAddressBatchResult",
     modelProperties: {
       ...BatchResult.type.modelProperties,
       batchItems: {
