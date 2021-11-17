@@ -6,7 +6,7 @@
  */
 
 import { DefaultAzureCredential } from "@azure/identity";
-import { TokenCredential, AzureKeyCredential } from "@azure/core-auth";
+import { AzureKeyCredential } from "@azure/core-auth";
 import {
   SearchClient,
   Coordinate,
@@ -27,19 +27,22 @@ dotenv.config();
  */
 
 async function main() {
-  let credential: TokenCredential | AzureKeyCredential;
-  let mapsClientId: string | undefined;
+  let client: SearchClient;
 
   if (process.env.MAPS_SUBSCRIPTION_KEY) {
     // Use subscription key authentication
-    credential = new AzureKeyCredential(process.env.MAPS_SUBSCRIPTION_KEY);
+    const credential = new AzureKeyCredential(process.env.MAPS_SUBSCRIPTION_KEY);
+    client = new SearchClient(credential);
   } else {
     // Use Azure AD authentication
-    credential = new DefaultAzureCredential();
-    mapsClientId = process.env.MAPS_CLIENT_ID;
+    if (process.env.MAPS_CLIENT_ID) {
+      const credential = new DefaultAzureCredential();
+      const mapsClientId = process.env.MAPS_CLIENT_ID;
+      client = new SearchClient(credential, mapsClientId);
+    } else {
+      throw Error("Cannot authenticate the client.");
+    }
   }
-
-  const client = new SearchClient(credential, { clientId: mapsClientId });
 
   console.log(" --- Geocode address:");
   console.log(await client.searchAddress("400 Broad, Seattle"));

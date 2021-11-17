@@ -40,8 +40,11 @@ import { MapsCommonClientOptions } from "./mapsCommonOptions";
  */
 export interface SearchClientOptions extends MapsCommonClientOptions {}
 
+const isSearchClientOptions = (clientIdOrOptions: any): clientIdOrOptions is SearchClientOptions =>
+  clientIdOrOptions && typeof clientIdOrOptions !== "string";
+
 /**
- * Client class for interacting with Azure Maps Search Service to query the ISO country code for the provided IP address
+ * Client class for interacting with Azure Maps Search Service.
  */
 export class SearchClient {
   /**
@@ -52,22 +55,43 @@ export class SearchClient {
   /**
    * Creates an instance of SearchClient.
    *
-   * Example usage:
-   * ```ts
-   * import { SearchClient } from "@azure/maps-search";
-   * import { AzureKeyCredential } from "@azure/core-auth"
-   *
-   * const client = new SearchClient(new AzureKeyCredential('<subscription-key>'));
-   * ```
-   * @param credential - Used to authenticate requests to the service.
-   * @param options - Used to configure the Search Client
+   * @param credential - An AzureKeyCredential instance used to authenticate requests to the service.
    */
-  constructor(credential: TokenCredential | AzureKeyCredential, options: SearchClientOptions = {}) {
+  constructor(credential: AzureKeyCredential);
+  /**
+   * Creates an instance of SearchClient.
+   *
+   * @param credential - An AzureKeyCredential instance used to authenticate requests to the service
+   * @param options - Options used to configure the Search Client
+   */
+  constructor(credential: AzureKeyCredential, options?: SearchClientOptions);
+  /**
+   * Creates an instance of SearchClient.
+   *
+   * @param credential - An TokenCredential instance used to authenticate requests to the service
+   * @param clientId - The Azure Maps client id of a specific map resource
+   */
+  constructor(credential: TokenCredential, clientId: string);
+  /**
+   * Creates an instance of SearchClient.
+   *
+   * @param credential - An TokenCredential instance used to authenticate requests to the service
+   * @param clientId - The Azure Maps client id of a specific map resource
+   * @param options - Options used to configure the Search Client
+   */
+  constructor(credential: TokenCredential, clientId: string, options?: SearchClientOptions);
+  constructor(
+    credential: TokenCredential | AzureKeyCredential,
+    clientIdOrOptions?: string | SearchClientOptions,
+    maybeOptions: SearchClientOptions = {}
+  ) {
+    const options = isSearchClientOptions(clientIdOrOptions) ? clientIdOrOptions : maybeOptions;
     this.defaultFormat = "json";
     this.client = new GeneratedClient(options);
     if (isTokenCredential(credential)) {
-      if (!options.clientId) {
-        throw Error("option: maps client id is needed for TokenCredential");
+      const clientId = typeof clientIdOrOptions === "string" ? clientIdOrOptions : "";
+      if (!clientId) {
+        throw Error("Client id is needed for TokenCredential");
       }
       this.client.pipeline.addPolicy(
         bearerTokenAuthenticationPolicy({
@@ -75,7 +99,7 @@ export class SearchClient {
           scopes: "https://atlas.microsoft.com/.default"
         })
       );
-      this.client.pipeline.addPolicy(mapsClientIdPolicy(options.clientId));
+      this.client.pipeline.addPolicy(mapsClientIdPolicy(clientId));
     } else {
       this.client.pipeline.addPolicy(mapsAzureKeyCredentialPolicy(credential));
     }
@@ -134,7 +158,7 @@ export class SearchClient {
    */
   public async searchNearbyPointOfInterest(
     coordinate: Coordinate,
-    options: SearchNearbyPointOfInterestOptions
+    options: SearchNearbyPointOfInterestOptions = {}
   ) {
     const internalOptions = mapSearchNearbyPointOfInterestOptions(options);
     return this.client.search.searchNearbyPointOfInterest(

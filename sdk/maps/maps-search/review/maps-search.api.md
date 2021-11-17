@@ -337,22 +337,25 @@ export interface SearchBaseOptions extends OperationOptions {
 
 // @public
 export class SearchClient {
-    constructor(credential: TokenCredential | AzureKeyCredential, options?: SearchClientOptions);
-    beginFuzzySearchBatch(batchRequest: BatchRequest, options: BeginFuzzySearchBatchOptions): Promise<PollerLike<PollOperationState<SearchAddressBatchResult>, SearchAddressBatchResult>>;
-    beginReverseSearchAddressBatch(batchRequest: BatchRequest, options: BeginReverseSearchAddressBatchOptions): Promise<PollerLike<PollOperationState<ReverseSearchAddressBatchProcessResult>, ReverseSearchAddressBatchProcessResult>>;
-    beginSearchAddressBatch(batchRequest: BatchRequest, options: BeginSearchAddressBatchOptions): Promise<PollerLike<PollOperationState<SearchAddressBatchResult>, SearchAddressBatchResult>>;
+    constructor(credential: AzureKeyCredential);
+    constructor(credential: AzureKeyCredential, options?: SearchClientOptions);
+    constructor(credential: TokenCredential, clientId: string);
+    constructor(credential: TokenCredential, clientId: string, options?: SearchClientOptions);
+    beginFuzzySearchBatch(batchRequest: BatchRequest, options?: BeginFuzzySearchBatchOptions): Promise<PollerLike<PollOperationState<SearchAddressBatchResult>, SearchAddressBatchResult>>;
+    beginReverseSearchAddressBatch(batchRequest: BatchRequest, options?: BeginReverseSearchAddressBatchOptions): Promise<PollerLike<PollOperationState<ReverseSearchAddressBatchProcessResult>, ReverseSearchAddressBatchProcessResult>>;
+    beginSearchAddressBatch(batchRequest: BatchRequest, options?: BeginSearchAddressBatchOptions): Promise<PollerLike<PollOperationState<SearchAddressBatchResult>, SearchAddressBatchResult>>;
     fuzzySearch(query: string, options?: FuzzySearchOptions): Promise<SearchAddressResult>;
     getPointOfInterestCategoryTree(options?: GetPointOfInterestCategoryTreeOptions): Promise<PointOfInterestCategoryTreeResult>;
     listPolygons(geometryIds: string[], options?: ListPolygonsOptions): Promise<PolygonResult>;
     reverseSearchAddress(coordinate: Coordinate, options?: ReverseSearchAddressOptions): Promise<ReverseSearchAddressResult>;
     reverseSearchCrossStreetAddress(coordinate: Coordinate, options?: ReverseSearchCrossStreetAddressOptions): Promise<ReverseSearchCrossStreetAddressResult>;
     searchAddress(query: string, options?: SearchAddressOptions): Promise<SearchAddressResult>;
-    searchAlongRoute(query: string, maxDetourTime: number, route: GeoJsonLineString, options: SearchAlongRouteOptions): Promise<SearchAddressResult>;
-    searchInsideGeometry(query: string, geometry: GeoJsonObjectUnion, options: SearchInsideGeometryOptions): Promise<SearchAddressResult>;
-    searchNearbyPointOfInterest(coordinate: Coordinate, options: SearchNearbyPointOfInterestOptions): Promise<SearchAddressResult>;
+    searchAlongRoute(query: string, maxDetourTime: number, route: GeoJsonLineString, options?: SearchAlongRouteOptions): Promise<SearchAddressResult>;
+    searchInsideGeometry(query: string, geometry: GeoJsonObjectUnion, options?: SearchInsideGeometryOptions): Promise<SearchAddressResult>;
+    searchNearbyPointOfInterest(coordinate: Coordinate, options?: SearchNearbyPointOfInterestOptions): Promise<SearchAddressResult>;
     searchPointOfInterest(query: string, options?: SearchPointOfInterestOptions): Promise<SearchAddressResult>;
     searchPointOfInterestCategory(query: string, options?: SearchPointOfInterestOptions): Promise<SearchAddressResult>;
-    searchStructuredAddress(countryCode: string, options: SearchStructuredAddressOptions): Promise<SearchAddressResult>;
+    searchStructuredAddress(countryCode: string, options?: SearchStructuredAddressOptions): Promise<SearchAddressResult>;
 }
 
 // Warning: (ae-forgotten-export) The symbol "MapsCommonClientOptions" needs to be exported by the entry point index.d.ts
