@@ -110,6 +110,7 @@ export type EntryPointType = string;
 
 // @public
 export interface FuzzySearchOptions extends SearchPointOfInterestOptions {
+    entityType?: GeographicEntityType;
     indexFilter?: SearchIndexes[];
     maxFuzzyLevel?: number;
     minFuzzyLevel?: number;
@@ -118,11 +119,54 @@ export interface FuzzySearchOptions extends SearchPointOfInterestOptions {
 // @public
 export type GeographicEntityType = string;
 
-// Warning: (ae-forgotten-export) The symbol "GeoJsonGeometry" needs to be exported by the entry point index.d.ts
-// Warning: (ae-forgotten-export) The symbol "GeoJsonLineStringData" needs to be exported by the entry point index.d.ts
-//
 // @public
-export type GeoJsonLineString = GeoJsonGeometry & GeoJsonLineStringData & {};
+export interface GeoJsonCircleFeature extends GeoJsonFeature {
+    // (undocumented)
+    geometry: GeoJsonPoint;
+    // (undocumented)
+    properties: {
+        subType: "Circle";
+        radius: number;
+    };
+}
+
+// @public
+export interface GeoJsonFeature {
+    // (undocumented)
+    geometry: GeoJsonPolygon | GeoJsonPoint;
+    // (undocumented)
+    id?: string | number | undefined;
+    // (undocumented)
+    properties?: {
+        [name: string]: any;
+    };
+    // (undocumented)
+    type: "Feature";
+}
+
+// @public
+export interface GeoJsonFeatureCollection {
+    // (undocumented)
+    features: GeoJsonFeature[];
+    // (undocumented)
+    type: "FeatureCollection";
+}
+
+// @public (undocumented)
+export interface GeoJsonGeometryCollection {
+    // (undocumented)
+    geometries: GeoJsonPolygon[];
+    // (undocumented)
+    type: "GeometryCollection";
+}
+
+// @public
+export interface GeoJsonLineString {
+    // (undocumented)
+    coordinates: number[][];
+    // (undocumented)
+    type: "LineString";
+}
 
 // Warning: (ae-forgotten-export) The symbol "GeoJsonObject" needs to be exported by the entry point index.d.ts
 // Warning: (ae-forgotten-export) The symbol "GeoJsonGeometryUnion" needs to be exported by the entry point index.d.ts
@@ -130,7 +174,29 @@ export type GeoJsonLineString = GeoJsonGeometry & GeoJsonLineStringData & {};
 // Warning: (ae-forgotten-export) The symbol "GeoJsonFeatureCollection" needs to be exported by the entry point index.d.ts
 //
 // @public (undocumented)
-export type GeoJsonObjectUnion = GeoJsonObject | GeoJsonGeometryUnion | GeoJsonFeature | GeoJsonFeatureCollection;
+export type GeoJsonObjectUnion = GeoJsonObject | GeoJsonGeometryUnion | GeoJsonFeature_2 | GeoJsonFeatureCollection_2;
+
+// @public
+export interface GeoJsonPoint {
+    // (undocumented)
+    coordinates: number[];
+    // (undocumented)
+    type: "Point";
+}
+
+// @public
+export interface GeoJsonPolygon {
+    // (undocumented)
+    coordinates: number[][][];
+    // (undocumented)
+    type: "Polygon";
+}
+
+// @public
+export interface GeoJsonPolygonFeature extends GeoJsonFeature {
+    // (undocumented)
+    geometry: GeoJsonPolygon;
+}
 
 // @public
 export interface GeometryIdentifier {
@@ -141,6 +207,9 @@ export interface GeometryIdentifier {
 export interface GetPointOfInterestCategoryTreeOptions extends OperationOptions {
     language?: string;
 }
+
+// @public (undocumented)
+export const isSearchClientOptions: (clientIdOrOptions: any) => clientIdOrOptions is SearchClientOptions;
 
 // @public
 export interface LatLongPairAbbreviated {
@@ -272,17 +341,22 @@ export interface ReverseSearchCrossStreetAddressResult {
 export type RoadUseType = string;
 
 // @public
-export type SearchAddressBatchResult = BatchResult & {
-    readonly batchItems?: SearchAddressBatchItem[];
-};
-
-// @public
-export interface SearchAddressOptions extends SearchBaseOptions {
+export interface SearchAddressBaseOptions extends SearchBaseOptions {
     boundingBox?: BoundingBox;
     coordinate?: Coordinate;
     countryFilter?: string[];
     isTypeAhead?: boolean;
     radiusInMeters?: number;
+}
+
+// @public
+export type SearchAddressBatchResult = BatchResult & {
+    readonly batchItems?: SearchAddressBatchItem[];
+};
+
+// @public (undocumented)
+export interface SearchAddressOptions extends SearchAddressBaseOptions {
+    entityType?: GeographicEntityType;
 }
 
 // @public
@@ -327,7 +401,6 @@ export interface SearchAlongRouteOptions extends OperationOptions {
 
 // @public
 export interface SearchBaseOptions extends OperationOptions {
-    entityType?: GeographicEntityType;
     extendedPostalCodesFor?: SearchIndexes[];
     language?: string;
     localizedMapView?: LocalizedMapView;
@@ -344,24 +417,29 @@ export class SearchClient {
     beginFuzzySearchBatch(batchRequest: BatchRequest, options?: BeginFuzzySearchBatchOptions): Promise<PollerLike<PollOperationState<SearchAddressBatchResult>, SearchAddressBatchResult>>;
     beginReverseSearchAddressBatch(batchRequest: BatchRequest, options?: BeginReverseSearchAddressBatchOptions): Promise<PollerLike<PollOperationState<ReverseSearchAddressBatchProcessResult>, ReverseSearchAddressBatchProcessResult>>;
     beginSearchAddressBatch(batchRequest: BatchRequest, options?: BeginSearchAddressBatchOptions): Promise<PollerLike<PollOperationState<SearchAddressBatchResult>, SearchAddressBatchResult>>;
-    fuzzySearch(query: string, options?: FuzzySearchOptions): Promise<SearchAddressResult>;
+    fuzzySearch(keyword: string, options?: FuzzySearchOptions): Promise<SearchAddressResult>;
     getPointOfInterestCategoryTree(options?: GetPointOfInterestCategoryTreeOptions): Promise<PointOfInterestCategoryTreeResult>;
     listPolygons(geometryIds: string[], options?: ListPolygonsOptions): Promise<PolygonResult>;
     reverseSearchAddress(coordinate: Coordinate, options?: ReverseSearchAddressOptions): Promise<ReverseSearchAddressResult>;
     reverseSearchCrossStreetAddress(coordinate: Coordinate, options?: ReverseSearchCrossStreetAddressOptions): Promise<ReverseSearchCrossStreetAddressResult>;
-    searchAddress(query: string, options?: SearchAddressOptions): Promise<SearchAddressResult>;
-    searchAlongRoute(query: string, maxDetourTime: number, route: GeoJsonLineString, options?: SearchAlongRouteOptions): Promise<SearchAddressResult>;
-    searchInsideGeometry(query: string, geometry: GeoJsonObjectUnion, options?: SearchInsideGeometryOptions): Promise<SearchAddressResult>;
+    searchAddress(address: string, options?: SearchAddressOptions): Promise<SearchAddressResult>;
+    searchAlongRoute(poiName: string, maxDetourTime: number, route: GeoJsonLineString, options?: SearchAlongRouteOptions): Promise<SearchAddressResult>;
+    searchInsideGeometry(poiName: string, geometry: GeoJsonPolygon | GeoJsonGeometryCollection | GeoJsonFeatureCollection, options?: SearchInsideGeometryOptions): Promise<SearchAddressResult>;
     searchNearbyPointOfInterest(coordinate: Coordinate, options?: SearchNearbyPointOfInterestOptions): Promise<SearchAddressResult>;
-    searchPointOfInterest(query: string, options?: SearchPointOfInterestOptions): Promise<SearchAddressResult>;
-    searchPointOfInterestCategory(query: string, options?: SearchPointOfInterestOptions): Promise<SearchAddressResult>;
-    searchStructuredAddress(countryCode: string, options?: SearchStructuredAddressOptions): Promise<SearchAddressResult>;
+    searchPointOfInterest(poiName: string, options?: SearchPointOfInterestOptions): Promise<SearchAddressResult>;
+    searchPointOfInterestCategory(poiCategoryName: string, options?: SearchPointOfInterestOptions): Promise<SearchAddressResult>;
+    searchStructuredAddress(structuredAddress: StructuredAddress, options?: SearchStructuredAddressOptions): Promise<SearchAddressResult>;
 }
 
-// Warning: (ae-forgotten-export) The symbol "MapsCommonClientOptions" needs to be exported by the entry point index.d.ts
-//
 // @public
-export interface SearchClientOptions extends MapsCommonClientOptions {
+export interface SearchClientOptions extends CommonClientOptions {
+}
+
+// @public (undocumented)
+export interface SearchExtraFilterOptions {
+    brandFilter?: string[];
+    categoryFilter?: number[];
+    electricVehicleConnectorFilter?: ElectricVehicleConnector[];
 }
 
 // @public
@@ -378,39 +456,19 @@ export interface SearchInsideGeometryOptions extends OperationOptions {
 }
 
 // @public
-export interface SearchNearbyPointOfInterestOptions extends OperationOptions {
-    brandFilter?: string[];
-    categoryFilter?: number[];
+export interface SearchNearbyPointOfInterestOptions extends SearchBaseOptions, SearchExtraFilterOptions {
     countryFilter?: string[];
-    electricVehicleConnectorFilter?: ElectricVehicleConnector[];
-    extendedPostalCodesFor?: SearchIndexes[];
-    language?: string;
-    localizedMapView?: LocalizedMapView;
     radiusInMeters?: number;
-    skip?: number;
-    top?: number;
 }
 
 // @public
-export interface SearchPointOfInterestOptions extends SearchAddressOptions {
-    brandFilter?: string[];
-    categoryFilter?: number[];
-    electricVehicleConnectorFilter?: ElectricVehicleConnector[];
+export interface SearchPointOfInterestOptions extends SearchAddressBaseOptions, SearchExtraFilterOptions {
     operatingHours?: OperatingHoursRange;
 }
 
 // @public
 export interface SearchStructuredAddressOptions extends SearchBaseOptions {
-    countryCode?: string;
-    countrySecondarySubdivision?: string;
-    countrySubdivision?: string;
-    countryTertiarySubdivision?: string;
-    crossStreet?: string;
-    municipality?: string;
-    municipalitySubdivision?: string;
-    postalCode?: string;
-    streetName?: string;
-    streetNumber?: string;
+    entityType?: GeographicEntityType;
 }
 
 // @public
@@ -424,6 +482,20 @@ export interface SearchSummary {
     readonly skip?: number;
     readonly top?: number;
     readonly totalResults?: number;
+}
+
+// @public (undocumented)
+export interface StructuredAddress {
+    countryCode: string;
+    countrySecondarySubdivision?: string;
+    countrySubdivision?: string;
+    countryTertiarySubdivision?: string;
+    crossStreet?: string;
+    municipality?: string;
+    municipalitySubdivision?: string;
+    postalCode?: string;
+    streetName?: string;
+    streetNumber?: string;
 }
 
 // @public

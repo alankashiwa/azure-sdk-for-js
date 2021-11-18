@@ -11,7 +11,8 @@ import {
   SearchClient,
   Coordinate,
   GeoJsonLineString,
-  GeoJsonObjectUnion
+  GeoJsonPolygon,
+  StructuredAddress
 } from "@azure/maps-search";
 import * as dotenv from "dotenv";
 dotenv.config();
@@ -58,15 +59,15 @@ async function main() {
   console.log(await client.reverseSearchCrossStreetAddress(coordinate));
 
   console.log(" --- Geocode structured address:");
-  const countryCode = "US";
-  const searchAddressStructuredOptions = {
+  const structuredAddress: StructuredAddress = {
+    countryCode: "US",
     streetNumber: "15127",
     streetName: "NE 24th Street",
     municipality: "Redmond",
     countrySubdivision: "WA",
     postalCode: "98052"
   };
-  console.log(await client.searchStructuredAddress(countryCode, searchAddressStructuredOptions));
+  console.log(await client.searchStructuredAddress(structuredAddress));
 
   console.log(" --- Perform a fuzzy search:");
   const fuzzyResult = await client.fuzzySearch("pizza", {
@@ -138,7 +139,7 @@ async function main() {
 
   console.log(" --- Search inside geometry:");
   const searchInsideGeometryQuery = "burger";
-  const searchGeometry: GeoJsonObjectUnion = {
+  const searchGeometry: GeoJsonPolygon = {
     type: "Polygon",
     coordinates: [
       [

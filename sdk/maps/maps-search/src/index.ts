@@ -7,4 +7,5 @@
  */
 
 export * from "./searchClient";
+export * from "./options";
 export * from "./models";
