@@ -522,6 +522,11 @@
       "versionPolicyName": "client"
     },
     {
+      "packageName": "@azure/maps-search",
+      "projectFolder": "sdk/maps/maps-search",
+      "versionPolicyName": "client"
+    },
+    {
       "packageName": "@azure/monitor-opentelemetry-exporter",
       "projectFolder": "sdk/monitor/monitor-opentelemetry-exporter",
       "versionPolicyName": "client"
