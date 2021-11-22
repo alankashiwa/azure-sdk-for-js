@@ -208,9 +208,6 @@ export interface GetPointOfInterestCategoryTreeOptions extends OperationOptions 
     language?: string;
 }
 
-// @public (undocumented)
-export const isSearchClientOptions: (clientIdOrOptions: any) => clientIdOrOptions is SearchClientOptions;
-
 // @public
 export interface LatLongPairAbbreviated {
     lat?: number;

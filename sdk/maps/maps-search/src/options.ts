@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 import { CommonClientOptions, OperationOptions } from "@azure/core-client";
 import {
   ElectricVehicleConnector,
@@ -13,11 +16,6 @@ import { BoundingBox, Coordinate } from "./models";
  * Client options used to configure the Search Client
  */
 export interface SearchClientOptions extends CommonClientOptions {}
-
-export const isSearchClientOptions = (
-  clientIdOrOptions: any
-): clientIdOrOptions is SearchClientOptions =>
-  clientIdOrOptions && typeof clientIdOrOptions !== "string";
 
 /**
  * Options for get polygon
@@ -69,11 +67,11 @@ export interface SearchExtraFilterOptions {
   /**
    * A comma-separated list of category set IDs which could be used to restrict the result to specific Points of Interest categories.
    * ID order does not matter. When multiple category identifiers are provided, only POIs that belong to (at least) one of the categories from the provided list will be returned.
-   * The list of supported categories can be discovered using  [POI Categories API](https://aka.ms/AzureMapsPOICategoryTree).
+   * The list of supported categories can be discovered using [POI Categories API](https://aka.ms/AzureMapsPOICategoryTree).
    *
    * Usage examples:
-   * `categorySet=7315` (Search Points of Interest from category Restaurant)
-   * `categorySet=7315025,7315017` (Search Points of Interest of category either Italian or French Restaurant)
+   * `categorySet=7315`(Search Points of Interest from category Restaurant)
+   * `categorySet=7315025,7315017`(Search Points of Interest of category either Italian or French Restaurant)
    */
   categoryFilter?: number[];
   /**
@@ -223,11 +221,11 @@ export interface SearchInsideGeometryOptions extends OperationOptions {
   /**
    * A comma-separated list of category set IDs which could be used to restrict the result to specific Points of Interest categories.
    * ID order does not matter. When multiple category identifiers are provided, only POIs that belong to (at least) one of the categories from the provided list will be returned.
-   * The list of supported categories can be discovered using  [POI Categories API](https://aka.ms/AzureMapsPOICategoryTree).
+   * The list of supported categories can be discovered using [POI Categories API](https://aka.ms/AzureMapsPOICategoryTree).
    *
    * Usage examples:
-   * `categorySet=7315` (Search Points of Interest from category Restaurant)
-   * `categorySet=7315025,7315017` (Search Points of Interest of category either Italian or French Restaurant)
+   * `categorySet=7315`(Search Points of Interest from category Restaurant)
+   * `categorySet=7315025,7315017`(Search Points of Interest of category either Italian or French Restaurant)
    */
   categoryFilter?: number[];
   /** Hours of operation for a POI (Points of Interest). */
@@ -241,11 +239,11 @@ export interface SearchAlongRouteOptions extends OperationOptions {
   /**
    * A comma-separated list of category set IDs which could be used to restrict the result to specific Points of Interest categories.
    * ID order does not matter. When multiple category identifiers are provided, only POIs that belong to (at least) one of the categories from the provided list will be returned.
-   * The list of supported categories can be discovered using  [POI Categories API](https://aka.ms/AzureMapsPOICategoryTree).
+   * The list of supported categories can be discovered using [POI Categories API](https://aka.ms/AzureMapsPOICategoryTree).
    *
    * Usage examples:
-   * `categorySet=7315` (Search Points of Interest from category Restaurant)
-   * `categorySet=7315025,7315017` (Search Points of Interest of category either Italian or French Restaurant)
+   * `categorySet=7315`(Search Points of Interest from category Restaurant)
+   * `categorySet=7315025,7315017`(Search Points of Interest of category either Italian or French Restaurant)
    */
   categoryFilter?: number[];
   /**

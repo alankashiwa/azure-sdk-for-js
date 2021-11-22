@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 import { TokenCredential, AzureKeyCredential, isTokenCredential } from "@azure/core-auth";
 import {
   bearerTokenAuthenticationPolicy,
@@ -36,7 +39,6 @@ import {
 } from "./models";
 import {
   SearchClientOptions,
-  isSearchClientOptions,
   ListPolygonsOptions,
   FuzzySearchOptions,
   SearchPointOfInterestOptions,
@@ -60,6 +62,9 @@ import { logger } from "./utils/logger";
 import { OperationOptions } from "@azure/core-client";
 import { createSpan } from "./utils/tracing";
 import { SpanStatusCode } from "@azure/core-tracing";
+
+const isSearchClientOptions = (clientIdOrOptions: any): clientIdOrOptions is SearchClientOptions =>
+  clientIdOrOptions && typeof clientIdOrOptions !== "string";
 
 /**
  * Client class for interacting with Azure Maps Search Service.
@@ -224,7 +229,7 @@ export class SearchClient {
   public async searchNearbyPointOfInterest(
     coordinate: Coordinate,
     options: SearchNearbyPointOfInterestOptions = {}
-  ) {
+  ): Promise<SearchAddressResult> {
     const { span, updatedOptions } = createSpan(
       "SearchClient-searchNearbyPointOfInterest",
       options
@@ -404,7 +409,7 @@ export class SearchClient {
   public async searchStructuredAddress(
     structuredAddress: StructuredAddress,
     options: SearchStructuredAddressOptions = {}
-  ) {
+  ): Promise<SearchAddressResult> {
     const { span, updatedOptions } = createSpan("SearchClient-searchStructuredAddress", options);
     const { countryCode, ...structuredAddressOptions } = structuredAddress;
     const internalOptions = {
@@ -441,7 +446,7 @@ export class SearchClient {
     poiName: string,
     geometry: GeoJsonPolygon | GeoJsonGeometryCollection | GeoJsonFeatureCollection,
     options: SearchInsideGeometryOptions = {}
-  ) {
+  ): Promise<SearchAddressResult> {
     const { span, updatedOptions } = createSpan("SearchClient-searchInsideGeometry", options);
     const internalOptions = updatedOptions as SearchInsideGeometryOptionalParams;
     try {

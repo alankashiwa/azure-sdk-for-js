@@ -1,4 +1,7 @@
-import { AzureKeyCredential } from "@azure/core-auth";
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+import { KeyCredential } from "@azure/core-auth";
 import {
   PipelineResponse,
   PipelineRequest,
@@ -18,9 +21,7 @@ export const mapsAzureKeyCredentialPolicyName = "mapsAzureKeyCredentialPolicy";
  * using an `AzureKeyCredential` for Azure Maps
  * @internal
  */
-export function mapsAzureKeyCredentialPolicy(
-  azureKeyCredential: AzureKeyCredential
-): PipelinePolicy {
+export function mapsAzureKeyCredentialPolicy(azureKeyCredential: KeyCredential): PipelinePolicy {
   return {
     name: mapsAzureKeyCredentialPolicyName,
     async sendRequest(request: PipelineRequest, next: SendRequest): Promise<PipelineResponse> {
