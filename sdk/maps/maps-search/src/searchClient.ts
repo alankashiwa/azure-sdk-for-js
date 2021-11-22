@@ -168,18 +168,18 @@ export class SearchClient {
   /**
    * Perform a free-form Search which handles the most fuzzy of inputs handling any combination of address or POI tokens.
    *
-   * @param keyword - The applicable query string (e.g., "seattle", "pizza").
+   * @param query - The applicable query string (e.g., "seattle", "pizza").
    *                  Can also be specified as a comma separated string composed by latitude followed by longitude (e.g., "47.641268, -122.125679").
    * @param options - Optional parameters for the operation
    */
   public async fuzzySearch(
-    keyword: string,
+    query: string,
     options: FuzzySearchOptions = {}
   ): Promise<SearchAddressResult> {
     const { span, updatedOptions } = createSpan("SearchClient-fuzzySearch", options);
     const internalOptions = mapFuzzySearchOptions(updatedOptions);
     try {
-      return await this.client.search.fuzzySearch(this.defaultFormat, keyword, internalOptions);
+      return await this.client.search.fuzzySearch(this.defaultFormat, query, internalOptions);
     } catch (e) {
       span.setStatus({
         code: SpanStatusCode.ERROR,
@@ -194,11 +194,11 @@ export class SearchClient {
   /**
    * Requests points of interest (POI) results by name
    *
-   * @param poiName - The POI name to search for (e.g., "statue of liberty", "starbucks")
+   * @param query - The POI name to search for (e.g., "statue of liberty", "starbucks")
    * @param options - Optional parameters for the operation
    */
   public async searchPointOfInterest(
-    poiName: string,
+    query: string,
     options: SearchPointOfInterestOptions = {}
   ): Promise<SearchAddressResult> {
     const { span, updatedOptions } = createSpan("SearchClient-searchPointOfInterest", options);
@@ -206,7 +206,7 @@ export class SearchClient {
     try {
       return await this.client.search.searchPointOfInterest(
         this.defaultFormat,
-        poiName,
+        query,
         internalOptions
       );
     } catch (e) {
@@ -256,11 +256,11 @@ export class SearchClient {
   /**
    * Requests points of interests (POI) results from given category.
    *
-   * @param poiCategoryName - The POI category to search for (e.g., "AIRPORT", "RESTAURANT")
+   * @param query - The POI category to search for (e.g., "AIRPORT", "RESTAURANT")
    * @param options - Optional parameters for the operation
    */
   public async searchPointOfInterestCategory(
-    poiCategoryName: string,
+    query: string,
     options: SearchPointOfInterestOptions = {}
   ): Promise<SearchAddressResult> {
     const { span, updatedOptions } = createSpan(
@@ -271,7 +271,7 @@ export class SearchClient {
     try {
       return await this.client.search.searchPointOfInterestCategory(
         this.defaultFormat,
-        poiCategoryName,
+        query,
         internalOptions
       );
     } catch (e) {
@@ -317,17 +317,17 @@ export class SearchClient {
   /**
    * Geocodes a address.
    *
-   * @param address - The address to search for (e.g., "1 Microsoft way, Redmond, WA")
+   * @param query - The address to search for (e.g., "1 Microsoft way, Redmond, WA")
    * @param options - Optional parameters for the operation
    */
   public async searchAddress(
-    address: string,
+    query: string,
     options: SearchAddressOptions = {}
   ): Promise<SearchAddressResult> {
     const { span, updatedOptions } = createSpan("SearchClient-searchAddress", options);
     const internalOptions = mapSearchAddressOptions(updatedOptions);
     try {
-      return await this.client.search.searchAddress(this.defaultFormat, address, internalOptions);
+      return await this.client.search.searchAddress(this.defaultFormat, query, internalOptions);
     } catch (e) {
       span.setStatus({
         code: SpanStatusCode.ERROR,
@@ -436,14 +436,14 @@ export class SearchClient {
   /**
    * Performs a free form search inside a single geometry or many of them.
    *
-   * @param poiName - The POI name to search for (e.g., "statue of liberty", "starbucks", "pizza").
+   * @param query - The POI name to search for (e.g., "statue of liberty", "starbucks", "pizza").
    * @param geometry - This represents the geometry for one or more geographical features (parks, state
    *                   boundary etc.) to search in and should be a GeoJSON compliant type. Please refer to [RFC
    *                   7946](https://tools.ietf.org/html/rfc7946) for details.
    * @param options - Optional parameters for the operation
    */
   public async searchInsideGeometry(
-    poiName: string,
+    query: string,
     geometry: GeoJsonPolygon | GeoJsonGeometryCollection | GeoJsonFeatureCollection,
     options: SearchInsideGeometryOptions = {}
   ): Promise<SearchAddressResult> {
@@ -452,7 +452,7 @@ export class SearchClient {
     try {
       return await this.client.search.searchInsideGeometry(
         this.defaultFormat,
-        poiName,
+        query,
         {
           geometry: (geometry as unknown) as Record<string, unknown>
         },
@@ -472,13 +472,13 @@ export class SearchClient {
   /**
    * Performs a fuzzy search for POIs along a specified route.
    *
-   * @param poiName - The POI name to search for (e.g., "statue of liberty", "starbucks", "pizza").
+   * @param query - The POI name to search for (e.g., "statue of liberty", "starbucks", "pizza").
    * @param maxDetourTime - Maximum detour time of the point of interest in seconds. Max value is 3600 seconds
    * @param route - This represents the route to search along and should be a valid `GeoJSON LineString` type.
    * @param options - Optional parameters for the operation
    */
   public async searchAlongRoute(
-    poiName: string,
+    query: string,
     maxDetourTime: number,
     route: GeoJsonLineString,
     options: SearchAlongRouteOptions = {}
@@ -488,7 +488,7 @@ export class SearchClient {
     try {
       return await this.client.search.searchAlongRoute(
         this.defaultFormat,
-        poiName,
+        query,
         maxDetourTime,
         { route: route },
         internalOptions
