@@ -66,18 +66,6 @@ export interface BatchResultSummary {
 }
 
 // @public
-export interface BeginFuzzySearchBatchOptions extends OperationOptions {
-}
-
-// @public
-export interface BeginReverseSearchAddressBatchOptions extends OperationOptions {
-}
-
-// @public
-export interface BeginSearchAddressBatchOptions extends OperationOptions {
-}
-
-// @public
 export interface BoundingBox {
     bottomRight: Coordinate;
     topLeft: Coordinate;
@@ -122,6 +110,10 @@ export interface EntryPoint {
 
 // @public
 export type EntryPointType = string;
+
+// @public
+export interface FuzzySearchBatchOptions extends OperationOptions {
+}
 
 // @public
 export interface FuzzySearchOptions extends SearchPointOfInterestOptions {
@@ -298,6 +290,10 @@ export interface PolygonResult {
 export type QueryType = string;
 
 // @public
+export interface ReverseSearchAddressBatchOptions extends OperationOptions {
+}
+
+// @public
 export type ReverseSearchAddressBatchProcessResult = BatchResult & {
     readonly batchItems?: ReverseSearchAddressBatchItem[];
 };
@@ -365,6 +361,10 @@ export interface SearchAddressBaseOptions extends SearchBaseOptions {
 }
 
 // @public
+export interface SearchAddressBatchOptions extends OperationOptions {
+}
+
+// @public
 export type SearchAddressBatchResult = BatchResult & {
     readonly batchItems?: SearchAddressBatchItem[];
 };
@@ -429,15 +429,18 @@ export class SearchClient {
     constructor(credential: AzureKeyCredential, options?: SearchClientOptions);
     constructor(credential: TokenCredential, clientId: string);
     constructor(credential: TokenCredential, clientId: string, options?: SearchClientOptions);
-    beginFuzzySearchBatch(batchRequest: BatchRequest, options?: BeginFuzzySearchBatchOptions): Promise<PollerLike<PollOperationState<SearchAddressBatchResult>, SearchAddressBatchResult>>;
-    beginReverseSearchAddressBatch(batchRequest: BatchRequest, options?: BeginReverseSearchAddressBatchOptions): Promise<PollerLike<PollOperationState<ReverseSearchAddressBatchProcessResult>, ReverseSearchAddressBatchProcessResult>>;
-    beginSearchAddressBatch(batchRequest: BatchRequest, options?: BeginSearchAddressBatchOptions): Promise<PollerLike<PollOperationState<SearchAddressBatchResult>, SearchAddressBatchResult>>;
+    beginFuzzySearchBatch(batchRequest: BatchRequest, options?: FuzzySearchBatchOptions): Promise<PollerLike<PollOperationState<SearchAddressBatchResult>, SearchAddressBatchResult>>;
+    beginReverseSearchAddressBatch(batchRequest: BatchRequest, options?: ReverseSearchAddressBatchOptions): Promise<PollerLike<PollOperationState<ReverseSearchAddressBatchProcessResult>, ReverseSearchAddressBatchProcessResult>>;
+    beginSearchAddressBatch(batchRequest: BatchRequest, options?: SearchAddressBatchOptions): Promise<PollerLike<PollOperationState<SearchAddressBatchResult>, SearchAddressBatchResult>>;
     fuzzySearch(query: string, options?: FuzzySearchOptions): Promise<SearchAddressResult>;
+    fuzzySearchBatchSync(batchRequest: BatchRequest, options?: FuzzySearchBatchOptions): Promise<SearchAddressBatchResult>;
     getPointOfInterestCategoryTree(options?: GetPointOfInterestCategoryTreeOptions): Promise<PointOfInterestCategoryTreeResult>;
     listPolygons(geometryIds: string[], options?: ListPolygonsOptions): Promise<PolygonResult>;
     reverseSearchAddress(coordinate: Coordinate, options?: ReverseSearchAddressOptions): Promise<ReverseSearchAddressResult>;
+    reverseSearchAddressBatchSync(batchRequest: BatchRequest, options?: ReverseSearchAddressBatchOptions): Promise<ReverseSearchAddressBatchProcessResult>;
     reverseSearchCrossStreetAddress(coordinate: Coordinate, options?: ReverseSearchCrossStreetAddressOptions): Promise<ReverseSearchCrossStreetAddressResult>;
     searchAddress(query: string, options?: SearchAddressOptions): Promise<SearchAddressResult>;
+    searchAddressBatchSync(batchRequest: BatchRequest, options?: SearchAddressBatchOptions): Promise<SearchAddressBatchResult>;
     searchAlongRoute(query: string, maxDetourTime: number, route: GeoJsonLineString, options?: SearchAlongRouteOptions): Promise<SearchAddressResult>;
     searchInsideGeometry(query: string, geometry: GeoJsonPolygon | GeoJsonGeometryCollection | GeoJsonFeatureCollection, options?: SearchInsideGeometryOptions): Promise<SearchAddressResult>;
     searchNearbyPointOfInterest(coordinate: Coordinate, options?: SearchNearbyPointOfInterestOptions): Promise<SearchAddressResult>;

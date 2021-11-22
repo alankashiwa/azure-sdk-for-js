@@ -159,7 +159,6 @@ async function main() {
     )
   );
 
-  console.log(" --- Search address batch:");
   const searchAddressBatchRequest = {
     batchItems: [
       {
@@ -173,10 +172,13 @@ async function main() {
       }
     ]
   };
+  console.log(" --- Search address batch:");
+  console.log(await client.searchAddressBatchSync(searchAddressBatchRequest));
+
+  console.log(" --- Search address batch (long-running):");
   let poller = await client.beginSearchAddressBatch(searchAddressBatchRequest);
   console.log(await poller.pollUntilDone());
 
-  console.log(" --- Search address reverse batch:");
   const searchAddressReverseBatchRequest = {
     batchItems: [
       {
@@ -190,10 +192,14 @@ async function main() {
       }
     ]
   };
+
+  console.log(" --- Search address reverse batch:");
+  console.log(await client.reverseSearchAddressBatchSync(searchAddressBatchRequest));
+
+  console.log(" --- Search address reverse batch (long-running):");
   poller = await client.beginReverseSearchAddressBatch(searchAddressReverseBatchRequest);
   console.log(await poller.pollUntilDone());
 
-  console.log(" --- Search fuzzy batch:");
   const searchFuzzyBatchRequest = {
     batchItems: [
       {
@@ -207,6 +213,11 @@ async function main() {
       }
     ]
   };
+
+  console.log(" --- Search fuzzy batch:");
+  console.log(await client.fuzzySearchBatchSync(searchFuzzyBatchRequest));
+
+  console.log(" --- Search fuzzy batch (long-running):");
   poller = await client.beginFuzzySearchBatch(searchFuzzyBatchRequest);
   console.log(await poller.pollUntilDone());
 }

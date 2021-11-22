@@ -277,12 +277,12 @@ export interface SearchAlongRouteOptions extends OperationOptions {
 /**
  * Options for begin fuzzy search batch
  */
-export interface BeginFuzzySearchBatchOptions extends OperationOptions {}
+export interface FuzzySearchBatchOptions extends OperationOptions {}
 /**
  * Options for begin search address batch
  */
-export interface BeginSearchAddressBatchOptions extends OperationOptions {}
+export interface SearchAddressBatchOptions extends OperationOptions {}
 /**
  * Options for reverse begin search address batch
  */
-export interface BeginReverseSearchAddressBatchOptions extends OperationOptions {}
+export interface ReverseSearchAddressBatchOptions extends OperationOptions {}
