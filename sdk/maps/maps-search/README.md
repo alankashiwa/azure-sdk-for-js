@@ -38,7 +38,7 @@ npm install @azure/maps-search
 
 ### Create and authenticate a `SearchClient`
 
-To create a client object to access the Azure Maps Search API, you will need a `credential` object. The Azure Maps Search client can use an Azure Active Directory credential or an Azure Key credential to authenticate.
+To create a client object to access the Azure Maps Search API, you will need a `credential` object. The Azure Maps Search client can use an Azure Active Directory credential to authenticate.
 
 #### Using an Azure Active Directory Credential
 
@@ -52,27 +52,10 @@ You will also need to register a new AAD application and grant access to Azure M
 
 Set the values of the client ID, tenant ID, and client secret of the AAD application as environment variables: `AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, `AZURE_CLIENT_SECRET`.
 
-You will also need to specify the Azure Maps resource you intend to use by specifying the `clientId` in the client options.
-The Azure Maps resource client id can be found in the Authentication sections in the Azure Maps resource. Please refer to the [documentation](https://docs.microsoft.com/azure/azure-maps/how-to-manage-authentication#view-authentication-details) on how to find it.
-
 ```javascript
 const { SearchClient } = require("@azure/maps-search");
 const { DefaultAzureCredential } = require("@azure/identity");
-const client = new SearchClient(new DefaultAzureCredential(), { clientId: "<maps-client-id>" });
-```
-
-#### Using a Subscription Key Credential
-
-You can authenticate with your Azure Maps Subscription Key. Please install the `@azure/core-auth` package:
-
-```bash
-npm install @azure/core-auth
-```
-
-```javascript
-const { SearchClient } = require("@azure/maps-search");
-const { AzureKeyCredential } = require("@azure/core-auth");
-const client = new SearchClient(new AzureKeyCredential("<subscription-key>"));
+const client = new SearchClient(new DefaultAzureCredential());
 ```
 
 ## Key concepts
@@ -96,11 +79,17 @@ You can use an authenticated client to convert an address into latitude and long
 
 ```javascript
 const credential = new DefaultAzureCredential();
-const client = new SearchClient(credential, { clientId: "<maps-client-id>" });
-const result = await client.searchAddress("json", "400 Broad, Seattle");
+const operationOptions = {
+  requestOptions: {
+    customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
+  }
+};
+
+const client = new SearchClient(credential).search;
+const response = await client.searchAddress("json", "400 Broad, Seattle", operationOptions);
 ```
 
-Result
+Response
 
 ```yaml
 {
@@ -156,11 +145,20 @@ You can use Fuzzy Search to search an address or a point of interest (POI). The 
 
 ```javascript
 const credential = new DefaultAzureCredential();
-const client = new SearchClient(credential, { clientId: "<maps-client-id>" });
-const result = await client.fuzzySearch("pizza", { countryFilter: ["Brazil"] });
+const operationOptions = {
+  requestOptions: {
+    customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
+  }
+};
+
+const client = new SearchClient(credential).search;
+const response = await client.fuzzySearch("json", "pizza", {
+  countryFilter: ["Brazil"],
+  ...operationOptions
+});
 ```
 
-Result
+Response
 
 ```yaml
 {
@@ -231,15 +229,17 @@ This is often used for applications that consume GPS feeds and want to discover 
 
 ```javascript
 const credential = new DefaultAzureCredential();
-const client = new SearchClient(credential, { clientId: "<maps-client-id>" });
-const coordinate: Coordinate = {
-  latitude: 47.59118,
-  longitude: -122.3327
+const operationOptions = {
+  requestOptions: {
+    customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
+  }
 };
-const result = await client.reverseSearchAddress(coordinate);
+
+const client = new SearchClient(credential).search;
+const response = await client.reverseSearchAddress("json", [47.59118, -122.3327], operationOptions);
 ```
 
-Result
+Response
 
 ```yaml
 {
@@ -285,16 +285,21 @@ Translate coordinate location into a human understandable cross street by using 
 
 ```javascript
 const credential = new DefaultAzureCredential();
-const client = new SearchClient(credential, { clientId: "<maps-client-id>" });
-const coordinate: Coordinate = {
-  latitude: 47.59118,
-  longitude: -122.3327
+const operationOptions = {
+  requestOptions: {
+    customHeaders: { "x-ms-client-id": process.env.MAPS_CLIENT_ID }
+  }
 };
 
-const result = await client.reverseSearchCrossStreetAddress(coordinate);
+const client = new SearchClient(credential).search;
+const response = await client.reverseSearchCrossStreetAddress(
+  "json",
+  [47.59118, -122.3327],
+  operationOptions
+);
 ```
 
-Result
+Response
 
 ```yaml
 {
