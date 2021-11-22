@@ -46,8 +46,23 @@ export interface AddressRanges {
 
 // @public
 export interface BatchRequest {
-    // Warning: (ae-forgotten-export) The symbol "BatchRequestItem" needs to be exported by the entry point index.d.ts
     batchItems?: BatchRequestItem[];
+}
+
+// @public
+export interface BatchRequestItem {
+    query?: string;
+}
+
+// @public
+export interface BatchResult {
+    readonly batchSummary?: BatchResultSummary;
+}
+
+// @public
+export interface BatchResultSummary {
+    readonly successfulRequests?: number;
+    readonly totalRequests?: number;
 }
 
 // @public
@@ -282,8 +297,6 @@ export interface PolygonResult {
 // @public
 export type QueryType = string;
 
-// Warning: (ae-forgotten-export) The symbol "BatchResult" needs to be exported by the entry point index.d.ts
-//
 // @public
 export type ReverseSearchAddressBatchProcessResult = BatchResult & {
     readonly batchItems?: ReverseSearchAddressBatchItem[];
@@ -329,9 +342,14 @@ export interface ReverseSearchCrossStreetAddressOptions extends OperationOptions
 
 // @public
 export interface ReverseSearchCrossStreetAddressResult {
-    // Warning: (ae-forgotten-export) The symbol "ReverseSearchCrossStreetAddressResultItem" needs to be exported by the entry point index.d.ts
     readonly addresses?: ReverseSearchCrossStreetAddressResultItem[];
     readonly summary?: SearchSummary;
+}
+
+// @public
+export interface ReverseSearchCrossStreetAddressResultItem {
+    readonly address?: Address;
+    readonly position?: string;
 }
 
 // @public

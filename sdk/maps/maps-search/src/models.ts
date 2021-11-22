@@ -39,7 +39,11 @@ export {
   GeoJsonObjectUnion,
   SearchAddressBatchResult,
   BatchRequest,
-  ReverseSearchAddressBatchProcessResult
+  ReverseSearchAddressBatchProcessResult,
+  BatchResult,
+  ReverseSearchCrossStreetAddressResultItem,
+  BatchRequestItem,
+  BatchResultSummary
 } from "./generated/models";
 
 /**
