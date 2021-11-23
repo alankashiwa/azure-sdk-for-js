@@ -508,7 +508,7 @@ export class SearchClient {
    * Sends batches of fuzzy search queries. The method return the result directly.
    *
    * @param batchRequest - The list of search queries to process. The list can contain a
-   *                       max of 100  queries and must contain at least 1 query.
+   *                       max of 100 queries and must contain at least 1 query.
    * @param options - Optional parameters for the operation
    */
   public async fuzzySearchBatchSync(
@@ -566,7 +566,7 @@ export class SearchClient {
    * Sends batches of geocoding queries. The method return the result directly.
    *
    * @param batchRequest - The list of search queries to process. The list can contain a
-   *                       max of 100  queries and must contain at least 1 query.
+   *                       max of 100 queries and must contain at least 1 query.
    * @param options - Optional parameters for the operation
    */
   public async searchAddressBatchSync(

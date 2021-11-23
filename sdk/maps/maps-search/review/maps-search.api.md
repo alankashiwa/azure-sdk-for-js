@@ -299,17 +299,13 @@ export type ReverseSearchAddressBatchProcessResult = BatchResult & {
 };
 
 // @public
-export interface ReverseSearchAddressOptions extends OperationOptions {
+export interface ReverseSearchAddressOptions extends ReverseSearchBaseOptions {
     allowFreeformNewline?: boolean;
     entityType?: GeographicEntityType;
-    heading?: number;
     includeMatchType?: boolean;
     includeRoadUse?: boolean;
     includeSpeedLimit?: boolean;
-    language?: string;
-    localizedMapView?: LocalizedMapView;
     numberParam?: string;
-    radiusInMeters?: number;
     roadUse?: RoadUseType[];
 }
 
@@ -328,11 +324,15 @@ export interface ReverseSearchAddressResultItem {
 }
 
 // @public
-export interface ReverseSearchCrossStreetAddressOptions extends OperationOptions {
+export interface ReverseSearchBaseOptions extends OperationOptions {
     heading?: number;
     language?: string;
     localizedMapView?: LocalizedMapView;
     radiusInMeters?: number;
+}
+
+// @public
+export interface ReverseSearchCrossStreetAddressOptions extends ReverseSearchBaseOptions {
     top?: number;
 }
 
@@ -369,7 +369,7 @@ export type SearchAddressBatchResult = BatchResult & {
     readonly batchItems?: SearchAddressBatchItem[];
 };
 
-// @public (undocumented)
+// @public
 export interface SearchAddressOptions extends SearchAddressBaseOptions {
     entityType?: GeographicEntityType;
 }
@@ -405,13 +405,9 @@ export interface SearchAddressResultItem {
 export type SearchAddressResultType = string;
 
 // @public
-export interface SearchAlongRouteOptions extends OperationOptions {
+export interface SearchAlongRouteOptions extends SearchGeometryBaseOptions {
     brandFilter?: string[];
-    categoryFilter?: number[];
     electricVehicleConnectorFilter?: ElectricVehicleConnector[];
-    localizedMapView?: LocalizedMapView;
-    operatingHours?: OperatingHoursRange;
-    top?: number;
 }
 
 // @public
@@ -453,7 +449,7 @@ export class SearchClient {
 export interface SearchClientOptions extends CommonClientOptions {
 }
 
-// @public (undocumented)
+// @public
 export interface SearchExtraFilterOptions {
     brandFilter?: string[];
     categoryFilter?: number[];
@@ -461,16 +457,21 @@ export interface SearchExtraFilterOptions {
 }
 
 // @public
-export type SearchIndexes = string;
-
-// @public
-export interface SearchInsideGeometryOptions extends OperationOptions {
+export interface SearchGeometryBaseOptions extends OperationOptions {
     categoryFilter?: number[];
-    extendedPostalCodesFor?: SearchIndexes[];
-    language?: string;
     localizedMapView?: LocalizedMapView;
     operatingHours?: OperatingHoursRange;
     top?: number;
+}
+
+// @public
+export type SearchIndexes = string;
+
+// @public
+export interface SearchInsideGeometryOptions extends SearchGeometryBaseOptions {
+    extendedPostalCodesFor?: SearchIndexes[];
+    indexFilter?: SearchIndexes[];
+    language?: string;
 }
 
 // @public

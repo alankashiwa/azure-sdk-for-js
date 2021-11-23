@@ -31,7 +31,7 @@ export interface GetPointOfInterestCategoryTreeOptions extends OperationOptions 
 }
 
 /**
- * Search base options
+ * Base options for search
  */
 
 export interface SearchBaseOptions extends OperationOptions {
@@ -48,7 +48,7 @@ export interface SearchBaseOptions extends OperationOptions {
 }
 
 /**
- * Options for search address
+ * Base options for search address
  */
 export interface SearchAddressBaseOptions extends SearchBaseOptions {
   /** Bounding box of the search range */
@@ -63,6 +63,9 @@ export interface SearchAddressBaseOptions extends SearchBaseOptions {
   radiusInMeters?: number;
 }
 
+/**
+ * Extra filter options
+ */
 export interface SearchExtraFilterOptions {
   /**
    * A comma-separated list of category set IDs which could be used to restrict the result to specific Points of Interest categories.
@@ -144,6 +147,9 @@ export interface SearchNearbyPointOfInterestOptions
   radiusInMeters?: number;
 }
 
+/**
+ * Options for search acddress
+ */
 export interface SearchAddressOptions extends SearchAddressBaseOptions {
   /** The entityType specifies the level of filtering performed on geographies */
   entityType?: GeographicEntityType;
@@ -158,21 +164,27 @@ export interface SearchStructuredAddressOptions extends SearchBaseOptions {
 }
 
 /**
- * Options for reverse search address
+ * Base options for reverse search
  */
-export interface ReverseSearchAddressOptions extends OperationOptions {
+export interface ReverseSearchBaseOptions extends OperationOptions {
   /** The radius in meters to for the results to be constrained to the defined area */
   radiusInMeters?: number;
   /** Language in which search results should be returned. */
   language?: string;
-  /** The entityType specifies the level of filtering performed on geographies */
-  entityType?: GeographicEntityType;
   /** The View parameter (also called the "user region" parameter) allows you to show the correct maps for a certain country/region for geopolitically disputed regions. */
   localizedMapView?: LocalizedMapView;
-  /** To enable return of the posted speed limit */
-  includeSpeedLimit?: boolean;
   /** The directional heading of the vehicle in degrees, for travel along a segment of roadway. 0 is North, 90 is East and so on, values range from -360 to 360. The precision can include upto one decimal place */
   heading?: number;
+}
+
+/**
+ * Options for reverse search address
+ */
+export interface ReverseSearchAddressOptions extends ReverseSearchBaseOptions {
+  /** The entityType specifies the level of filtering performed on geographies */
+  entityType?: GeographicEntityType;
+  /** To enable return of the posted speed limit */
+  includeSpeedLimit?: boolean;
   /** If a number is sent in along with the request, the response may include the side of the street (Left/Right) and also an offset position for that number */
   numberParam?: string;
   /** Boolean. To enable return of the road use array for reverse geocodes at street level */
@@ -193,29 +205,17 @@ export interface ReverseSearchAddressOptions extends OperationOptions {
 /**
  * Options for reverse search cross street address
  */
-export interface ReverseSearchCrossStreetAddressOptions extends OperationOptions {
+export interface ReverseSearchCrossStreetAddressOptions extends ReverseSearchBaseOptions {
   /** Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100 */
   top?: number;
-  /** The radius in meters to for the results to be constrained to the defined area */
-  radiusInMeters?: number;
-  /** Language in which search results should be returned. */
-  language?: string;
-  /** The View parameter (also called the "user region" parameter) allows you to show the correct maps for a certain country/region for geopolitically disputed regions. */
-  localizedMapView?: LocalizedMapView;
-  /** The directional heading of the vehicle in degrees, for travel along a segment of roadway. 0 is North, 90 is East and so on, values range from -360 to 360. The precision can include upto one decimal place */
-  heading?: number;
 }
 
 /**
- * Options for search inside geometry
+ * Base options for geometry search
  */
-export interface SearchInsideGeometryOptions extends OperationOptions {
+export interface SearchGeometryBaseOptions extends OperationOptions {
   /** Maximum number of responses that will be returned. Default: 10, minimum: 1 and maximum: 100 */
   top?: number;
-  /** Language in which search results should be returned. */
-  language?: string;
-  /** Indexes for which extended postal codes should be included in the results */
-  extendedPostalCodesFor?: SearchIndexes[];
   /** The View parameter (also called the "user region" parameter) allows you to show the correct maps for a certain country/region for geopolitically disputed regions. */
   localizedMapView?: LocalizedMapView;
   /**
@@ -233,19 +233,27 @@ export interface SearchInsideGeometryOptions extends OperationOptions {
 }
 
 /**
+ * Options for search inside geometry
+ */
+export interface SearchInsideGeometryOptions extends SearchGeometryBaseOptions {
+  /** Language in which search results should be returned. */
+  language?: string;
+  /** Indexes for which extended postal codes should be included in the results */
+  extendedPostalCodesFor?: SearchIndexes[];
+  /** A comma separated list of indexes which should be utilized for the search. Item order does not matter.
+   *  Available indexes are:
+   *   - Addr = Address range interpolation,
+   *   - Geo = Geographies, PAD = Point Addresses,
+   *   - POI = Points of interest, Str = Streets,
+   *   - Xstr = Cross Streets (intersections)
+   * */
+  indexFilter?: SearchIndexes[];
+}
+
+/**
  * Options for search along route
  */
-export interface SearchAlongRouteOptions extends OperationOptions {
-  /**
-   * A comma-separated list of category set IDs which could be used to restrict the result to specific Points of Interest categories.
-   * ID order does not matter. When multiple category identifiers are provided, only POIs that belong to (at least) one of the categories from the provided list will be returned.
-   * The list of supported categories can be discovered using [POI Categories API](https://aka.ms/AzureMapsPOICategoryTree).
-   *
-   * Usage examples:
-   * `categorySet=7315`(Search Points of Interest from category Restaurant)
-   * `categorySet=7315025,7315017`(Search Points of Interest of category either Italian or French Restaurant)
-   */
-  categoryFilter?: number[];
+export interface SearchAlongRouteOptions extends SearchGeometryBaseOptions {
   /**
    * A comma-separated list of brand names which could be used to restrict the result to specific brands.
    * Item order does not matter. When multiple brands are provided, only results that belong to (at least) one of the provided list will be returned.
@@ -266,12 +274,6 @@ export interface SearchAlongRouteOptions extends OperationOptions {
    *  connectorSet=IEC62196Type2Outlet,IEC62196Type2CableAttached
    */
   electricVehicleConnectorFilter?: ElectricVehicleConnector[];
-  /** The View parameter (also called the "user region" parameter) allows you to show the correct maps for a certain country/region for geopolitically disputed regions. */
-  localizedMapView?: LocalizedMapView;
-  /** Hours of operation for a POI (Points of Interest). */
-  operatingHours?: OperatingHoursRange;
-  /** Maximum number of responses that will be returned. Default value is 10. Max value is 20 */
-  top?: number;
 }
 
 /**
