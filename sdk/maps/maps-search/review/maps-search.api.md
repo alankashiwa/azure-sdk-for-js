@@ -66,9 +66,16 @@ export interface BatchResultSummary {
 }
 
 // @public
-export interface BoundingBox {
-    bottomRight: Coordinate;
-    topLeft: Coordinate;
+export class BoundingBox {
+    constructor(topLeft: LatLong, bottomRight: LatLong);
+    get bottom(): number;
+    get bottomLeft(): LatLong;
+    get bottomRight(): LatLong;
+    get left(): number;
+    get right(): number;
+    get top(): number;
+    get topLeft(): LatLong;
+    get topRight(): LatLong;
 }
 
 // @public
@@ -86,12 +93,6 @@ export interface Classification {
 export interface ClassificationName {
     readonly name?: string;
     readonly nameLocale?: string;
-}
-
-// @public
-export interface Coordinate {
-    latitude: number;
-    longitude: number;
 }
 
 // @public
@@ -214,6 +215,13 @@ export interface GeometryIdentifier {
 export interface GetPointOfInterestCategoryTreeOptions extends OperationOptions {
     language?: string;
 }
+
+// @public
+export class LatLong {
+    constructor(latitude: number, longitude: number);
+    get latitude(): number;
+    get longitude(): number;
+    }
 
 // @public
 export interface LatLongPairAbbreviated {
@@ -354,7 +362,7 @@ export type RoadUseType = string;
 // @public
 export interface SearchAddressBaseOptions extends SearchBaseOptions {
     boundingBox?: BoundingBox;
-    coordinate?: Coordinate;
+    coordinate?: LatLong;
     countryFilter?: string[];
     isTypeAhead?: boolean;
     radiusInMeters?: number;
@@ -432,14 +440,14 @@ export class SearchClient {
     fuzzySearchBatchSync(batchRequest: BatchRequest, options?: FuzzySearchBatchOptions): Promise<SearchAddressBatchResult>;
     getPointOfInterestCategoryTree(options?: GetPointOfInterestCategoryTreeOptions): Promise<PointOfInterestCategoryTreeResult>;
     listPolygons(geometryIds: string[], options?: ListPolygonsOptions): Promise<PolygonResult>;
-    reverseSearchAddress(coordinate: Coordinate, options?: ReverseSearchAddressOptions): Promise<ReverseSearchAddressResult>;
+    reverseSearchAddress(coordinate: LatLong, options?: ReverseSearchAddressOptions): Promise<ReverseSearchAddressResult>;
     reverseSearchAddressBatchSync(batchRequest: BatchRequest, options?: ReverseSearchAddressBatchOptions): Promise<ReverseSearchAddressBatchProcessResult>;
-    reverseSearchCrossStreetAddress(coordinate: Coordinate, options?: ReverseSearchCrossStreetAddressOptions): Promise<ReverseSearchCrossStreetAddressResult>;
+    reverseSearchCrossStreetAddress(coordinate: LatLong, options?: ReverseSearchCrossStreetAddressOptions): Promise<ReverseSearchCrossStreetAddressResult>;
     searchAddress(query: string, options?: SearchAddressOptions): Promise<SearchAddressResult>;
     searchAddressBatchSync(batchRequest: BatchRequest, options?: SearchAddressBatchOptions): Promise<SearchAddressBatchResult>;
     searchAlongRoute(query: string, maxDetourTime: number, route: GeoJsonLineString, options?: SearchAlongRouteOptions): Promise<SearchAddressResult>;
     searchInsideGeometry(query: string, geometry: GeoJsonPolygon | GeoJsonGeometryCollection | GeoJsonFeatureCollection, options?: SearchInsideGeometryOptions): Promise<SearchAddressResult>;
-    searchNearbyPointOfInterest(coordinate: Coordinate, options?: SearchNearbyPointOfInterestOptions): Promise<SearchAddressResult>;
+    searchNearbyPointOfInterest(coordinate: LatLong, options?: SearchNearbyPointOfInterestOptions): Promise<SearchAddressResult>;
     searchPointOfInterest(query: string, options?: SearchPointOfInterestOptions): Promise<SearchAddressResult>;
     searchPointOfInterestCategory(query: string, options?: SearchPointOfInterestOptions): Promise<SearchAddressResult>;
     searchStructuredAddress(structuredAddress: StructuredAddress, options?: SearchStructuredAddressOptions): Promise<SearchAddressResult>;

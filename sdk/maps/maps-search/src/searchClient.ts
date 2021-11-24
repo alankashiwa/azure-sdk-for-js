@@ -30,7 +30,7 @@ import {
 } from "./generated/models";
 import { PollerLike, PollOperationState } from "@azure/core-lro";
 import {
-  Coordinate,
+  LatLong,
   StructuredAddress,
   GeoJsonLineString,
   GeoJsonFeatureCollection,
@@ -227,7 +227,7 @@ export class SearchClient {
    * @param options - Optional parameters for the operation
    */
   public async searchNearbyPointOfInterest(
-    coordinate: Coordinate,
+    coordinate: LatLong,
     options: SearchNearbyPointOfInterestOptions = {}
   ): Promise<SearchAddressResult> {
     const { span, updatedOptions } = createSpan(
@@ -346,7 +346,7 @@ export class SearchClient {
    * @param options - Optional parameters for the operation
    */
   public async reverseSearchAddress(
-    coordinate: Coordinate,
+    coordinate: LatLong,
     options: ReverseSearchAddressOptions = {}
   ): Promise<ReverseSearchAddressResult> {
     const { span, updatedOptions } = createSpan("SearchClient-reverseSearchAddress", options);
@@ -375,7 +375,7 @@ export class SearchClient {
    * @param options - Optional parameters for the operation
    */
   public async reverseSearchCrossStreetAddress(
-    coordinate: Coordinate,
+    coordinate: LatLong,
     options: ReverseSearchCrossStreetAddressOptions = {}
   ): Promise<ReverseSearchCrossStreetAddressResult> {
     const { span, updatedOptions } = createSpan(
@@ -693,7 +693,7 @@ export class SearchClient {
 /**
  * @internal
  */
-function toLatLongString(coordinate: Coordinate): string {
+function toLatLongString(coordinate: LatLong): string {
   return `${coordinate.latitude},${coordinate.longitude}`;
 }
 

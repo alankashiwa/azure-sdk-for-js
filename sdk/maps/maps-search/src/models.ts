@@ -49,21 +49,76 @@ export {
 /**
  * Bounding Box
  */
-export interface BoundingBox {
+export class BoundingBox {
   /** Top left coordinate of the bounding box */
-  topLeft: Coordinate;
+  private _topLeft: LatLong;
   /** Bottom right coordinate of the bounding box */
-  bottomRight: Coordinate;
+  private _bottomRight: LatLong;
+  constructor(topLeft: LatLong, bottomRight: LatLong) {
+    this._topLeft = topLeft;
+    this._bottomRight = bottomRight;
+  }
+  /** Top left coordinate of the bounding box */
+  public get topLeft() {
+    return this._topLeft;
+  }
+
+  /** Bottom right coordinate of the bounding box */
+  public get bottomRight() {
+    return this._bottomRight;
+  }
+
+  /** Top latitude of the bounding box */
+  public get top() {
+    return this._topLeft.latitude;
+  }
+
+  /** Left longitude of the bounding box */
+  public get left() {
+    return this._topLeft.longitude;
+  }
+
+  /** Bottom latitude of the bounding box */
+  public get bottom() {
+    return this._bottomRight.latitude;
+  }
+
+  /** Right longitude of the bounding box */
+  public get right() {
+    return this._bottomRight.longitude;
+  }
+
+  /** Top right coordinate of the bounding box */
+  public get topRight() {
+    return new LatLong(this._topLeft.latitude, this._bottomRight.longitude);
+  }
+
+  /** Bottom left coordinate of the bounding box */
+  public get bottomLeft() {
+    return new LatLong(this._bottomRight.latitude, this._topLeft.longitude);
+  }
 }
 
 /**
- * Latitude/Longitude Pair
+ * Immutable Latitude/Longitude Pair
  */
-export interface Coordinate {
-  /** latitude */
-  latitude: number;
-  /** longitude */
-  longitude: number;
+export class LatLong {
+  private _latitude: number;
+  private _longitude: number;
+  constructor(latitude: number, longitude: number) {
+    this._latitude = latitude;
+    this._longitude = longitude;
+  }
+
+  /** Latitude */
+  public get latitude() {
+    return this._latitude;
+  }
+
+  /** Longitude */
+  public get longitude() {
+    return this._longitude;
+  }
 }
 
 /**

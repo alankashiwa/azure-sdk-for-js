@@ -9,7 +9,7 @@ import { DefaultAzureCredential } from "@azure/identity";
 import { AzureKeyCredential } from "@azure/core-auth";
 import {
   SearchClient,
-  Coordinate,
+  LatLong,
   GeoJsonLineString,
   GeoJsonPolygon,
   StructuredAddress
@@ -49,10 +49,7 @@ async function main() {
   console.log(await client.searchAddress("400 Broad, Seattle"));
 
   console.log(" --- Reverse-geocode coordinate to address:");
-  const coordinate: Coordinate = {
-    latitude: 47.59118,
-    longitude: -122.3327
-  };
+  const coordinate = new LatLong(47.59118, -122.3327);
   console.log(await client.reverseSearchAddress(coordinate));
 
   console.log(" --- Reverse-geocode coordinate to cross street address:");
@@ -79,10 +76,7 @@ async function main() {
   let geometryIds: string[] = [];
   fuzzyResult.results?.forEach((res) => geometryIds.push(res.dataSources?.geometry?.id!));
   console.log(" --- Search nearby POI:");
-  const searchNearbyCoordinate: Coordinate = {
-    latitude: 40.70627,
-    longitude: -74.011454
-  };
+  const searchNearbyCoordinate = new LatLong(40.70627, -74.011454);
   const searchNearbyOptions = { radiusInMeters: 8046 };
   console.log(
     await client.searchNearbyPointOfInterest(searchNearbyCoordinate, searchNearbyOptions)
@@ -92,7 +86,7 @@ async function main() {
   const searchPOIQuery = "juice bars";
   const searchPOIOptions = {
     top: 5,
-    coordinate: { latitude: 47.606038, longitude: -122.333345 },
+    coordinate: new LatLong(47.606038, -122.333345),
     radiusInMeters: 8046
   };
   console.log(await client.searchPointOfInterest(searchPOIQuery, searchPOIOptions));
@@ -101,7 +95,7 @@ async function main() {
   const searchPOICategoryQuery = "atm";
   const searchPOICategoryOptions = {
     skip: 5,
-    coordinate: { latitude: 47.606038, longitude: -122.333345 },
+    coordinate: new LatLong(47.606038, -122.333345),
     radiusInMeters: 8046
   };
   console.log(
