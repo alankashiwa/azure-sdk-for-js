@@ -70,9 +70,7 @@ async function main() {
   console.log(await client.searchStructuredAddress(structuredAddress));
 
   console.log(" --- Perform a fuzzy search:");
-  const fuzzyResult = await client.fuzzySearch("pizza", {
-    countryFilter: ["Brazil"]
-  });
+  const fuzzyResult = await client.fuzzySearch("pizza", coordinate);
   console.log(fuzzyResult);
 
   // let's save geometry IDs from the fuzzy search for the getSearchPolygon example
@@ -92,20 +90,22 @@ async function main() {
   const searchPOIQuery = "juice bars";
   const searchPOIOptions = {
     top: 5,
-    coordinate: { latitude: 47.606038, longitude: -122.333345 },
     radiusInMeters: 8046
   };
-  console.log(await client.searchPointOfInterest(searchPOIQuery, searchPOIOptions));
+  console.log(await client.searchPointOfInterest(searchPOIQuery, coordinate, searchPOIOptions));
 
   console.log(" --- Search POI category:");
   const searchPOICategoryQuery = "atm";
   const searchPOICategoryOptions = {
     skip: 5,
-    coordinate: { latitude: 47.606038, longitude: -122.333345 },
     radiusInMeters: 8046
   };
   console.log(
-    await client.searchPointOfInterestCategory(searchPOICategoryQuery, searchPOICategoryOptions)
+    await client.searchPointOfInterestCategory(
+      searchPOICategoryQuery,
+      coordinate,
+      searchPOICategoryOptions
+    )
   );
 
   console.log(" --- Get search POI category tree:");

@@ -174,10 +174,15 @@ export class SearchClient {
    */
   public async fuzzySearch(
     query: string,
+    coordinate?: Coordinate,
     options: FuzzySearchOptions = {}
   ): Promise<SearchAddressResult> {
     const { span, updatedOptions } = createSpan("SearchClient-fuzzySearch", options);
-    const internalOptions = mapFuzzySearchOptions(updatedOptions);
+    const internalOptions: FuzzySearchOptionalParams = {
+      lat: coordinate?.latitude,
+      lon: coordinate?.longitude,
+      ...mapFuzzySearchOptions(updatedOptions)
+    };
     try {
       return await this.client.search.fuzzySearch(this.defaultFormat, query, internalOptions);
     } catch (e) {
@@ -199,10 +204,15 @@ export class SearchClient {
    */
   public async searchPointOfInterest(
     query: string,
+    coordinate?: Coordinate,
     options: SearchPointOfInterestOptions = {}
   ): Promise<SearchAddressResult> {
     const { span, updatedOptions } = createSpan("SearchClient-searchPointOfInterest", options);
-    const internalOptions = mapSearchPointOfInterestOptions(updatedOptions);
+    const internalOptions: SearchPointOfInterestOptionalParams = {
+      lat: coordinate?.latitude,
+      lon: coordinate?.longitude,
+      ...mapSearchPointOfInterestOptions(updatedOptions)
+    };
     try {
       return await this.client.search.searchPointOfInterest(
         this.defaultFormat,
@@ -261,13 +271,18 @@ export class SearchClient {
    */
   public async searchPointOfInterestCategory(
     query: string,
+    coordinate?: Coordinate,
     options: SearchPointOfInterestOptions = {}
   ): Promise<SearchAddressResult> {
     const { span, updatedOptions } = createSpan(
       "SearchClient-searchPointOfInterestCategory",
       options
     );
-    const internalOptions = mapSearchPointOfInterestOptions(updatedOptions);
+    const internalOptions: SearchPointOfInterestOptionalParams = {
+      lat: coordinate?.latitude,
+      lon: coordinate?.longitude,
+      ...mapSearchPointOfInterestOptions(updatedOptions)
+    };
     try {
       return await this.client.search.searchPointOfInterestCategory(
         this.defaultFormat,
@@ -740,6 +755,7 @@ function mapSearchExtraFilterOptions(options: SearchExtraFilterOptions): SearchE
  */
 function mapSearchAddressOptions(options: SearchAddressOptions): SearchAddressOptionalParams {
   return {
+    entityType: options.entityType,
     isTypeAhead: options.isTypeAhead,
     countryFilter: options.countryFilter,
     lat: options.coordinate?.latitude,
@@ -761,8 +777,6 @@ function mapSearchPointOfInterestOptions(
     operatingHours: options.operatingHours,
     isTypeAhead: options.isTypeAhead,
     countryFilter: options.countryFilter,
-    lat: options.coordinate?.latitude,
-    lon: options.coordinate?.longitude,
     radiusInMeters: options.radiusInMeters,
     topLeft: options.boundingBox ? toLatLongString(options.boundingBox.topLeft) : undefined,
     btmRight: options.boundingBox ? toLatLongString(options.boundingBox.bottomRight) : undefined,
