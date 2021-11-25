@@ -50,9 +50,7 @@ export {
  * Bounding Box
  */
 export class BoundingBox {
-  /** Top left coordinate of the bounding box */
   private _topLeft: LatLong;
-  /** Bottom right coordinate of the bounding box */
   private _bottomRight: LatLong;
   constructor(topLeft: LatLong, bottomRight: LatLong) {
     this._topLeft = topLeft;
@@ -100,7 +98,7 @@ export class BoundingBox {
 }
 
 /**
- * Immutable Latitude/Longitude Pair
+ * Latitude/Longitude Pair
  */
 export class LatLong {
   private _latitude: number;
