@@ -48,12 +48,12 @@ async function main() {
   console.log(" --- Geocode address:");
   console.log(await client.searchAddress("400 Broad, Seattle"));
 
-  console.log(" --- Reverse-geocode coordinate to address:");
-  const coordinate = new LatLong(47.59118, -122.3327);
-  console.log(await client.reverseSearchAddress(coordinate));
+  console.log(" --- Reverse-geocode coordinates to address:");
+  const coordinates = new LatLong(47.59118, -122.3327);
+  console.log(await client.reverseSearchAddress(coordinates));
 
-  console.log(" --- Reverse-geocode coordinate to cross street address:");
-  console.log(await client.reverseSearchCrossStreetAddress(coordinate));
+  console.log(" --- Reverse-geocode coordinates to cross street address:");
+  console.log(await client.reverseSearchCrossStreetAddress(coordinates));
 
   console.log(" --- Geocode structured address:");
   const structuredAddress: StructuredAddress = {
@@ -86,7 +86,7 @@ async function main() {
   const searchPOIQuery = "juice bars";
   const searchPOIOptions = {
     top: 5,
-    coordinate: new LatLong(47.606038, -122.333345),
+    coordinates: new LatLong(47.606038, -122.333345),
     radiusInMeters: 8046
   };
   console.log(await client.searchPointOfInterest(searchPOIQuery, searchPOIOptions));
@@ -95,7 +95,7 @@ async function main() {
   const searchPOICategoryQuery = "atm";
   const searchPOICategoryOptions = {
     skip: 5,
-    coordinate: new LatLong(47.606038, -122.333345),
+    coordinates: new LatLong(47.606038, -122.333345),
     radiusInMeters: 8046
   };
   console.log(

@@ -362,7 +362,7 @@ export type RoadUseType = string;
 // @public
 export interface SearchAddressBaseOptions extends SearchBaseOptions {
     boundingBox?: BoundingBox;
-    coordinate?: LatLong;
+    coordinates?: LatLong;
     countryFilter?: string[];
     isTypeAhead?: boolean;
     radiusInMeters?: number;
@@ -440,14 +440,14 @@ export class SearchClient {
     fuzzySearchBatchSync(batchRequest: BatchRequest, options?: FuzzySearchBatchOptions): Promise<SearchAddressBatchResult>;
     getPointOfInterestCategoryTree(options?: GetPointOfInterestCategoryTreeOptions): Promise<PointOfInterestCategoryTreeResult>;
     listPolygons(geometryIds: string[], options?: ListPolygonsOptions): Promise<PolygonResult>;
-    reverseSearchAddress(coordinate: LatLong, options?: ReverseSearchAddressOptions): Promise<ReverseSearchAddressResult>;
+    reverseSearchAddress(coordinates: LatLong, options?: ReverseSearchAddressOptions): Promise<ReverseSearchAddressResult>;
     reverseSearchAddressBatchSync(batchRequest: BatchRequest, options?: ReverseSearchAddressBatchOptions): Promise<ReverseSearchAddressBatchProcessResult>;
-    reverseSearchCrossStreetAddress(coordinate: LatLong, options?: ReverseSearchCrossStreetAddressOptions): Promise<ReverseSearchCrossStreetAddressResult>;
+    reverseSearchCrossStreetAddress(coordinates: LatLong, options?: ReverseSearchCrossStreetAddressOptions): Promise<ReverseSearchCrossStreetAddressResult>;
     searchAddress(query: string, options?: SearchAddressOptions): Promise<SearchAddressResult>;
     searchAddressBatchSync(batchRequest: BatchRequest, options?: SearchAddressBatchOptions): Promise<SearchAddressBatchResult>;
     searchAlongRoute(query: string, maxDetourTime: number, route: GeoJsonLineString, options?: SearchAlongRouteOptions): Promise<SearchAddressResult>;
     searchInsideGeometry(query: string, geometry: GeoJsonPolygon | GeoJsonGeometryCollection | GeoJsonFeatureCollection, options?: SearchInsideGeometryOptions): Promise<SearchAddressResult>;
-    searchNearbyPointOfInterest(coordinate: LatLong, options?: SearchNearbyPointOfInterestOptions): Promise<SearchAddressResult>;
+    searchNearbyPointOfInterest(coordinates: LatLong, options?: SearchNearbyPointOfInterestOptions): Promise<SearchAddressResult>;
     searchPointOfInterest(query: string, options?: SearchPointOfInterestOptions): Promise<SearchAddressResult>;
     searchPointOfInterestCategory(query: string, options?: SearchPointOfInterestOptions): Promise<SearchAddressResult>;
     searchStructuredAddress(structuredAddress: StructuredAddress, options?: SearchStructuredAddressOptions): Promise<SearchAddressResult>;

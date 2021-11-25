@@ -223,11 +223,11 @@ export class SearchClient {
   /**
    * Requests points of interest (POI) results around a specific location.
    *
-   * @param coordinate - The coordinate for the nearby POI search
+   * @param coordinates - The coordinates for the nearby POI search
    * @param options - Optional parameters for the operation
    */
   public async searchNearbyPointOfInterest(
-    coordinate: LatLong,
+    coordinates: LatLong,
     options: SearchNearbyPointOfInterestOptions = {}
   ): Promise<SearchAddressResult> {
     const { span, updatedOptions } = createSpan(
@@ -238,8 +238,8 @@ export class SearchClient {
     try {
       return await this.client.search.searchNearbyPointOfInterest(
         this.defaultFormat,
-        coordinate.latitude,
-        coordinate.longitude,
+        coordinates.latitude,
+        coordinates.longitude,
         internalOptions
       );
     } catch (e) {
@@ -340,13 +340,13 @@ export class SearchClient {
   }
 
   /**
-   * Translates a coordinate into a human understandable street address.
+   * Translates a coordinates into a human understandable street address.
    *
-   * @param coordinate - The coordinate for the reverse search query
+   * @param coordinates - The coordinates for the reverse search query
    * @param options - Optional parameters for the operation
    */
   public async reverseSearchAddress(
-    coordinate: LatLong,
+    coordinates: LatLong,
     options: ReverseSearchAddressOptions = {}
   ): Promise<ReverseSearchAddressResult> {
     const { span, updatedOptions } = createSpan("SearchClient-reverseSearchAddress", options);
@@ -354,7 +354,7 @@ export class SearchClient {
     try {
       return await this.client.search.reverseSearchAddress(
         this.defaultFormat,
-        [coordinate.latitude, coordinate.longitude],
+        [coordinates.latitude, coordinates.longitude],
         internalOptions
       );
     } catch (e) {
@@ -369,13 +369,13 @@ export class SearchClient {
   }
 
   /**
-   * Translates a coordinate into a human understandable cross street.
+   * Translates a coordinates into a human understandable cross street.
    *
-   * @param coordinate - The coordinate for the reverse search query
+   * @param coordinates - The coordinates for the reverse search query
    * @param options - Optional parameters for the operation
    */
   public async reverseSearchCrossStreetAddress(
-    coordinate: LatLong,
+    coordinates: LatLong,
     options: ReverseSearchCrossStreetAddressOptions = {}
   ): Promise<ReverseSearchCrossStreetAddressResult> {
     const { span, updatedOptions } = createSpan(
@@ -386,7 +386,7 @@ export class SearchClient {
     try {
       return await this.client.search.reverseSearchCrossStreetAddress(
         this.defaultFormat,
-        [coordinate.latitude, coordinate.longitude],
+        [coordinates.latitude, coordinates.longitude],
         internalOptions
       );
     } catch (e) {
@@ -693,8 +693,8 @@ export class SearchClient {
 /**
  * @internal
  */
-function toLatLongString(coordinate: LatLong): string {
-  return `${coordinate.latitude},${coordinate.longitude}`;
+function toLatLongString(coordinates: LatLong): string {
+  return `${coordinates.latitude},${coordinates.longitude}`;
 }
 
 /**
@@ -742,8 +742,8 @@ function mapSearchAddressOptions(options: SearchAddressOptions): SearchAddressOp
   return {
     isTypeAhead: options.isTypeAhead,
     countryFilter: options.countryFilter,
-    lat: options.coordinate?.latitude,
-    lon: options.coordinate?.longitude,
+    lat: options.coordinates?.latitude,
+    lon: options.coordinates?.longitude,
     radiusInMeters: options.radiusInMeters,
     topLeft: options.boundingBox ? toLatLongString(options.boundingBox.topLeft) : undefined,
     btmRight: options.boundingBox ? toLatLongString(options.boundingBox.bottomRight) : undefined,
@@ -761,8 +761,8 @@ function mapSearchPointOfInterestOptions(
     operatingHours: options.operatingHours,
     isTypeAhead: options.isTypeAhead,
     countryFilter: options.countryFilter,
-    lat: options.coordinate?.latitude,
-    lon: options.coordinate?.longitude,
+    lat: options.coordinates?.latitude,
+    lon: options.coordinates?.longitude,
     radiusInMeters: options.radiusInMeters,
     topLeft: options.boundingBox ? toLatLongString(options.boundingBox.topLeft) : undefined,
     btmRight: options.boundingBox ? toLatLongString(options.boundingBox.bottomRight) : undefined,
