@@ -53,10 +53,6 @@ export interface SearchBaseOptions extends OperationOptions {
 export interface SearchAddressBaseOptions extends SearchBaseOptions {
   /** Bounding box of the search range */
   boundingBox?: BoundingBox;
-  /** Counter filters that limit the search to the specified countries */
-  countryFilter?: string[];
-  /** The coordinates where results should be biased */
-  coordinates?: LatLong;
   /** Whether the query should be interpreted as a partial input and the search will enter predictive mode */
   isTypeAhead?: boolean;
   /** The radius in meters to for the results to be constrained to the defined area */
@@ -153,6 +149,10 @@ export interface SearchNearbyPointOfInterestOptions
 export interface SearchAddressOptions extends SearchAddressBaseOptions {
   /** The entityType specifies the level of filtering performed on geographies */
   entityType?: GeographicEntityType;
+  /** Counter filters that limit the search to the specified countries */
+  countryFilter?: string[];
+  /** The coordinates where results should be biased */
+  coordinates?: LatLong;
 }
 
 /**
