@@ -171,7 +171,6 @@ export class SearchClient {
    * Perform a free-form Search which handles the most fuzzy of inputs handling any combination of address or POI tokens.
    *
    * @param query - The applicable query string (e.g., "seattle", "pizza").
-   *                  Can also be specified as a comma separated string composed by latitude followed by longitude (e.g., "47.641268, -122.125679").
    * @param coordinates - The coordinates where results should be biased
    * @param options - Optional parameters for the operation
    */
@@ -184,7 +183,6 @@ export class SearchClient {
    * Perform a free-form Search which handles the most fuzzy of inputs handling any combination of address or POI tokens.
    *
    * @param query - The applicable query string (e.g., "seattle", "pizza").
-   *                  Can also be specified as a comma separated string composed by latitude followed by longitude (e.g., "47.641268, -122.125679").
    * @param countryFilter - Counter filters that limit the search to the specified countries
    * @param options - Optional parameters for the operation
    */
@@ -193,16 +191,37 @@ export class SearchClient {
     countryFilter?: string[],
     options?: FuzzySearchOptions
   ): Promise<SearchAddressResult>;
+  /**
+   * Perform a free-form Search which handles the most fuzzy of inputs handling any combination of address or POI tokens.
+   *
+   * @param query - The applicable query string (e.g., "seattle", "pizza").
+   * @param coordinates - The coordinates where results should be biased
+   * @param countryFilter - Counter filters that limit the search to the specified countries
+   * @param options - Optional parameters for the operation
+   */
+  public async fuzzySearch(
+    query: string,
+    coordinates?: LatLong,
+    countryFilter?: string[],
+    options?: FuzzySearchOptions
+  ): Promise<SearchAddressResult>;
   public async fuzzySearch(
     query: string,
     coordinatesOrCountryFilter?: string[] | LatLong,
-    options: FuzzySearchOptions = {}
+    countryFilterOrOptions?: string[] | FuzzySearchOptions,
+    maybeOptions: FuzzySearchOptions = {}
   ): Promise<SearchAddressResult> {
+    const isThirdParamCountryFilter =
+      Array.isArray(countryFilterOrOptions) && isStringArray(countryFilterOrOptions);
+    const options = isThirdParamCountryFilter ? maybeOptions : countryFilterOrOptions;
     const { span, updatedOptions } = createSpan("SearchClient-fuzzySearch", options);
     const internalOptions = mapFuzzySearchOptions(updatedOptions);
     if (coordinatesOrCountryFilter instanceof LatLong) {
       internalOptions.lat = coordinatesOrCountryFilter.latitude;
       internalOptions.lon = coordinatesOrCountryFilter.longitude;
+      if (isThirdParamCountryFilter) {
+        internalOptions.countryFilter = countryFilterOrOptions;
+      }
     } else if (
       Array.isArray(coordinatesOrCountryFilter) &&
       isStringArray(coordinatesOrCountryFilter)
