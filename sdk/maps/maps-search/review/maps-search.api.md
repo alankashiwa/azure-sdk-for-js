@@ -450,10 +450,12 @@ export class SearchClient {
     searchAlongRoute(query: string, maxDetourTime: number, route: GeoJsonLineString, options?: SearchAlongRouteOptions): Promise<SearchAddressResult>;
     searchInsideGeometry(query: string, geometry: GeoJsonPolygon | GeoJsonGeometryCollection | GeoJsonFeatureCollection, options?: SearchInsideGeometryOptions): Promise<SearchAddressResult>;
     searchNearbyPointOfInterest(coordinates: LatLong, options?: SearchNearbyPointOfInterestOptions): Promise<SearchAddressResult>;
-    searchPointOfInterest(query: string, coordinates?: LatLong, options?: SearchPointOfInterestOptions): Promise<SearchAddressResult>;
-    searchPointOfInterest(query: string, countryFilter?: string[], options?: SearchPointOfInterestOptions): Promise<SearchAddressResult>;
-    searchPointOfInterestCategory(query: string, coordinates?: LatLong, options?: SearchPointOfInterestOptions): Promise<SearchAddressResult>;
-    searchPointOfInterestCategory(query: string, countryFilter?: string[], options?: SearchPointOfInterestOptions): Promise<SearchAddressResult>;
+    searchPointOfInterest(query: string, coordinates: LatLong, options?: SearchPointOfInterestOptions): Promise<SearchAddressResult>;
+    searchPointOfInterest(query: string, countryFilter: string[], options?: SearchPointOfInterestOptions): Promise<SearchAddressResult>;
+    searchPointOfInterest(query: string, coordinates: LatLong, countryFilter: string[], options?: SearchPointOfInterestOptions): Promise<SearchAddressResult>;
+    searchPointOfInterestCategory(query: string, coordinates: LatLong, options?: SearchPointOfInterestOptions): Promise<SearchAddressResult>;
+    searchPointOfInterestCategory(query: string, countryFilter: string[], options?: SearchPointOfInterestOptions): Promise<SearchAddressResult>;
+    searchPointOfInterestCategory(query: string, coordinates: LatLong, countryFilter: string[], options?: SearchPointOfInterestOptions): Promise<SearchAddressResult>;
     searchStructuredAddress(structuredAddress: StructuredAddress, options?: SearchStructuredAddressOptions): Promise<SearchAddressResult>;
 }
 
