@@ -66,6 +66,13 @@ import { SpanStatusCode } from "@azure/core-tracing";
 const isSearchClientOptions = (clientIdOrOptions: any): clientIdOrOptions is SearchClientOptions =>
   clientIdOrOptions && typeof clientIdOrOptions !== "string";
 
+const isPOISearchOptions = <
+  POISearchOptions extends FuzzySearchOptions | SearchPointOfInterestOptions
+>(
+  countryFilterOrOptions: any
+): countryFilterOrOptions is POISearchOptions =>
+  countryFilterOrOptions && Array.isArray(countryFilterOrOptions) === false;
+
 const isStringArray = (array: any[]): array is string[] => typeof array[0] === "string";
 
 /**
@@ -176,7 +183,7 @@ export class SearchClient {
    */
   public async fuzzySearch(
     query: string,
-    coordinates?: LatLong,
+    coordinates: LatLong,
     options?: FuzzySearchOptions
   ): Promise<SearchAddressResult>;
   /**
@@ -188,7 +195,7 @@ export class SearchClient {
    */
   public async fuzzySearch(
     query: string,
-    countryFilter?: string[],
+    countryFilter: string[],
     options?: FuzzySearchOptions
   ): Promise<SearchAddressResult>;
   /**
@@ -201,25 +208,27 @@ export class SearchClient {
    */
   public async fuzzySearch(
     query: string,
-    coordinates?: LatLong,
-    countryFilter?: string[],
+    coordinates: LatLong,
+    countryFilter: string[],
     options?: FuzzySearchOptions
   ): Promise<SearchAddressResult>;
   public async fuzzySearch(
     query: string,
-    coordinatesOrCountryFilter?: string[] | LatLong,
+    coordinatesOrCountryFilter: string[] | LatLong,
     countryFilterOrOptions?: string[] | FuzzySearchOptions,
     maybeOptions: FuzzySearchOptions = {}
   ): Promise<SearchAddressResult> {
-    const isThirdParamCountryFilter =
-      Array.isArray(countryFilterOrOptions) && isStringArray(countryFilterOrOptions);
-    const options = isThirdParamCountryFilter ? maybeOptions : countryFilterOrOptions;
+    const options: FuzzySearchOptions = isPOISearchOptions<FuzzySearchOptions>(
+      countryFilterOrOptions
+    )
+      ? countryFilterOrOptions
+      : maybeOptions;
     const { span, updatedOptions } = createSpan("SearchClient-fuzzySearch", options);
     const internalOptions = mapFuzzySearchOptions(updatedOptions);
     if (coordinatesOrCountryFilter instanceof LatLong) {
       internalOptions.lat = coordinatesOrCountryFilter.latitude;
       internalOptions.lon = coordinatesOrCountryFilter.longitude;
-      if (isThirdParamCountryFilter) {
+      if (!isPOISearchOptions<FuzzySearchOptions>(countryFilterOrOptions)) {
         internalOptions.countryFilter = countryFilterOrOptions;
       }
     } else if (
@@ -250,7 +259,7 @@ export class SearchClient {
    */
   public async searchPointOfInterest(
     query: string,
-    coordinates?: LatLong,
+    coordinates: LatLong,
     options?: SearchPointOfInterestOptions
   ): Promise<SearchAddressResult>;
   /**
@@ -262,19 +271,42 @@ export class SearchClient {
    */
   public async searchPointOfInterest(
     query: string,
-    countryFilter?: string[],
+    countryFilter: string[],
+    options?: SearchPointOfInterestOptions
+  ): Promise<SearchAddressResult>;
+  /**
+   * Requests points of interest (POI) results by name
+   *
+   * @param query - The POI name to search for (e.g., "statue of liberty", "starbucks")
+   * @param coordinates - The coordinates where results should be biased
+   * @param countryFilter - Counter filters that limit the search to the specified countries
+   * @param options - Optional parameters for the operation
+   */
+  public async searchPointOfInterest(
+    query: string,
+    coordinates: LatLong,
+    countryFilter: string[],
     options?: SearchPointOfInterestOptions
   ): Promise<SearchAddressResult>;
   public async searchPointOfInterest(
     query: string,
-    coordinatesOrCountryFilter?: string[] | LatLong,
-    options: SearchPointOfInterestOptions = {}
+    coordinatesOrCountryFilter: string[] | LatLong,
+    countryFilterOrOptions?: string[] | SearchPointOfInterestOptions,
+    maybeOptions: SearchPointOfInterestOptions = {}
   ): Promise<SearchAddressResult> {
+    const options: SearchPointOfInterestOptions = isPOISearchOptions<SearchPointOfInterestOptions>(
+      countryFilterOrOptions
+    )
+      ? countryFilterOrOptions
+      : maybeOptions;
     const { span, updatedOptions } = createSpan("SearchClient-searchPointOfInterest", options);
     const internalOptions = mapSearchPointOfInterestOptions(updatedOptions);
     if (coordinatesOrCountryFilter instanceof LatLong) {
       internalOptions.lat = coordinatesOrCountryFilter.latitude;
       internalOptions.lon = coordinatesOrCountryFilter.longitude;
+      if (!isPOISearchOptions<SearchPointOfInterestOptions>(countryFilterOrOptions)) {
+        internalOptions.countryFilter = countryFilterOrOptions;
+      }
     } else if (
       Array.isArray(coordinatesOrCountryFilter) &&
       isStringArray(coordinatesOrCountryFilter)
@@ -340,7 +372,7 @@ export class SearchClient {
    */
   public async searchPointOfInterestCategory(
     query: string,
-    coordinates?: LatLong,
+    coordinates: LatLong,
     options?: SearchPointOfInterestOptions
   ): Promise<SearchAddressResult>;
   /**
@@ -352,14 +384,34 @@ export class SearchClient {
    */
   public async searchPointOfInterestCategory(
     query: string,
-    countryFilter?: string[],
+    countryFilter: string[],
+    options?: SearchPointOfInterestOptions
+  ): Promise<SearchAddressResult>;
+  /**
+   * Requests points of interests (POI) results from given category.
+   *
+   * @param query - The POI category to search for (e.g., "AIRPORT", "RESTAURANT")
+   * @param coordinates - The coordinates where results should be biased
+   * @param countryFilter - Counter filters that limit the search to the specified countries
+   * @param options - Optional parameters for the operation
+   */
+  public async searchPointOfInterestCategory(
+    query: string,
+    coordinates: LatLong,
+    countryFilter: string[],
     options?: SearchPointOfInterestOptions
   ): Promise<SearchAddressResult>;
   public async searchPointOfInterestCategory(
     query: string,
-    coordinatesOrCountryFilter?: string[] | LatLong,
-    options: SearchPointOfInterestOptions = {}
+    coordinatesOrCountryFilter: string[] | LatLong,
+    countryFilterOrOptions?: string[] | SearchPointOfInterestOptions,
+    maybeOptions: SearchPointOfInterestOptions = {}
   ): Promise<SearchAddressResult> {
+    const options: SearchPointOfInterestOptions = isPOISearchOptions<SearchPointOfInterestOptions>(
+      countryFilterOrOptions
+    )
+      ? countryFilterOrOptions
+      : maybeOptions;
     const { span, updatedOptions } = createSpan(
       "SearchClient-searchPointOfInterestCategory",
       options
@@ -368,6 +420,9 @@ export class SearchClient {
     if (coordinatesOrCountryFilter instanceof LatLong) {
       internalOptions.lat = coordinatesOrCountryFilter.latitude;
       internalOptions.lon = coordinatesOrCountryFilter.longitude;
+      if (!isPOISearchOptions<SearchPointOfInterestOptions>(countryFilterOrOptions)) {
+        internalOptions.countryFilter = countryFilterOrOptions;
+      }
     } else if (
       Array.isArray(coordinatesOrCountryFilter) &&
       isStringArray(coordinatesOrCountryFilter)

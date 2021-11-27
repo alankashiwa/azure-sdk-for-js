@@ -436,8 +436,9 @@ export class SearchClient {
     beginFuzzySearchBatch(batchRequest: BatchRequest, options?: FuzzySearchBatchOptions): Promise<PollerLike<PollOperationState<SearchAddressBatchResult>, SearchAddressBatchResult>>;
     beginReverseSearchAddressBatch(batchRequest: BatchRequest, options?: ReverseSearchAddressBatchOptions): Promise<PollerLike<PollOperationState<ReverseSearchAddressBatchProcessResult>, ReverseSearchAddressBatchProcessResult>>;
     beginSearchAddressBatch(batchRequest: BatchRequest, options?: SearchAddressBatchOptions): Promise<PollerLike<PollOperationState<SearchAddressBatchResult>, SearchAddressBatchResult>>;
-    fuzzySearch(query: string, coordinates?: LatLong, options?: FuzzySearchOptions): Promise<SearchAddressResult>;
-    fuzzySearch(query: string, countryFilter?: string[], options?: FuzzySearchOptions): Promise<SearchAddressResult>;
+    fuzzySearch(query: string, coordinates: LatLong, options?: FuzzySearchOptions): Promise<SearchAddressResult>;
+    fuzzySearch(query: string, countryFilter: string[], options?: FuzzySearchOptions): Promise<SearchAddressResult>;
+    fuzzySearch(query: string, coordinates: LatLong, countryFilter: string[], options?: FuzzySearchOptions): Promise<SearchAddressResult>;
     fuzzySearchBatchSync(batchRequest: BatchRequest, options?: FuzzySearchBatchOptions): Promise<SearchAddressBatchResult>;
     getPointOfInterestCategoryTree(options?: GetPointOfInterestCategoryTreeOptions): Promise<PointOfInterestCategoryTreeResult>;
     listPolygons(geometryIds: string[], options?: ListPolygonsOptions): Promise<PolygonResult>;

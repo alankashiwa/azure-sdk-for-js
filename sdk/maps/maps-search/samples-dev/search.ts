@@ -66,9 +66,17 @@ async function main() {
   };
   console.log(await client.searchStructuredAddress(structuredAddress));
 
-  console.log(" --- Perform a fuzzy search:");
-  const fuzzyResult = await client.fuzzySearch("pizza", ["Fr"]);
-  console.log(fuzzyResult);
+  console.log(" --- Perform a fuzzy search with coordinates:");
+  let fuzzyResult = await client.fuzzySearch("pizza", coordinates);
+  console.log(fuzzyResult.summary);
+
+  console.log(" --- Perform a fuzzy search with country filter:");
+  fuzzyResult = await client.fuzzySearch("pizza", ["Fr"]);
+  console.log(fuzzyResult.summary);
+
+  console.log(" --- Perform a fuzzy search with coordinate and country filter:");
+  fuzzyResult = await client.fuzzySearch("pizza", coordinates, ["Fr"]);
+  console.log(fuzzyResult.summary);
 
   // let's save geometry IDs from the fuzzy search for the getSearchPolygon example
   let geometryIds: string[] = [];
@@ -80,7 +88,7 @@ async function main() {
     await client.searchNearbyPointOfInterest(searchNearbyCoordinate, searchNearbyOptions)
   );
 
-  console.log(" --- Search POI:");
+  console.log(" --- Search POI with coordinates:");
   const searchPOIQuery = "juice bars";
   const searchPOIOptions = {
     top: 5,
@@ -94,7 +102,20 @@ async function main() {
     )
   );
 
-  console.log(" --- Search POI category:");
+  console.log(" --- Search POI with countryFilter:");
+  console.log(await client.searchPointOfInterest(searchPOIQuery, ["fr"], searchPOIOptions));
+
+  console.log(" --- Search POI with coordinate and countryFilter:");
+  console.log(
+    await client.searchPointOfInterest(
+      searchPOIQuery,
+      new LatLong(47.606038, -122.333345),
+      ["fr"],
+      searchPOIOptions
+    )
+  );
+
+  console.log(" --- Search POI category with coordinates:");
   const searchPOICategoryQuery = "atm";
   const searchPOICategoryOptions = {
     skip: 5,
@@ -104,6 +125,25 @@ async function main() {
     await client.searchPointOfInterestCategory(
       searchPOICategoryQuery,
       new LatLong(47.606038, -122.333345),
+      searchPOICategoryOptions
+    )
+  );
+
+  console.log(" --- Search POI category with countryFilter:");
+  console.log(
+    await client.searchPointOfInterestCategory(
+      searchPOICategoryQuery,
+      ["fr"],
+      searchPOICategoryOptions
+    )
+  );
+
+  console.log(" --- Search POI category with coordinates and countryFilter:");
+  console.log(
+    await client.searchPointOfInterestCategory(
+      searchPOICategoryQuery,
+      new LatLong(47.606038, -122.333345),
+      ["fr"],
       searchPOICategoryOptions
     )
   );
