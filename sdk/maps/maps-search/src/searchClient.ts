@@ -675,7 +675,7 @@ export class SearchClient {
   public async fuzzySearchBatchSync(
     batchRequest: BatchRequest,
     options: FuzzySearchBatchOptions = {}
-  ) {
+  ): Promise<SearchAddressBatchResult> {
     const { span, updatedOptions } = createSpan("SearchClient-fuzzySearchBatchSync", options);
     try {
       return await this.client.search.fuzzySearchBatchSync(
@@ -733,7 +733,7 @@ export class SearchClient {
   public async searchAddressBatchSync(
     batchRequest: BatchRequest,
     options: SearchAddressBatchOptions = {}
-  ) {
+  ): Promise<SearchAddressBatchResult> {
     const { span, updatedOptions } = createSpan("SearchClient-searchAddressBatchSync", options);
     try {
       return await this.client.search.searchAddressBatchSync(
@@ -791,7 +791,7 @@ export class SearchClient {
   public async reverseSearchAddressBatchSync(
     batchRequest: BatchRequest,
     options: ReverseSearchAddressBatchOptions = {}
-  ) {
+  ): Promise<ReverseSearchAddressBatchProcessResult> {
     const { span, updatedOptions } = createSpan(
       "SearchClient-reverseSearchAddressBatchSync",
       options
