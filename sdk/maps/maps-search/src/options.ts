@@ -105,6 +105,8 @@ export interface SearchPointOfInterestOptions
   operatingHours?: OperatingHoursRange;
 }
 
+export type SearchPointOfInterestCategoryOptions = SearchPointOfInterestOptions;
+
 /**
  * Options for fuzzy search
  *
@@ -279,12 +281,12 @@ export interface SearchAlongRouteOptions extends SearchGeometryBaseOptions {
 /**
  * Options for begin fuzzy search batch
  */
-export interface FuzzySearchBatchOptions extends OperationOptions {}
+export type FuzzySearchBatchOptions = FuzzySearchOptions;
 /**
  * Options for begin search address batch
  */
-export interface SearchAddressBatchOptions extends OperationOptions {}
+export type SearchAddressBatchOptions = SearchAddressOptions;
 /**
  * Options for reverse begin search address batch
  */
-export interface ReverseSearchAddressBatchOptions extends OperationOptions {}
+export type ReverseSearchAddressBatchOptions = ReverseSearchAddressOptions;

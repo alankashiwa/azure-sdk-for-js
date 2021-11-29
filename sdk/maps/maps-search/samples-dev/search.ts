@@ -12,7 +12,10 @@ import {
   LatLong,
   GeoJsonLineString,
   GeoJsonPolygon,
-  StructuredAddress
+  StructuredAddress,
+  SearchAddressRequestItem,
+  ReverseSearchAddressRequestItem,
+  FuzzySearchRequestItem
 } from "@azure/maps-search";
 import * as dotenv from "dotenv";
 dotenv.config();
@@ -199,66 +202,89 @@ async function main() {
     )
   );
 
-  const searchAddressBatchRequest = {
-    batchItems: [
-      {
-        query: "?query=400 Broad St, Seattle, WA 98109&limit=3"
-      },
-      {
-        query: "?query=One, Microsoft Way, Redmond, WA 98052&limit=3"
-      },
-      {
-        query: "?query=350 5th Ave, New York, NY 10118&limit=1"
-      }
-    ]
-  };
+  // const searchAddressBatchRequest = {
+  //   batchItems: [
+  //     {
+  //       query: "?query=400 Broad St, Seattle, WA 98109&limit=3"
+  //     },
+  //     {
+  //       query: "?query=One, Microsoft Way, Redmond, WA 98052&limit=3"
+  //     },
+  //     {
+  //       query: "?query=350 5th Ave, New York, NY 10118&limit=1"
+  //     }
+  //   ]
+  // };
+  const searchAddressRequests: SearchAddressRequestItem[] = [
+    { query: "400 Broad St, Seattle, WA 98109" },
+    { query: "One, Microsoft Way, Redmond, WA 98052" },
+    { query: "350 5th Ave, New York, NY 10118" }
+  ];
   console.log(" --- Search address batch:");
-  console.log(await client.searchAddressBatchSync(searchAddressBatchRequest));
+  console.log(await client.searchAddressBatchSync(searchAddressRequests, { top: 3 }));
 
   console.log(" --- Search address batch (long-running):");
-  let poller = await client.beginSearchAddressBatch(searchAddressBatchRequest);
+  let poller = await client.beginSearchAddressBatch(searchAddressRequests, { top: 3 });
   console.log(await poller.pollUntilDone());
 
-  const searchAddressReverseBatchRequest = {
-    batchItems: [
-      {
-        query: "?query=48.858561,2.294911"
-      },
-      {
-        query: "?query=47.639765,-122.127896&radius=5000&limit=2"
-      },
-      {
-        query: "?query=47.621028,-122.348170"
-      }
-    ]
-  };
+  // const searchAddressReverseBatchRequest = {
+  //   batchItems: [
+  //     {
+  //       query: "?query=48.858561,2.294911"
+  //     },
+  //     {
+  //       query: "?query=47.639765,-122.127896&radius=5000&limit=2"
+  //     },
+  //     {
+  //       query: "?query=47.621028,-122.348170"
+  //     }
+  //   ]
+  // };
+
+  const reverseSearchAddressRequests: ReverseSearchAddressRequestItem[] = [
+    { coordinates: new LatLong(48.858561, 2.294911) },
+    { coordinates: new LatLong(47.639765, -122.127896) },
+    { coordinates: new LatLong(47.621028, -122.34817) }
+  ];
 
   console.log(" --- Search address reverse batch:");
-  console.log(await client.reverseSearchAddressBatchSync(searchAddressBatchRequest));
+  console.log(
+    await client.reverseSearchAddressBatchSync(reverseSearchAddressRequests, {
+      radiusInMeters: 50000
+    })
+  );
 
   console.log(" --- Search address reverse batch (long-running):");
-  poller = await client.beginReverseSearchAddressBatch(searchAddressReverseBatchRequest);
+  poller = await client.beginReverseSearchAddressBatch(reverseSearchAddressRequests, {
+    radiusInMeters: 50000
+  });
   console.log(await poller.pollUntilDone());
 
-  const searchFuzzyBatchRequest = {
-    batchItems: [
-      {
-        query: "?query=atm&lat=47.639769&lon=-122.128362&radius=5000&limit=5"
-      },
-      {
-        query: "?query=Statue Of Liberty&limit=2"
-      },
-      {
-        query: "?query=Starbucks&lat=47.639769&lon=-122.128362&radius=5000"
-      }
-    ]
-  };
+  // const searchFuzzyBatchRequest = {
+  //   batchItems: [
+  //     {
+  //       query: "?query=atm&lat=47.639769&lon=-122.128362&radius=5000&limit=5"
+  //     },
+  //     {
+  //       query: "?query=Statue Of Liberty&limit=2"
+  //     },
+  //     {
+  //       query: "?query=Starbucks&lat=47.639769&lon=-122.128362&radius=5000"
+  //     }
+  //   ]
+  // };
+
+  const fuzzySearchRequests: FuzzySearchRequestItem[] = [
+    { query: "atm", coordinates: new LatLong(48.858561, 2.294911) },
+    { query: "Statue Of Liberty", coordinates: new LatLong(47.639765, -122.127896) },
+    { query: "Starbucks", coordinates: new LatLong(47.621028, -122.34817) }
+  ];
 
   console.log(" --- Search fuzzy batch:");
-  console.log(await client.fuzzySearchBatchSync(searchFuzzyBatchRequest));
+  console.log(await client.fuzzySearchBatchSync(fuzzySearchRequests, { radiusInMeters: 5000 }));
 
   console.log(" --- Search fuzzy batch (long-running):");
-  poller = await client.beginFuzzySearchBatch(searchFuzzyBatchRequest);
+  poller = await client.beginFuzzySearchBatch(fuzzySearchRequests, { radiusInMeters: 5000 });
   console.log(await poller.pollUntilDone());
 }
 

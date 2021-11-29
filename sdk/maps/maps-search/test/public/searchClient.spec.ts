@@ -1,5 +1,6 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
+
 import { isPlaybackMode, Recorder } from "@azure-tools/test-recorder";
 import { matrix } from "@azure/test-utils";
 import { assert } from "chai";
@@ -35,34 +36,34 @@ matrix([["SubscriptionKey", "AAD"]] as const, async (authMethod: AuthMethod) => 
           // TODO: Come up with test data
           const geometryId: string[] = [];
           const results = await client.listPolygons(geometryId);
-          assert.equal(results.polygons?.length, geometryId.length);
+          assert.equal(results.length, geometryId.length);
           // TODO: Assert the OK results
         });
       });
-      xdescribe("#fuzzySearch", function() {});
-      xdescribe("#searchPointOfInterest", function() {});
-      xdescribe("#searchNearbyPointOfInterest", function() {});
-      xdescribe("#searchPointOfInterestCategory", function() {});
-      xdescribe("#getPointOfInterestCategoryTree", function() {});
-      xdescribe("#searchAddress", function() {});
-      xdescribe("#reverseSearchAddress", function() {});
-      xdescribe("#reverseSearchCrossStreetAddress", function() {});
-      xdescribe("#searchStructuredAddress", function() {});
-      xdescribe("#searchInsideGeometry", function() {});
-      xdescribe("#searchAlongRoute", function() {});
-      xdescribe("#fuzzySearchBatchSync", function() {});
-      xdescribe("#searchAddressBatchSync", function() {});
-      xdescribe("#reverseSearchAddressBatchSync", function() {});
+      // describe("#fuzzySearch", function() {});
+      // describe("#searchPointOfInterest", function() {});
+      // describe("#searchNearbyPointOfInterest", function() {});
+      // describe("#searchPointOfInterestCategory", function() {});
+      // describe("#getPointOfInterestCategoryTree", function() {});
+      // describe("#searchAddress", function() {});
+      // describe("#reverseSearchAddress", function() {});
+      // describe("#reverseSearchCrossStreetAddress", function() {});
+      // describe("#searchStructuredAddress", function() {});
+      // describe("#searchInsideGeometry", function() {});
+      // describe("#searchAlongRoute", function() {});
+      // describe("#fuzzySearchBatchSync", function() {});
+      // describe("#searchAddressBatchSync", function() {});
+      // describe("#reverseSearchAddressBatchSync", function() {});
     });
     describe("LROs", function() {
-      //const pollingInterval = isPlaybackMode() ? 0 : 2000;
+      // const pollingInterval = isPlaybackMode() ? 0 : 2000;
 
       before(function(this: Context) {
         this.timeout(isPlaybackMode() ? fastTimeout : CLITimeout);
       });
-      xdescribe("#beginFuzzySearchBatch", function() {});
-      xdescribe("#beginSearchAddressBatch", function() {});
-      xdescribe("#beginReverseSearchAddressBatch", function() {});
+      // describe("#beginFuzzySearchBatch", function() {});
+      // describe("#beginSearchAddressBatch", function() {});
+      // describe("#beginReverseSearchAddressBatch", function() {});
     });
   });
 });

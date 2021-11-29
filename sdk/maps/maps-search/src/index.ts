@@ -4,3 +4,4 @@
 export * from "./searchClient";
 export * from "./options";
 export * from "./models";
+export * from "./results";

@@ -1,5 +1,7 @@
-import { env, record, Recorder, RecorderEnvironmentSetup } from "@azure-tools/test-recorder";
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
+import { env, record, Recorder, RecorderEnvironmentSetup } from "@azure-tools/test-recorder";
 import { Context } from "mocha";
 import { AzureKeyCredential } from "@azure/core-auth";
 import { ClientSecretCredential, TokenCredential } from "@azure/identity";

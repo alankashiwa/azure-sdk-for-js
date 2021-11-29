@@ -1,27 +1,23 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+import { BatchRequest } from "./generated/models";
+import { SearchAddressOptions, ReverseSearchAddressOptions, FuzzySearchOptions } from "./options";
+
 export {
   Polygon,
   PolygonResult,
   SearchIndexes,
   GeographicEntityType,
   LocalizedMapView,
-  SearchAddressResult,
-  SearchAddressResultItem,
-  SearchSummary,
   QueryType,
-  LatLongPairAbbreviated,
   SearchAddressResultType,
   PointOfInterest,
-  Viewport,
-  EntryPoint,
-  AddressRanges,
-  Address,
-  DataSource,
   MatchType,
   GeometryIdentifier,
   EntryPointType,
+  DataSource,
+  Address,
   BrandName,
   Classification,
   ClassificationName,
@@ -32,16 +28,12 @@ export {
   OperatingHoursRange,
   ElectricVehicleConnector,
   PointOfInterestCategoryTreeResult,
-  ReverseSearchAddressResult,
   RoadUseType,
-  ReverseSearchCrossStreetAddressResult,
-  ReverseSearchAddressResultItem,
   GeoJsonObjectUnion,
   SearchAddressBatchResult,
   BatchRequest,
   ReverseSearchAddressBatchProcessResult,
   BatchResult,
-  ReverseSearchCrossStreetAddressResultItem,
   BatchRequestItem,
   BatchResultSummary
 } from "./generated/models";
@@ -57,42 +49,42 @@ export class BoundingBox {
     this._bottomRight = bottomRight;
   }
   /** Top left coordinate of the bounding box */
-  public get topLeft() {
+  public get topLeft(): LatLong {
     return this._topLeft;
   }
 
   /** Bottom right coordinate of the bounding box */
-  public get bottomRight() {
+  public get bottomRight(): LatLong {
     return this._bottomRight;
   }
 
   /** Top latitude of the bounding box */
-  public get top() {
+  public get top(): number {
     return this._topLeft.latitude;
   }
 
   /** Left longitude of the bounding box */
-  public get left() {
+  public get left(): number {
     return this._topLeft.longitude;
   }
 
   /** Bottom latitude of the bounding box */
-  public get bottom() {
+  public get bottom(): number {
     return this._bottomRight.latitude;
   }
 
   /** Right longitude of the bounding box */
-  public get right() {
+  public get right(): number {
     return this._bottomRight.longitude;
   }
 
   /** Top right coordinate of the bounding box */
-  public get topRight() {
+  public get topRight(): LatLong {
     return new LatLong(this._topLeft.latitude, this._bottomRight.longitude);
   }
 
   /** Bottom left coordinate of the bounding box */
-  public get bottomLeft() {
+  public get bottomLeft(): LatLong {
     return new LatLong(this._bottomRight.latitude, this._topLeft.longitude);
   }
 }
@@ -109,12 +101,12 @@ export class LatLong {
   }
 
   /** Latitude */
-  public get latitude() {
+  public get latitude(): number {
     return this._latitude;
   }
 
   /** Longitude */
-  public get longitude() {
+  public get longitude(): number {
     return this._longitude;
   }
 }
@@ -179,11 +171,17 @@ export interface GeoJsonFeatureCollection {
   features: GeoJsonFeature[];
 }
 
+/**
+ * GeoJson geometry collection
+ */
 export interface GeoJsonGeometryCollection {
   type: "GeometryCollection";
   geometries: GeoJsonPolygon[];
 }
 
+/**
+ * Structured address
+ */
 export interface StructuredAddress {
   /** The 2 or 3 letter [ISO3166-1](https://www.iso.org/iso-3166-country-codes.html) country code portion of an address. E.g. US. */
   countryCode: string;
@@ -205,4 +203,211 @@ export interface StructuredAddress {
   countrySubdivision?: string;
   /** The postal code portion of an address */
   postalCode?: string;
+}
+
+export interface FuzzySearchRequestItem {
+  query: string;
+  coordinates?: LatLong;
+  countryFilter?: string[];
+}
+
+export interface SearchAddressRequestItem {
+  query: string;
+}
+
+export interface ReverseSearchAddressRequestItem {
+  coordinates: LatLong;
+}
+
+export function createFuzzySearchBatchRequest(
+  requests: FuzzySearchRequestItem[],
+  options?: FuzzySearchOptions
+): BatchRequest {
+  return {
+    batchItems: requests.map((r) => {
+      let query = `?query=${r.query}`;
+      if (options) {
+        for (const [k, v] of Object.entries(options)) {
+          switch (k) {
+            case "indexFilter":
+              if (v && v.length > 0) {
+                query += `&idxSet=${v.join(",")}`;
+              }
+              break;
+            case "operatingHours":
+              if (v) {
+                query += `&openingHours=${v}`;
+              }
+              break;
+            case "categoryFilter":
+              if (v && v.length > 0) {
+                query += `&categorySet=${v.join(",")}`;
+              }
+              break;
+            case "brandFilter":
+              if (v && v.length > 0) {
+                query += `&brandSet=${v.join(",")}`;
+              }
+              break;
+            case "electricVehicleConnectorFilter":
+              if (v && v.length > 0) {
+                query += `&connectorSet=${v.join(",")}`;
+              }
+              break;
+            case "isTypeAhead":
+              if (v) {
+                query += `&typeahead=${v}`;
+              }
+              break;
+            case "radiusInMeters":
+              if (v) {
+                query += `&radius=${v}`;
+              }
+              break;
+            case "boundingBox":
+              if (v) {
+                query += `&topLeft=${v.topLeft}&btmRight=${v.bottomRight}`;
+              }
+              break;
+            case "localizedMapView":
+              if (v) {
+                query += `&view=${v}`;
+              }
+              break;
+            case "top":
+              if (v) {
+                query += `&limit=${v}`;
+              }
+              break;
+            case "skip":
+              if (v) {
+                query += `&offset=${v}`;
+              }
+              break;
+            default:
+              query += `&${k}=${v}`;
+              break;
+          }
+        }
+      }
+      return { query };
+    })
+  };
+}
+
+export function createSearchAddressBatchRequest(
+  requests: SearchAddressRequestItem[],
+  options?: SearchAddressOptions
+): BatchRequest {
+  return {
+    batchItems: requests.map((r) => {
+      let query = `?query=${r.query}`;
+      if (options) {
+        for (const [k, v] of Object.entries(options)) {
+          switch (k) {
+            case "coordinates":
+              if (v) {
+                query += `&lat=${v.latitude}&lon=${v.longitude}`;
+              }
+              break;
+            case "countryFilter":
+              if (v && v.length > 0) {
+                query += `&countrySet=${v.join(",")}`;
+              }
+              break;
+            case "isTypeAhead":
+              if (v) {
+                query += `&typeahead=${v}`;
+              }
+              break;
+            case "radiusInMeters":
+              if (v) {
+                query += `&radius=${v}`;
+              }
+              break;
+            case "boundingBox":
+              if (v) {
+                query += `&topLeft=${v.topLeft}&btmRight=${v.bottomRight}`;
+              }
+              break;
+            case "localizedMapView":
+              if (v) {
+                query += `&view=${v}`;
+              }
+              break;
+            case "top":
+              if (v) {
+                query += `&limit=${v}`;
+              }
+              break;
+            case "skip":
+              if (v) {
+                query += `&offset=${v}`;
+              }
+              break;
+            default:
+              query += `&${k}=${v}`;
+              break;
+          }
+        }
+      }
+      return { query };
+    })
+  };
+}
+
+export function createReverseSearchAddressBatchRequest(
+  requests: ReverseSearchAddressRequestItem[],
+  options?: ReverseSearchAddressOptions
+): BatchRequest {
+  return {
+    batchItems: requests.map((r) => {
+      let query = `?query=${r.coordinates.latitude},${r.coordinates.longitude}`;
+      if (options) {
+        for (const [k, v] of Object.entries(options)) {
+          switch (k) {
+            case "includeSpeedLimit":
+              if (v) {
+                query += `&returnSpeedLimit=${v}`;
+              }
+              break;
+            case "numberParam":
+              if (v) {
+                query += `&number=${v}`;
+              }
+              break;
+            case "includeRoadUse":
+              if (v) {
+                query += `&returnRoadUse=${v}`;
+              }
+              break;
+            case "roadUse":
+              if (v && v.length > 0) {
+                query += `&roadUse=${v.join(",")}`;
+              }
+              break;
+            case "includeMatchType":
+              if (v) {
+                query += `&returnMatchType=${v}`;
+              }
+              break;
+            case "radiusInMeters":
+              if (v) {
+                query += `&radius=${v}`;
+              }
+              break;
+            case "localizedMapView":
+              if (v) {
+                query += `&view=${v}`;
+              }
+              break;
+            default:
+              query += `&${k}=${v}`;
+              break;
+          }
+        }
+      }
+      return { query };
+    })
+  };
 }

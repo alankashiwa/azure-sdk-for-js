@@ -19,14 +19,15 @@ import {
   SearchSearchNearbyPointOfInterestOptionalParams as SearchNearbyPointOfInterestOptionalParams,
   SearchReverseSearchAddressOptionalParams as ReverseSearchAddressOptionalParams,
   SearchReverseSearchCrossStreetAddressOptionalParams as ReverseSearchCrossStreetAddressOptionalParams,
-  PolygonResult,
-  PointOfInterestCategoryTreeResult,
-  SearchAddressResult,
-  ReverseSearchAddressResult,
-  ReverseSearchCrossStreetAddressResult,
+  ReverseSearchCrossStreetAddressResult as ReverseSearchCrossStreetAddressResultInternal,
+  SearchAddressResult as SearchAddressResultInternal,
+  BoundingBox as BoundingBoxInternal,
+  ReverseSearchAddressResult as ReverseSearchAddressResultInternal,
   SearchAddressBatchResult,
-  BatchRequest,
-  ReverseSearchAddressBatchProcessResult
+  ReverseSearchAddressBatchProcessResult,
+  LatLongPairAbbreviated,
+  Polygon,
+  PointOfInterestCategory
 } from "./generated/models";
 import { PollerLike, PollOperationState } from "@azure/core-lro";
 import {
@@ -35,8 +36,23 @@ import {
   GeoJsonLineString,
   GeoJsonFeatureCollection,
   GeoJsonPolygon,
-  GeoJsonGeometryCollection
+  GeoJsonGeometryCollection,
+  BoundingBox,
+  createFuzzySearchBatchRequest,
+  FuzzySearchRequestItem,
+  SearchAddressRequestItem,
+  createSearchAddressBatchRequest,
+  ReverseSearchAddressRequestItem,
+  createReverseSearchAddressBatchRequest
 } from "./models";
+import {
+  SearchAddressResult,
+  SearchAddressResultItem,
+  ReverseSearchAddressResult,
+  ReverseSearchAddressResultItem,
+  ReverseSearchCrossStreetAddressResult,
+  ReverseSearchCrossStreetAddressResultItem
+} from "./results";
 import {
   SearchClientOptions,
   ListPolygonsOptions,
@@ -54,7 +70,8 @@ import {
   SearchAddressBatchOptions,
   ReverseSearchAddressBatchOptions,
   SearchBaseOptions,
-  SearchExtraFilterOptions
+  SearchExtraFilterOptions,
+  SearchPointOfInterestCategoryOptions
 } from "./options";
 import { mapsClientIdPolicy } from "./credential/mapsClientIdPolicy";
 import { mapsAzureKeyCredentialPolicy } from "./credential/mapsAzureKeyCredentialPolicy";
@@ -67,7 +84,10 @@ const isSearchClientOptions = (clientIdOrOptions: any): clientIdOrOptions is Sea
   clientIdOrOptions && typeof clientIdOrOptions !== "string";
 
 const isPOISearchOptions = <
-  POISearchOptions extends FuzzySearchOptions | SearchPointOfInterestOptions
+  POISearchOptions extends
+    | FuzzySearchOptions
+    | SearchPointOfInterestOptions
+    | SearchPointOfInterestCategoryOptions
 >(
   countryFilterOrOptions: any
 ): countryFilterOrOptions is POISearchOptions =>
@@ -154,15 +174,16 @@ export class SearchClient {
   public async listPolygons(
     geometryIds: string[],
     options: ListPolygonsOptions = {}
-  ): Promise<PolygonResult> {
+  ): Promise<Polygon[]> {
     const { span, updatedOptions } = createSpan("SearchClient-listPolygons", options);
     const internalOptions = updatedOptions as ListPolygonsOptionalParams;
     try {
-      return await this.client.search.listPolygons(
+      const result = await this.client.search.listPolygons(
         this.defaultFormat,
         geometryIds,
         internalOptions
       );
+      return result.polygons ? result.polygons : [];
     } catch (e) {
       span.setStatus({
         code: SpanStatusCode.ERROR,
@@ -238,7 +259,12 @@ export class SearchClient {
       internalOptions.countryFilter = coordinatesOrCountryFilter;
     }
     try {
-      return await this.client.search.fuzzySearch(this.defaultFormat, query, internalOptions);
+      const result = await this.client.search.fuzzySearch(
+        this.defaultFormat,
+        query,
+        internalOptions
+      );
+      return mapSearchAddressResult(result);
     } catch (e) {
       span.setStatus({
         code: SpanStatusCode.ERROR,
@@ -314,11 +340,12 @@ export class SearchClient {
       internalOptions.countryFilter = coordinatesOrCountryFilter;
     }
     try {
-      return await this.client.search.searchPointOfInterest(
+      const result = await this.client.search.searchPointOfInterest(
         this.defaultFormat,
         query,
         internalOptions
       );
+      return mapSearchAddressResult(result);
     } catch (e) {
       span.setStatus({
         code: SpanStatusCode.ERROR,
@@ -346,12 +373,13 @@ export class SearchClient {
     );
     const internalOptions = mapSearchNearbyPointOfInterestOptions(updatedOptions);
     try {
-      return await this.client.search.searchNearbyPointOfInterest(
+      const result = await this.client.search.searchNearbyPointOfInterest(
         this.defaultFormat,
         coordinates.latitude,
         coordinates.longitude,
         internalOptions
       );
+      return mapSearchAddressResult(result);
     } catch (e) {
       span.setStatus({
         code: SpanStatusCode.ERROR,
@@ -373,7 +401,7 @@ export class SearchClient {
   public async searchPointOfInterestCategory(
     query: string,
     coordinates: LatLong,
-    options?: SearchPointOfInterestOptions
+    options?: SearchPointOfInterestCategoryOptions
   ): Promise<SearchAddressResult>;
   /**
    * Requests points of interests (POI) results from given category.
@@ -385,7 +413,7 @@ export class SearchClient {
   public async searchPointOfInterestCategory(
     query: string,
     countryFilter: string[],
-    options?: SearchPointOfInterestOptions
+    options?: SearchPointOfInterestCategoryOptions
   ): Promise<SearchAddressResult>;
   /**
    * Requests points of interests (POI) results from given category.
@@ -399,17 +427,17 @@ export class SearchClient {
     query: string,
     coordinates: LatLong,
     countryFilter: string[],
-    options?: SearchPointOfInterestOptions
+    options?: SearchPointOfInterestCategoryOptions
   ): Promise<SearchAddressResult>;
   public async searchPointOfInterestCategory(
     query: string,
     coordinatesOrCountryFilter: string[] | LatLong,
-    countryFilterOrOptions?: string[] | SearchPointOfInterestOptions,
-    maybeOptions: SearchPointOfInterestOptions = {}
+    countryFilterOrOptions?: string[] | SearchPointOfInterestCategoryOptions,
+    maybeOptions: SearchPointOfInterestCategoryOptions = {}
   ): Promise<SearchAddressResult> {
-    const options: SearchPointOfInterestOptions = isPOISearchOptions<SearchPointOfInterestOptions>(
-      countryFilterOrOptions
-    )
+    const options: SearchPointOfInterestCategoryOptions = isPOISearchOptions<
+      SearchPointOfInterestCategoryOptions
+    >(countryFilterOrOptions)
       ? countryFilterOrOptions
       : maybeOptions;
     const { span, updatedOptions } = createSpan(
@@ -430,11 +458,12 @@ export class SearchClient {
       internalOptions.countryFilter = coordinatesOrCountryFilter;
     }
     try {
-      return await this.client.search.searchPointOfInterestCategory(
+      const result = await this.client.search.searchPointOfInterestCategory(
         this.defaultFormat,
         query,
         internalOptions
       );
+      return mapSearchAddressResult(result);
     } catch (e) {
       span.setStatus({
         code: SpanStatusCode.ERROR,
@@ -453,17 +482,18 @@ export class SearchClient {
    */
   public async getPointOfInterestCategoryTree(
     options: GetPointOfInterestCategoryTreeOptions = {}
-  ): Promise<PointOfInterestCategoryTreeResult> {
+  ): Promise<PointOfInterestCategory[]> {
     const { span, updatedOptions } = createSpan(
       "SearchClient-getPointOfInterestCategoryTree",
       options
     );
     const internalOptions = updatedOptions as GetPointOfInterestCategoryTreeOptionalParams;
     try {
-      return await this.client.search.getPointOfInterestCategoryTree(
+      const result = await this.client.search.getPointOfInterestCategoryTree(
         this.defaultFormat,
         internalOptions
       );
+      return result.categories ? result.categories : [];
     } catch (e) {
       span.setStatus({
         code: SpanStatusCode.ERROR,
@@ -488,7 +518,12 @@ export class SearchClient {
     const { span, updatedOptions } = createSpan("SearchClient-searchAddress", options);
     const internalOptions = mapSearchAddressOptions(updatedOptions);
     try {
-      return await this.client.search.searchAddress(this.defaultFormat, query, internalOptions);
+      const result = await this.client.search.searchAddress(
+        this.defaultFormat,
+        query,
+        internalOptions
+      );
+      return mapSearchAddressResult(result);
     } catch (e) {
       span.setStatus({
         code: SpanStatusCode.ERROR,
@@ -513,11 +548,12 @@ export class SearchClient {
     const { span, updatedOptions } = createSpan("SearchClient-reverseSearchAddress", options);
     const internalOptions = updatedOptions as ReverseSearchAddressOptionalParams;
     try {
-      return await this.client.search.reverseSearchAddress(
+      const result = await this.client.search.reverseSearchAddress(
         this.defaultFormat,
         [coordinates.latitude, coordinates.longitude],
         internalOptions
       );
+      return mapReverseSearchAddressResult(result);
     } catch (e) {
       span.setStatus({
         code: SpanStatusCode.ERROR,
@@ -545,11 +581,12 @@ export class SearchClient {
     );
     const internalOptions = updatedOptions as ReverseSearchCrossStreetAddressOptionalParams;
     try {
-      return await this.client.search.reverseSearchCrossStreetAddress(
+      const result = await this.client.search.reverseSearchCrossStreetAddress(
         this.defaultFormat,
         [coordinates.latitude, coordinates.longitude],
         internalOptions
       );
+      return mapReverseSearchCrossStreetAddressCrResult(result);
     } catch (e) {
       span.setStatus({
         code: SpanStatusCode.ERROR,
@@ -578,11 +615,12 @@ export class SearchClient {
       ...structuredAddressOptions
     } as SearchStructuredAddressOptionalParams;
     try {
-      return await this.client.search.searchStructuredAddress(
+      const result = await this.client.search.searchStructuredAddress(
         this.defaultFormat,
         countryCode,
         internalOptions
       );
+      return mapSearchAddressResult(result);
     } catch (e) {
       span.setStatus({
         code: SpanStatusCode.ERROR,
@@ -611,7 +649,7 @@ export class SearchClient {
     const { span, updatedOptions } = createSpan("SearchClient-searchInsideGeometry", options);
     const internalOptions = updatedOptions as SearchInsideGeometryOptionalParams;
     try {
-      return await this.client.search.searchInsideGeometry(
+      const result = await this.client.search.searchInsideGeometry(
         this.defaultFormat,
         query,
         {
@@ -619,6 +657,7 @@ export class SearchClient {
         },
         internalOptions
       );
+      return mapSearchAddressResult(result);
     } catch (e) {
       span.setStatus({
         code: SpanStatusCode.ERROR,
@@ -647,13 +686,14 @@ export class SearchClient {
     const { span, updatedOptions } = createSpan("SearchClient-searchAlongRoute", options);
     const internalOptions = updatedOptions as SearchAlongRouteOptionalParams;
     try {
-      return await this.client.search.searchAlongRoute(
+      const result = await this.client.search.searchAlongRoute(
         this.defaultFormat,
         query,
         maxDetourTime,
         { route: route },
         internalOptions
       );
+      return mapSearchAddressResult(result);
     } catch (e) {
       span.setStatus({
         code: SpanStatusCode.ERROR,
@@ -673,10 +713,12 @@ export class SearchClient {
    * @param options - Optional parameters for the operation
    */
   public async fuzzySearchBatchSync(
-    batchRequest: BatchRequest,
+    requests: FuzzySearchRequestItem[],
     options: FuzzySearchBatchOptions = {}
   ): Promise<SearchAddressBatchResult> {
     const { span, updatedOptions } = createSpan("SearchClient-fuzzySearchBatchSync", options);
+    const batchRequest = createFuzzySearchBatchRequest(requests, options);
+    console.log(batchRequest);
     try {
       return await this.client.search.fuzzySearchBatchSync(
         this.defaultFormat,
@@ -702,10 +744,12 @@ export class SearchClient {
    * @param options - Optional parameters for the operation
    */
   public async beginFuzzySearchBatch(
-    batchRequest: BatchRequest,
+    requests: FuzzySearchRequestItem[],
     options: FuzzySearchBatchOptions = {}
   ): Promise<PollerLike<PollOperationState<SearchAddressBatchResult>, SearchAddressBatchResult>> {
     const { span, updatedOptions } = createSpan("SearchClient-beginFuzzySearchBatch", options);
+    const batchRequest = createFuzzySearchBatchRequest(requests, options);
+    console.log(batchRequest);
     try {
       return await this.client.search.beginFuzzySearchBatch(
         this.defaultFormat,
@@ -731,10 +775,11 @@ export class SearchClient {
    * @param options - Optional parameters for the operation
    */
   public async searchAddressBatchSync(
-    batchRequest: BatchRequest,
+    requests: SearchAddressRequestItem[],
     options: SearchAddressBatchOptions = {}
   ): Promise<SearchAddressBatchResult> {
     const { span, updatedOptions } = createSpan("SearchClient-searchAddressBatchSync", options);
+    const batchRequest = createSearchAddressBatchRequest(requests, options);
     try {
       return await this.client.search.searchAddressBatchSync(
         this.defaultFormat,
@@ -760,10 +805,11 @@ export class SearchClient {
    * @param options - Optional parameters for the operation
    */
   public async beginSearchAddressBatch(
-    batchRequest: BatchRequest,
+    requests: SearchAddressRequestItem[],
     options: SearchAddressBatchOptions = {}
   ): Promise<PollerLike<PollOperationState<SearchAddressBatchResult>, SearchAddressBatchResult>> {
     const { span, updatedOptions } = createSpan("SearchClient-beginSearchAddressBatch", options);
+    const batchRequest = createSearchAddressBatchRequest(requests, options);
     try {
       return await this.client.search.beginSearchAddressBatch(
         this.defaultFormat,
@@ -789,13 +835,14 @@ export class SearchClient {
    * @param options - Optional parameters for the operation
    */
   public async reverseSearchAddressBatchSync(
-    batchRequest: BatchRequest,
+    requests: ReverseSearchAddressRequestItem[],
     options: ReverseSearchAddressBatchOptions = {}
   ): Promise<ReverseSearchAddressBatchProcessResult> {
     const { span, updatedOptions } = createSpan(
       "SearchClient-reverseSearchAddressBatchSync",
       options
     );
+    const batchRequest = createReverseSearchAddressBatchRequest(requests, options);
     try {
       return await this.client.search.reverseSearchAddressBatchSync(
         this.defaultFormat,
@@ -821,7 +868,7 @@ export class SearchClient {
    * @param options - Optional parameters for the operation
    */
   public async beginReverseSearchAddressBatch(
-    batchRequest: BatchRequest,
+    requests: ReverseSearchAddressRequestItem[],
     options: ReverseSearchAddressBatchOptions = {}
   ): Promise<
     PollerLike<
@@ -833,6 +880,7 @@ export class SearchClient {
       "SearchClient-beginReverseSearchAddressBatch",
       options
     );
+    const batchRequest = createReverseSearchAddressBatchRequest(requests, options);
     try {
       return await this.client.search.beginReverseSearchAddressBatch(
         this.defaultFormat,
@@ -953,5 +1001,158 @@ function mapFuzzySearchOptions(options: FuzzySearchOptions): FuzzySearchOptional
     maxFuzzyLevel: options.maxFuzzyLevel,
     indexFilter: options.indexFilter,
     ...mapSearchPointOfInterestOptions(options)
+  };
+}
+
+/**
+ * @internal
+ */
+function mapLatLongPairAbbreviatedToLatLong(
+  latLongAbbr?: LatLongPairAbbreviated
+): LatLong | undefined {
+  if (latLongAbbr && latLongAbbr.lat && latLongAbbr.lon) {
+    return new LatLong(latLongAbbr.lat, latLongAbbr.lon);
+  } else {
+    return undefined;
+  }
+}
+
+/**
+ * @internal
+ */
+function mapStringToLatLong(latLongStr?: string): LatLong | undefined {
+  if (latLongStr && typeof latLongStr === "string") {
+    const latLongArray = latLongStr.split(",");
+    if (latLongArray.length === 2) {
+      const lat = Number(latLongArray[0]);
+      const lon = Number(latLongArray[1]);
+      if (!isNaN(lat) && !isNaN(lon)) {
+        return new LatLong(lat, lon);
+      }
+    }
+  }
+  return undefined;
+}
+
+/**
+ * @internal
+ */
+function mapBoundingBox(bbox?: BoundingBoxInternal): BoundingBox | undefined {
+  if (bbox && bbox.topLeft && bbox.bottomRight) {
+    const topLeft = mapLatLongPairAbbreviatedToLatLong(bbox.topLeft);
+    const bottomRight = mapLatLongPairAbbreviatedToLatLong(bbox.bottomRight);
+    if (topLeft && bottomRight) {
+      return new BoundingBox(topLeft, bottomRight);
+    }
+  }
+  return undefined;
+}
+
+/**
+ * @internal
+ */
+function mapSearchAddressResult(internalResult: SearchAddressResultInternal): SearchAddressResult {
+  return {
+    summary: internalResult.summary
+      ? {
+          query: internalResult.summary.query,
+          queryType: internalResult.summary.queryType,
+          queryTime: internalResult.summary.queryTime,
+          numResults: internalResult.summary.numResults,
+          top: internalResult.summary.top,
+          skip: internalResult.summary.skip,
+          totalResults: internalResult.summary.totalResults,
+          fuzzyLevel: internalResult.summary.fuzzyLevel,
+          geoBias: mapLatLongPairAbbreviatedToLatLong(internalResult.summary.geoBias)
+        }
+      : undefined,
+    results: internalResult.results
+      ? internalResult.results.map((ir) => {
+          const mappedResult: SearchAddressResultItem = {
+            type: ir.type,
+            id: ir.id,
+            score: ir.score,
+            distanceInMeters: ir.distanceInMeters,
+            info: ir.info,
+            entityType: ir.entityType,
+            pointOfInterest: ir.pointOfInterest,
+            address: ir.address,
+            position:
+              ir.position && ir.position.lat && ir.position.lon
+                ? new LatLong(ir.position.lat, ir.position.lon)
+                : undefined,
+            viewport: mapBoundingBox(ir.viewport),
+            entryPoints: ir.entryPoints
+              ? ir.entryPoints.map((p) => {
+                  return { type: p.type, position: mapLatLongPairAbbreviatedToLatLong(p.position) };
+                })
+              : undefined,
+            addressRanges: ir.addressRanges
+              ? {
+                  rangeLeft: ir.addressRanges.rangeLeft,
+                  rangeRight: ir.addressRanges.rangeRight,
+                  from: mapLatLongPairAbbreviatedToLatLong(ir.addressRanges.from),
+                  to: mapLatLongPairAbbreviatedToLatLong(ir.addressRanges.to)
+                }
+              : undefined,
+            dataSources: ir.dataSources,
+            matchType: ir.matchType,
+            detourTime: ir.detourTime
+          };
+          return mappedResult;
+        })
+      : undefined
+  };
+}
+
+/**
+ * @internal
+ */
+function mapReverseSearchAddressResult(
+  internalResult: ReverseSearchAddressResultInternal
+): ReverseSearchAddressResult {
+  return {
+    summary: internalResult.summary
+      ? {
+          queryTime: internalResult.summary.queryTime,
+          numResults: internalResult.summary.numResults
+        }
+      : undefined,
+    addresses: internalResult.addresses
+      ? internalResult.addresses.map((ad) => {
+          const mappedResult: ReverseSearchAddressResultItem = {
+            address: ad.address,
+            position: mapStringToLatLong(ad.position),
+            roadUse: ad.roadUse,
+            matchType: ad.matchType
+          };
+          return mappedResult;
+        })
+      : undefined
+  };
+}
+
+/**
+ * @internal
+ */
+function mapReverseSearchCrossStreetAddressCrResult(
+  internalResult: ReverseSearchCrossStreetAddressResultInternal
+): ReverseSearchCrossStreetAddressResult {
+  return {
+    summary: internalResult.summary
+      ? {
+          queryTime: internalResult.summary.queryTime,
+          numResults: internalResult.summary.numResults
+        }
+      : undefined,
+    addresses: internalResult.addresses
+      ? internalResult.addresses.map((ad) => {
+          const mappedResult: ReverseSearchCrossStreetAddressResultItem = {
+            address: ad.address,
+            position: mapStringToLatLong(ad.position)
+          };
+          return mappedResult;
+        })
+      : undefined
   };
 }

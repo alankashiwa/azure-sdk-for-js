@@ -38,10 +38,10 @@ export interface Address {
 
 // @public
 export interface AddressRanges {
-    from?: LatLongPairAbbreviated;
+    from?: LatLong;
     rangeLeft?: string;
     rangeRight?: string;
-    to?: LatLongPairAbbreviated;
+    to?: LatLong;
 }
 
 // @public
@@ -95,6 +95,15 @@ export interface ClassificationName {
     readonly nameLocale?: string;
 }
 
+// @public (undocumented)
+export function createFuzzySearchBatchRequest(requests: FuzzySearchRequestItem[], options?: FuzzySearchOptions): BatchRequest;
+
+// @public (undocumented)
+export function createReverseSearchAddressBatchRequest(requests: ReverseSearchAddressRequestItem[], options?: ReverseSearchAddressOptions): BatchRequest;
+
+// @public (undocumented)
+export function createSearchAddressBatchRequest(requests: SearchAddressRequestItem[], options?: SearchAddressOptions): BatchRequest;
+
 // @public
 export interface DataSource {
     geometry?: GeometryIdentifier;
@@ -105,7 +114,7 @@ export type ElectricVehicleConnector = string;
 
 // @public
 export interface EntryPoint {
-    position?: LatLongPairAbbreviated;
+    position?: LatLong;
     readonly type?: EntryPointType;
 }
 
@@ -113,8 +122,7 @@ export interface EntryPoint {
 export type EntryPointType = string;
 
 // @public
-export interface FuzzySearchBatchOptions extends OperationOptions {
-}
+export type FuzzySearchBatchOptions = FuzzySearchOptions;
 
 // @public
 export interface FuzzySearchOptions extends SearchPointOfInterestOptions {
@@ -122,6 +130,16 @@ export interface FuzzySearchOptions extends SearchPointOfInterestOptions {
     indexFilter?: SearchIndexes[];
     maxFuzzyLevel?: number;
     minFuzzyLevel?: number;
+}
+
+// @public (undocumented)
+export interface FuzzySearchRequestItem {
+    // (undocumented)
+    coordinates?: LatLong;
+    // (undocumented)
+    countryFilter?: string[];
+    // (undocumented)
+    query: string;
 }
 
 // @public
@@ -160,7 +178,7 @@ export interface GeoJsonFeatureCollection {
     type: "FeatureCollection";
 }
 
-// @public (undocumented)
+// @public
 export interface GeoJsonGeometryCollection {
     // (undocumented)
     geometries: GeoJsonPolygon[];
@@ -222,12 +240,6 @@ export class LatLong {
     get latitude(): number;
     get longitude(): number;
     }
-
-// @public
-export interface LatLongPairAbbreviated {
-    lat?: number;
-    lon?: number;
-}
 
 // @public
 export interface ListPolygonsOptions extends OperationOptions {
@@ -298,8 +310,7 @@ export interface PolygonResult {
 export type QueryType = string;
 
 // @public
-export interface ReverseSearchAddressBatchOptions extends OperationOptions {
-}
+export type ReverseSearchAddressBatchOptions = ReverseSearchAddressOptions;
 
 // @public
 export type ReverseSearchAddressBatchProcessResult = BatchResult & {
@@ -317,17 +328,23 @@ export interface ReverseSearchAddressOptions extends ReverseSearchBaseOptions {
     roadUse?: RoadUseType[];
 }
 
-// @public
-export interface ReverseSearchAddressResult {
-    readonly addresses?: ReverseSearchAddressResultItem[];
-    readonly summary?: SearchSummary;
+// @public (undocumented)
+export interface ReverseSearchAddressRequestItem {
+    // (undocumented)
+    coordinates: LatLong;
 }
 
-// @public
+// @public (undocumented)
+export interface ReverseSearchAddressResult {
+    readonly addresses?: ReverseSearchAddressResultItem[];
+    readonly summary?: ReverseSearchSummary;
+}
+
+// @public (undocumented)
 export interface ReverseSearchAddressResultItem {
     readonly address?: Address;
     readonly matchType?: MatchType;
-    readonly position?: string;
+    readonly position?: LatLong;
     readonly roadUse?: RoadUseType[];
 }
 
@@ -344,16 +361,24 @@ export interface ReverseSearchCrossStreetAddressOptions extends ReverseSearchBas
     top?: number;
 }
 
-// @public
+// @public (undocumented)
 export interface ReverseSearchCrossStreetAddressResult {
-    readonly addresses?: ReverseSearchCrossStreetAddressResultItem[];
-    readonly summary?: SearchSummary;
+    readonly addresses?: ReverseSearchAddressResultItem[];
+    readonly summary?: ReverseSearchSummary;
 }
 
-// @public
+// @public (undocumented)
 export interface ReverseSearchCrossStreetAddressResultItem {
     readonly address?: Address;
-    readonly position?: string;
+    readonly matchType?: MatchType;
+    readonly position?: LatLong;
+    readonly roadUse?: RoadUseType[];
+}
+
+// @public (undocumented)
+export interface ReverseSearchSummary {
+    readonly numResults?: number;
+    readonly queryTime?: number;
 }
 
 // @public
@@ -367,8 +392,7 @@ export interface SearchAddressBaseOptions extends SearchBaseOptions {
 }
 
 // @public
-export interface SearchAddressBatchOptions extends OperationOptions {
-}
+export type SearchAddressBatchOptions = SearchAddressOptions;
 
 // @public
 export type SearchAddressBatchResult = BatchResult & {
@@ -380,6 +404,12 @@ export interface SearchAddressOptions extends SearchAddressBaseOptions {
     coordinates?: LatLong;
     countryFilter?: string[];
     entityType?: GeographicEntityType;
+}
+
+// @public (undocumented)
+export interface SearchAddressRequestItem {
+    // (undocumented)
+    query: string;
 }
 
 // @public
@@ -395,18 +425,16 @@ export interface SearchAddressResultItem {
     readonly dataSources?: DataSource;
     readonly detourTime?: number;
     readonly distanceInMeters?: number;
-    // (undocumented)
-    entityType?: GeographicEntityType;
+    readonly entityType?: GeographicEntityType;
     readonly entryPoints?: EntryPoint[];
     readonly id?: string;
     readonly info?: string;
     readonly matchType?: MatchType;
     readonly pointOfInterest?: PointOfInterest;
-    position?: LatLongPairAbbreviated;
+    readonly position?: LatLong;
     readonly score?: number;
     readonly type?: SearchAddressResultType;
-    // Warning: (ae-forgotten-export) The symbol "BoundingBox" needs to be exported by the entry point index.d.ts
-    readonly viewport?: BoundingBox_2;
+    readonly viewport?: BoundingBox;
 }
 
 // @public
@@ -433,29 +461,29 @@ export class SearchClient {
     constructor(credential: AzureKeyCredential, options?: SearchClientOptions);
     constructor(credential: TokenCredential, clientId: string);
     constructor(credential: TokenCredential, clientId: string, options?: SearchClientOptions);
-    beginFuzzySearchBatch(batchRequest: BatchRequest, options?: FuzzySearchBatchOptions): Promise<PollerLike<PollOperationState<SearchAddressBatchResult>, SearchAddressBatchResult>>;
-    beginReverseSearchAddressBatch(batchRequest: BatchRequest, options?: ReverseSearchAddressBatchOptions): Promise<PollerLike<PollOperationState<ReverseSearchAddressBatchProcessResult>, ReverseSearchAddressBatchProcessResult>>;
-    beginSearchAddressBatch(batchRequest: BatchRequest, options?: SearchAddressBatchOptions): Promise<PollerLike<PollOperationState<SearchAddressBatchResult>, SearchAddressBatchResult>>;
+    beginFuzzySearchBatch(requests: FuzzySearchRequestItem[], options?: FuzzySearchBatchOptions): Promise<PollerLike<PollOperationState<SearchAddressBatchResult>, SearchAddressBatchResult>>;
+    beginReverseSearchAddressBatch(requests: ReverseSearchAddressRequestItem[], options?: ReverseSearchAddressBatchOptions): Promise<PollerLike<PollOperationState<ReverseSearchAddressBatchProcessResult>, ReverseSearchAddressBatchProcessResult>>;
+    beginSearchAddressBatch(requests: SearchAddressRequestItem[], options?: SearchAddressBatchOptions): Promise<PollerLike<PollOperationState<SearchAddressBatchResult>, SearchAddressBatchResult>>;
     fuzzySearch(query: string, coordinates: LatLong, options?: FuzzySearchOptions): Promise<SearchAddressResult>;
     fuzzySearch(query: string, countryFilter: string[], options?: FuzzySearchOptions): Promise<SearchAddressResult>;
     fuzzySearch(query: string, coordinates: LatLong, countryFilter: string[], options?: FuzzySearchOptions): Promise<SearchAddressResult>;
-    fuzzySearchBatchSync(batchRequest: BatchRequest, options?: FuzzySearchBatchOptions): Promise<SearchAddressBatchResult>;
-    getPointOfInterestCategoryTree(options?: GetPointOfInterestCategoryTreeOptions): Promise<PointOfInterestCategoryTreeResult>;
-    listPolygons(geometryIds: string[], options?: ListPolygonsOptions): Promise<PolygonResult>;
+    fuzzySearchBatchSync(requests: FuzzySearchRequestItem[], options?: FuzzySearchBatchOptions): Promise<SearchAddressBatchResult>;
+    getPointOfInterestCategoryTree(options?: GetPointOfInterestCategoryTreeOptions): Promise<PointOfInterestCategory[]>;
+    listPolygons(geometryIds: string[], options?: ListPolygonsOptions): Promise<Polygon[]>;
     reverseSearchAddress(coordinates: LatLong, options?: ReverseSearchAddressOptions): Promise<ReverseSearchAddressResult>;
-    reverseSearchAddressBatchSync(batchRequest: BatchRequest, options?: ReverseSearchAddressBatchOptions): Promise<ReverseSearchAddressBatchProcessResult>;
+    reverseSearchAddressBatchSync(requests: ReverseSearchAddressRequestItem[], options?: ReverseSearchAddressBatchOptions): Promise<ReverseSearchAddressBatchProcessResult>;
     reverseSearchCrossStreetAddress(coordinates: LatLong, options?: ReverseSearchCrossStreetAddressOptions): Promise<ReverseSearchCrossStreetAddressResult>;
     searchAddress(query: string, options?: SearchAddressOptions): Promise<SearchAddressResult>;
-    searchAddressBatchSync(batchRequest: BatchRequest, options?: SearchAddressBatchOptions): Promise<SearchAddressBatchResult>;
+    searchAddressBatchSync(requests: SearchAddressRequestItem[], options?: SearchAddressBatchOptions): Promise<SearchAddressBatchResult>;
     searchAlongRoute(query: string, maxDetourTime: number, route: GeoJsonLineString, options?: SearchAlongRouteOptions): Promise<SearchAddressResult>;
     searchInsideGeometry(query: string, geometry: GeoJsonPolygon | GeoJsonGeometryCollection | GeoJsonFeatureCollection, options?: SearchInsideGeometryOptions): Promise<SearchAddressResult>;
     searchNearbyPointOfInterest(coordinates: LatLong, options?: SearchNearbyPointOfInterestOptions): Promise<SearchAddressResult>;
     searchPointOfInterest(query: string, coordinates: LatLong, options?: SearchPointOfInterestOptions): Promise<SearchAddressResult>;
     searchPointOfInterest(query: string, countryFilter: string[], options?: SearchPointOfInterestOptions): Promise<SearchAddressResult>;
     searchPointOfInterest(query: string, coordinates: LatLong, countryFilter: string[], options?: SearchPointOfInterestOptions): Promise<SearchAddressResult>;
-    searchPointOfInterestCategory(query: string, coordinates: LatLong, options?: SearchPointOfInterestOptions): Promise<SearchAddressResult>;
-    searchPointOfInterestCategory(query: string, countryFilter: string[], options?: SearchPointOfInterestOptions): Promise<SearchAddressResult>;
-    searchPointOfInterestCategory(query: string, coordinates: LatLong, countryFilter: string[], options?: SearchPointOfInterestOptions): Promise<SearchAddressResult>;
+    searchPointOfInterestCategory(query: string, coordinates: LatLong, options?: SearchPointOfInterestCategoryOptions): Promise<SearchAddressResult>;
+    searchPointOfInterestCategory(query: string, countryFilter: string[], options?: SearchPointOfInterestCategoryOptions): Promise<SearchAddressResult>;
+    searchPointOfInterestCategory(query: string, coordinates: LatLong, countryFilter: string[], options?: SearchPointOfInterestCategoryOptions): Promise<SearchAddressResult>;
     searchStructuredAddress(structuredAddress: StructuredAddress, options?: SearchStructuredAddressOptions): Promise<SearchAddressResult>;
 }
 
@@ -494,6 +522,9 @@ export interface SearchNearbyPointOfInterestOptions extends SearchBaseOptions, S
     radiusInMeters?: number;
 }
 
+// @public (undocumented)
+export type SearchPointOfInterestCategoryOptions = SearchPointOfInterestOptions;
+
 // @public
 export interface SearchPointOfInterestOptions extends SearchAddressBaseOptions, SearchExtraFilterOptions {
     operatingHours?: OperatingHoursRange;
@@ -507,7 +538,7 @@ export interface SearchStructuredAddressOptions extends SearchBaseOptions {
 // @public
 export interface SearchSummary {
     readonly fuzzyLevel?: number;
-    readonly geoBias?: LatLongPairAbbreviated;
+    readonly geoBias?: LatLong;
     readonly numResults?: number;
     readonly query?: string;
     readonly queryTime?: number;
@@ -517,7 +548,7 @@ export interface SearchSummary {
     readonly totalResults?: number;
 }
 
-// @public (undocumented)
+// @public
 export interface StructuredAddress {
     countryCode: string;
     countrySecondarySubdivision?: string;
@@ -529,12 +560,6 @@ export interface StructuredAddress {
     postalCode?: string;
     streetName?: string;
     streetNumber?: string;
-}
-
-// @public
-export interface Viewport {
-    btmRightPoint?: LatLongPairAbbreviated;
-    topLeftPoint?: LatLongPairAbbreviated;
 }
 
 
