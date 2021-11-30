@@ -4,7 +4,9 @@
 
 ```ts
 
+import { AbortSignalLike } from '@azure/abort-controller';
 import { AzureKeyCredential } from '@azure/core-auth';
+import { CancelOnProgress } from '@azure/core-lro';
 import { CommonClientOptions } from '@azure/core-client';
 import { OperationOptions } from '@azure/core-client';
 import { PollerLike } from '@azure/core-lro';
@@ -13,7 +15,6 @@ import { TokenCredential } from '@azure/core-auth';
 
 // @public
 export interface Address {
-    readonly boundingBox?: Record<string, unknown>;
     readonly buildingNumber?: string;
     readonly country?: string;
     readonly countryCode?: string;
@@ -45,22 +46,15 @@ export interface AddressRanges {
 }
 
 // @public
-export interface BatchRequest {
-    batchItems?: BatchRequestItem[];
+export interface BatchItem<TResult> {
+    // Warning: (ae-forgotten-export) The symbol "ErrorResponse" needs to be exported by the entry point index.d.ts
+    readonly response?: TResult & ErrorResponse;
+    readonly statusCode?: number;
 }
 
 // @public
-export interface BatchRequestItem {
-    query?: string;
-}
-
-// @public
-export interface BatchResult {
-    readonly batchSummary?: BatchResultSummary;
-}
-
-// @public
-export interface BatchResultSummary {
+export interface BatchResult<TResult extends SearchAddressResult | ReverseSearchAddressResult> {
+    readonly batchItems?: BatchItem<TResult>[];
     readonly successfulRequests?: number;
     readonly totalRequests?: number;
 }
@@ -95,14 +89,16 @@ export interface ClassificationName {
     readonly nameLocale?: string;
 }
 
+// Warning: (ae-forgotten-export) The symbol "BatchRequest" needs to be exported by the entry point index.d.ts
+//
 // @public (undocumented)
-export function createFuzzySearchBatchRequest(requests: FuzzySearchRequestItem[], options?: FuzzySearchOptions): BatchRequest;
+export function createFuzzySearchBatchRequest(requests: FuzzySearchRequest[]): BatchRequest;
 
 // @public (undocumented)
-export function createReverseSearchAddressBatchRequest(requests: ReverseSearchAddressRequestItem[], options?: ReverseSearchAddressOptions): BatchRequest;
+export function createReverseSearchAddressBatchRequest(requests: ReverseSearchAddressRequest[]): BatchRequest;
 
 // @public (undocumented)
-export function createSearchAddressBatchRequest(requests: SearchAddressRequestItem[], options?: SearchAddressOptions): BatchRequest;
+export function createSearchAddressBatchRequest(requests: SearchAddressRequest[]): BatchRequest;
 
 // @public
 export interface DataSource {
@@ -122,7 +118,8 @@ export interface EntryPoint {
 export type EntryPointType = string;
 
 // @public
-export type FuzzySearchBatchOptions = FuzzySearchOptions;
+export interface FuzzySearchBatchOptions extends OperationOptions {
+}
 
 // @public
 export interface FuzzySearchOptions extends SearchPointOfInterestOptions {
@@ -133,11 +130,13 @@ export interface FuzzySearchOptions extends SearchPointOfInterestOptions {
 }
 
 // @public (undocumented)
-export interface FuzzySearchRequestItem {
+export interface FuzzySearchRequest {
     // (undocumented)
     coordinates?: LatLong;
     // (undocumented)
     countryFilter?: string[];
+    // (undocumented)
+    options?: FuzzySearchOptions;
     // (undocumented)
     query: string;
 }
@@ -310,12 +309,8 @@ export interface PolygonResult {
 export type QueryType = string;
 
 // @public
-export type ReverseSearchAddressBatchOptions = ReverseSearchAddressOptions;
-
-// @public
-export type ReverseSearchAddressBatchProcessResult = BatchResult & {
-    readonly batchItems?: ReverseSearchAddressBatchItem[];
-};
+export interface ReverseSearchAddressBatchOptions extends OperationOptions {
+}
 
 // @public
 export interface ReverseSearchAddressOptions extends ReverseSearchBaseOptions {
@@ -329,9 +324,11 @@ export interface ReverseSearchAddressOptions extends ReverseSearchBaseOptions {
 }
 
 // @public (undocumented)
-export interface ReverseSearchAddressRequestItem {
+export interface ReverseSearchAddressRequest {
     // (undocumented)
     coordinates: LatLong;
+    // (undocumented)
+    options?: ReverseSearchAddressOptions;
 }
 
 // @public (undocumented)
@@ -388,12 +385,8 @@ export interface SearchAddressBaseOptions extends SearchBaseOptions {
 }
 
 // @public
-export type SearchAddressBatchOptions = SearchAddressOptions;
-
-// @public
-export type SearchAddressBatchResult = BatchResult & {
-    readonly batchItems?: SearchAddressBatchItem[];
-};
+export interface SearchAddressBatchOptions extends OperationOptions {
+}
 
 // @public
 export interface SearchAddressOptions extends SearchAddressBaseOptions {
@@ -403,7 +396,9 @@ export interface SearchAddressOptions extends SearchAddressBaseOptions {
 }
 
 // @public (undocumented)
-export interface SearchAddressRequestItem {
+export interface SearchAddressRequest {
+    // (undocumented)
+    options?: SearchAddressOptions;
     // (undocumented)
     query: string;
 }
@@ -459,26 +454,55 @@ export interface SearchBaseOptions extends OperationOptions {
     top?: number;
 }
 
+// @public (undocumented)
+export class SearchBatchPoller<TSearchBatchResult, TInternalBatchResult> implements PollerLike<PollOperationState<TSearchBatchResult>, TSearchBatchResult> {
+    constructor(internalPoller: PollerLike<PollOperationState<TInternalBatchResult>, TInternalBatchResult>, mapper: (res: TInternalBatchResult) => TSearchBatchResult);
+    // (undocumented)
+    cancelOperation(options?: {
+        abortSignal?: AbortSignalLike;
+    }): Promise<void>;
+    // (undocumented)
+    getOperationState(): PollOperationState<TSearchBatchResult>;
+    // (undocumented)
+    getResult(): TSearchBatchResult | undefined;
+    // (undocumented)
+    isDone(): boolean;
+    // (undocumented)
+    isStopped(): boolean;
+    // (undocumented)
+    onProgress(callback: (state: PollOperationState<TSearchBatchResult>) => void): CancelOnProgress;
+    // (undocumented)
+    poll(options?: {
+        abortSignal?: AbortSignalLike;
+    }): Promise<void>;
+    // (undocumented)
+    pollUntilDone(): Promise<TSearchBatchResult>;
+    // (undocumented)
+    stopPolling(): void;
+    // (undocumented)
+    toString(): string;
+}
+
 // @public
 export class SearchClient {
     constructor(credential: AzureKeyCredential);
     constructor(credential: AzureKeyCredential, options?: SearchClientOptions);
     constructor(credential: TokenCredential, clientId: string);
     constructor(credential: TokenCredential, clientId: string, options?: SearchClientOptions);
-    beginFuzzySearchBatch(requests: FuzzySearchRequestItem[], options?: FuzzySearchBatchOptions): Promise<PollerLike<PollOperationState<SearchAddressBatchResult>, SearchAddressBatchResult>>;
-    beginReverseSearchAddressBatch(requests: ReverseSearchAddressRequestItem[], options?: ReverseSearchAddressBatchOptions): Promise<PollerLike<PollOperationState<ReverseSearchAddressBatchProcessResult>, ReverseSearchAddressBatchProcessResult>>;
-    beginSearchAddressBatch(requests: SearchAddressRequestItem[], options?: SearchAddressBatchOptions): Promise<PollerLike<PollOperationState<SearchAddressBatchResult>, SearchAddressBatchResult>>;
+    beginFuzzySearchBatch(requests: FuzzySearchRequest[], options?: FuzzySearchBatchOptions): Promise<PollerLike<PollOperationState<BatchResult<SearchAddressResult>>, BatchResult<SearchAddressResult>>>;
+    beginReverseSearchAddressBatch(requests: ReverseSearchAddressRequest[], options?: ReverseSearchAddressBatchOptions): Promise<PollerLike<PollOperationState<BatchResult<ReverseSearchAddressResult>>, BatchResult<ReverseSearchAddressResult>>>;
+    beginSearchAddressBatch(requests: SearchAddressRequest[], options?: SearchAddressBatchOptions): Promise<PollerLike<PollOperationState<BatchResult<SearchAddressResult>>, BatchResult<SearchAddressResult>>>;
     fuzzySearch(query: string, coordinates: LatLong, options?: FuzzySearchOptions): Promise<SearchAddressResult>;
     fuzzySearch(query: string, countryFilter: string[], options?: FuzzySearchOptions): Promise<SearchAddressResult>;
     fuzzySearch(query: string, coordinates: LatLong, countryFilter: string[], options?: FuzzySearchOptions): Promise<SearchAddressResult>;
-    fuzzySearchBatchSync(requests: FuzzySearchRequestItem[], options?: FuzzySearchBatchOptions): Promise<SearchAddressBatchResult>;
+    fuzzySearchBatchSync(requests: FuzzySearchRequest[], options?: FuzzySearchBatchOptions): Promise<BatchResult<SearchAddressResult>>;
     getPointOfInterestCategoryTree(options?: GetPointOfInterestCategoryTreeOptions): Promise<PointOfInterestCategory[]>;
     listPolygons(geometryIds: string[], options?: ListPolygonsOptions): Promise<Polygon[]>;
     reverseSearchAddress(coordinates: LatLong, options?: ReverseSearchAddressOptions): Promise<ReverseSearchAddressResult>;
-    reverseSearchAddressBatchSync(requests: ReverseSearchAddressRequestItem[], options?: ReverseSearchAddressBatchOptions): Promise<ReverseSearchAddressBatchProcessResult>;
+    reverseSearchAddressBatchSync(requests: ReverseSearchAddressRequest[], options?: ReverseSearchAddressBatchOptions): Promise<BatchResult<ReverseSearchAddressResult>>;
     reverseSearchCrossStreetAddress(coordinates: LatLong, options?: ReverseSearchCrossStreetAddressOptions): Promise<ReverseSearchCrossStreetAddressResult>;
     searchAddress(query: string, options?: SearchAddressOptions): Promise<SearchAddressResult>;
-    searchAddressBatchSync(requests: SearchAddressRequestItem[], options?: SearchAddressBatchOptions): Promise<SearchAddressBatchResult>;
+    searchAddressBatchSync(requests: SearchAddressRequest[], options?: SearchAddressBatchOptions): Promise<BatchResult<SearchAddressResult>>;
     searchAlongRoute(query: string, maxDetourTime: number, route: GeoJsonLineString, options?: SearchAlongRouteOptions): Promise<SearchAddressResult>;
     searchInsideGeometry(query: string, geometry: GeoJsonPolygon | GeoJsonGeometryCollection | GeoJsonFeatureCollection, options?: SearchInsideGeometryOptions): Promise<SearchAddressResult>;
     searchNearbyPointOfInterest(coordinates: LatLong, options?: SearchNearbyPointOfInterestOptions): Promise<SearchAddressResult>;
@@ -553,11 +577,6 @@ export interface StructuredAddress {
     streetNumber?: string;
 }
 
-
-// Warnings were encountered during analysis:
-//
-// src/generated/models/index.ts:805:3 - (ae-forgotten-export) The symbol "SearchAddressBatchItem" needs to be exported by the entry point index.d.ts
-// src/generated/models/index.ts:814:3 - (ae-forgotten-export) The symbol "ReverseSearchAddressBatchItem" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 

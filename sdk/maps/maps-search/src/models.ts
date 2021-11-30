@@ -1,6 +1,8 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+import { CancelOnProgress, PollerLike, PollOperationState } from "@azure/core-lro";
+import { AbortSignalLike } from "@azure/abort-controller";
 import { BatchRequest } from "./generated/models";
 import { SearchAddressOptions, ReverseSearchAddressOptions, FuzzySearchOptions } from "./options";
 
@@ -30,12 +32,6 @@ export {
   PointOfInterestCategoryTreeResult,
   RoadUseType,
   GeoJsonObjectUnion,
-  SearchAddressBatchResult,
-  BatchRequest,
-  ReverseSearchAddressBatchProcessResult,
-  BatchResult,
-  BatchRequestItem,
-  BatchResultSummary
 } from "./generated/models";
 
 /**
@@ -205,29 +201,35 @@ export interface StructuredAddress {
   postalCode?: string;
 }
 
-export interface FuzzySearchRequestItem {
+export interface FuzzySearchRequest {
   query: string;
   coordinates?: LatLong;
   countryFilter?: string[];
+  options?: FuzzySearchOptions;
 }
 
-export interface SearchAddressRequestItem {
+export interface SearchAddressRequest {
   query: string;
+  options?: SearchAddressOptions;
 }
 
-export interface ReverseSearchAddressRequestItem {
+export interface ReverseSearchAddressRequest {
   coordinates: LatLong;
+  options?: ReverseSearchAddressOptions;
 }
 
-export function createFuzzySearchBatchRequest(
-  requests: FuzzySearchRequestItem[],
-  options?: FuzzySearchOptions
-): BatchRequest {
+export function createFuzzySearchBatchRequest(requests: FuzzySearchRequest[]): BatchRequest {
   return {
     batchItems: requests.map((r) => {
       let query = `?query=${r.query}`;
-      if (options) {
-        for (const [k, v] of Object.entries(options)) {
+      if (r.coordinates) {
+        query += `&lat=${r.coordinates.latitude}&lon=${r.coordinates.longitude}`;
+      }
+      if (r.countryFilter && r.countryFilter.length > 0) {
+        query += `&countrySet=${r.countryFilter.join(",")}`;
+      }
+      if (r.options) {
+        for (const [k, v] of Object.entries(r.options)) {
           switch (k) {
             case "indexFilter":
               if (v && v.length > 0) {
@@ -295,15 +297,12 @@ export function createFuzzySearchBatchRequest(
   };
 }
 
-export function createSearchAddressBatchRequest(
-  requests: SearchAddressRequestItem[],
-  options?: SearchAddressOptions
-): BatchRequest {
+export function createSearchAddressBatchRequest(requests: SearchAddressRequest[]): BatchRequest {
   return {
     batchItems: requests.map((r) => {
       let query = `?query=${r.query}`;
-      if (options) {
-        for (const [k, v] of Object.entries(options)) {
+      if (r.options) {
+        for (const [k, v] of Object.entries(r.options)) {
           switch (k) {
             case "coordinates":
               if (v) {
@@ -357,14 +356,13 @@ export function createSearchAddressBatchRequest(
 }
 
 export function createReverseSearchAddressBatchRequest(
-  requests: ReverseSearchAddressRequestItem[],
-  options?: ReverseSearchAddressOptions
+  requests: ReverseSearchAddressRequest[]
 ): BatchRequest {
   return {
     batchItems: requests.map((r) => {
       let query = `?query=${r.coordinates.latitude},${r.coordinates.longitude}`;
-      if (options) {
-        for (const [k, v] of Object.entries(options)) {
+      if (r.options) {
+        for (const [k, v] of Object.entries(r.options)) {
           switch (k) {
             case "includeSpeedLimit":
               if (v) {
@@ -410,4 +408,179 @@ export function createReverseSearchAddressBatchRequest(
       return { query };
     })
   };
+}
+
+// export class FuzzySearchBatchPoller
+//   implements
+//     PollerLike<
+//       PollOperationState<SearchBatchResult<SearchAddressResult>>,
+//       SearchBatchResult<SearchAddressResult>
+//     > {
+//   constructor(
+//     private internalPoller: PollerLike<
+//       PollOperationState<SearchAddressBatchResult>,
+//       SearchAddressBatchResult
+//     >
+//   ) {}
+//   public poll(options: { abortSignal?: AbortSignalLike } = {}): Promise<void> {
+//     return this.internalPoller.poll(options);
+//   }
+//   public cancelOperation(options: { abortSignal?: AbortSignalLike } = {}): Promise<void> {
+//     return this.internalPoller.cancelOperation(options);
+//   }
+
+//   public async pollUntilDone(): Promise<SearchBatchResult<SearchAddressResult>> {
+//     const result = await this.internalPoller.pollUntilDone();
+//     return mapSearchAddressBatchResult(result);
+//   }
+//   public onProgress(
+//     callback: (state: PollOperationState<SearchBatchResult<SearchAddressResult>>) => void
+//   ): CancelOnProgress {
+//     const internalCallback = (
+//       internalState: PollOperationState<SearchAddressBatchResult>
+//     ): void => {
+//       const state: PollOperationState<SearchBatchResult<SearchAddressResult>> = {};
+//       if (internalState.isStarted) {
+//         state.isStarted = internalState.isStarted;
+//       }
+//       if (internalState.isCompleted) {
+//         state.isCompleted = internalState.isCompleted;
+//       }
+//       if (internalState.isCancelled) {
+//         state.isCancelled = internalState.isCancelled;
+//       }
+//       if (internalState.error) {
+//         state.error = internalState.error;
+//       }
+//       if (internalState.result) {
+//         state.result = mapSearchAddressBatchResult(internalState.result);
+//       }
+//       callback(state);
+//     };
+//     return this.internalPoller.onProgress(internalCallback);
+//   }
+//   public isDone(): boolean {
+//     return this.internalPoller.isDone();
+//   }
+//   public stopPolling(): void {
+//     this.internalPoller.stopPolling();
+//   }
+//   public isStopped(): boolean {
+//     return this.internalPoller.isStopped();
+//   }
+//   public getOperationState(): PollOperationState<SearchBatchResult<SearchAddressResult>> {
+//     const internalState = this.internalPoller.getOperationState();
+//     const state: PollOperationState<SearchBatchResult<SearchAddressResult>> = {};
+//     if (internalState.isStarted) {
+//       state.isStarted = internalState.isStarted;
+//     }
+//     if (internalState.isCompleted) {
+//       state.isCompleted = internalState.isCompleted;
+//     }
+//     if (internalState.isCancelled) {
+//       state.isCancelled = internalState.isCancelled;
+//     }
+//     if (internalState.error) {
+//       state.error = internalState.error;
+//     }
+//     if (internalState.result) {
+//       state.result = mapSearchAddressBatchResult(internalState.result);
+//     }
+//     return state;
+//   }
+//   public getResult(): SearchBatchResult<SearchAddressResult> | undefined {
+//     const result = this.internalPoller.getResult();
+//     if (result) {
+//       return mapSearchAddressBatchResult(result);
+//     }
+//     return result;
+//   }
+//   public toString(): string {
+//     return this.internalPoller.toString();
+//   }
+// }
+
+export class SearchBatchPoller<TSearchBatchResult, TInternalBatchResult>
+  implements PollerLike<PollOperationState<TSearchBatchResult>, TSearchBatchResult> {
+  constructor(
+    private internalPoller: PollerLike<
+      PollOperationState<TInternalBatchResult>,
+      TInternalBatchResult
+    >,
+    private mapper: (res: TInternalBatchResult) => TSearchBatchResult
+  ) {}
+  public poll(options: { abortSignal?: AbortSignalLike } = {}): Promise<void> {
+    return this.internalPoller.poll(options);
+  }
+  public cancelOperation(options: { abortSignal?: AbortSignalLike } = {}): Promise<void> {
+    return this.internalPoller.cancelOperation(options);
+  }
+
+  public async pollUntilDone(): Promise<TSearchBatchResult> {
+    const result = await this.internalPoller.pollUntilDone();
+    return this.mapper(result);
+  }
+  public onProgress(
+    callback: (state: PollOperationState<TSearchBatchResult>) => void
+  ): CancelOnProgress {
+    const internalCallback = (internalState: PollOperationState<TInternalBatchResult>): void => {
+      const state: PollOperationState<TSearchBatchResult> = {};
+      if (internalState.isStarted) {
+        state.isStarted = internalState.isStarted;
+      }
+      if (internalState.isCompleted) {
+        state.isCompleted = internalState.isCompleted;
+      }
+      if (internalState.isCancelled) {
+        state.isCancelled = internalState.isCancelled;
+      }
+      if (internalState.error) {
+        state.error = internalState.error;
+      }
+      if (internalState.result) {
+        state.result = this.mapper(internalState.result);
+      }
+      callback(state);
+    };
+    return this.internalPoller.onProgress(internalCallback);
+  }
+  public isDone(): boolean {
+    return this.internalPoller.isDone();
+  }
+  public stopPolling(): void {
+    this.internalPoller.stopPolling();
+  }
+  public isStopped(): boolean {
+    return this.internalPoller.isStopped();
+  }
+  public getOperationState(): PollOperationState<TSearchBatchResult> {
+    const internalState = this.internalPoller.getOperationState();
+    const state: PollOperationState<TSearchBatchResult> = {};
+    if (internalState.isStarted) {
+      state.isStarted = internalState.isStarted;
+    }
+    if (internalState.isCompleted) {
+      state.isCompleted = internalState.isCompleted;
+    }
+    if (internalState.isCancelled) {
+      state.isCancelled = internalState.isCancelled;
+    }
+    if (internalState.error) {
+      state.error = internalState.error;
+    }
+    if (internalState.result) {
+      state.result = this.mapper(internalState.result);
+    }
+    return state;
+  }
+  public getResult(): TSearchBatchResult | undefined {
+    const result = this.internalPoller.getResult();
+    if (result) {
+      return this.mapper(result);
+    }
+    return undefined;
+  }
+  public toString(): string {
+    return this.internalPoller.toString();
+  }
 }

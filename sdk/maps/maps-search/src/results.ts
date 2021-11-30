@@ -11,7 +11,8 @@ import {
   QueryType,
   SearchAddressResultType,
   Address,
-  RoadUseType
+  RoadUseType,
+  ErrorResponse
 } from "./generated/models";
 import { BoundingBox } from "./models";
 
@@ -131,4 +132,58 @@ export interface ReverseSearchCrossStreetAddressResultItem {
   readonly roadUse?: RoadUseType[];
   /** Information on the type of match. */
   readonly matchType?: MatchType;
+}
+
+// /** This object is returned from a successful Search Address Batch service call. */
+// export type SearchAddressBatchResult = {
+//   /** Number of successful requests in the batch */
+//   readonly successfulRequests?: number;
+//   /** Total number of requests in the batch */
+//   readonly totalRequests?: number;
+//   /** Array containing the batch results. */
+//   readonly batchItems?: SearchAddressBatchItem[];
+// };
+
+// /** An item returned from Search Address Batch service call. */
+// export type SearchAddressBatchItem = {
+//   /** HTTP request status code. */
+//   readonly statusCode?: number;
+//   /** The result of the query. SearchAddressResponse if the query completed successfully, ErrorResponse otherwise. */
+//   readonly response?: SearchAddressResult & ErrorResponse;
+// };
+
+// /** This object is returned from a successful Search Address Reverse Batch service call. */
+// export type ReverseSearchAddressBatchResult = {
+//   /** Number of successful requests in the batch */
+//   readonly successfulRequests?: number;
+//   /** Total number of requests in the batch */
+//   readonly totalRequests?: number;
+//   /** Array containing the batch results.*/
+//   readonly batchItems?: ReverseSearchAddressBatchItem[];
+// };
+
+// /** An item returned from Search Address Reverse Batch service call. */
+// export type ReverseSearchAddressBatchItem = {
+//   /** HTTP request status code. */
+//   readonly statusCode?: number;
+//   /** The result of the query. SearchAddressReverseResponse if the query completed successfully, ErrorResponse otherwise. */
+//   readonly response?: ReverseSearchAddressResult & ErrorResponse;
+// };
+
+/** This object is returned from a successful Search Address Batch service call. */
+export interface BatchResult<TResult extends SearchAddressResult | ReverseSearchAddressResult> {
+  /** Number of successful requests in the batch */
+  readonly successfulRequests?: number;
+  /** Total number of requests in the batch */
+  readonly totalRequests?: number;
+  /** Array containing the batch results. */
+  readonly batchItems?: BatchItem<TResult>[];
+}
+
+/** An item returned from Search Address Batch service call. */
+export interface BatchItem<TResult> {
+  /** HTTP request status code. */
+  readonly statusCode?: number;
+  /** The result of the query. SearchResultType if the query completed successfully, ErrorResponse otherwise. */
+  readonly response?: TResult & ErrorResponse;
 }

@@ -9,23 +9,14 @@ import {
 import { GeneratedClient } from "./generated";
 import {
   SearchListPolygonsOptionalParams as ListPolygonsOptionalParams,
-  SearchFuzzySearchOptionalParams as FuzzySearchOptionalParams,
-  SearchSearchPointOfInterestOptionalParams as SearchPointOfInterestOptionalParams,
   SearchGetPointOfInterestCategoryTreeOptionalParams as GetPointOfInterestCategoryTreeOptionalParams,
-  SearchSearchAddressOptionalParams as SearchAddressOptionalParams,
   SearchSearchStructuredAddressOptionalParams as SearchStructuredAddressOptionalParams,
   SearchSearchInsideGeometryOptionalParams as SearchInsideGeometryOptionalParams,
   SearchSearchAlongRouteOptionalParams as SearchAlongRouteOptionalParams,
-  SearchSearchNearbyPointOfInterestOptionalParams as SearchNearbyPointOfInterestOptionalParams,
   SearchReverseSearchAddressOptionalParams as ReverseSearchAddressOptionalParams,
   SearchReverseSearchCrossStreetAddressOptionalParams as ReverseSearchCrossStreetAddressOptionalParams,
-  ReverseSearchCrossStreetAddressResult as ReverseSearchCrossStreetAddressResultInternal,
-  SearchAddressResult as SearchAddressResultInternal,
-  BoundingBox as BoundingBoxInternal,
-  ReverseSearchAddressResult as ReverseSearchAddressResultInternal,
   SearchAddressBatchResult,
   ReverseSearchAddressBatchProcessResult,
-  LatLongPairAbbreviated,
   Polygon,
   PointOfInterestCategory
 } from "./generated/models";
@@ -37,21 +28,19 @@ import {
   GeoJsonFeatureCollection,
   GeoJsonPolygon,
   GeoJsonGeometryCollection,
-  BoundingBox,
   createFuzzySearchBatchRequest,
-  FuzzySearchRequestItem,
-  SearchAddressRequestItem,
+  FuzzySearchRequest,
+  SearchAddressRequest,
   createSearchAddressBatchRequest,
-  ReverseSearchAddressRequestItem,
-  createReverseSearchAddressBatchRequest
+  ReverseSearchAddressRequest,
+  createReverseSearchAddressBatchRequest,
+  SearchBatchPoller
 } from "./models";
 import {
   SearchAddressResult,
-  SearchAddressResultItem,
   ReverseSearchAddressResult,
-  ReverseSearchAddressResultItem,
   ReverseSearchCrossStreetAddressResult,
-  ReverseSearchCrossStreetAddressResultItem
+  BatchResult
 } from "./results";
 import {
   SearchClientOptions,
@@ -69,28 +58,36 @@ import {
   FuzzySearchBatchOptions,
   SearchAddressBatchOptions,
   ReverseSearchAddressBatchOptions,
-  SearchBaseOptions,
-  SearchExtraFilterOptions,
   SearchPointOfInterestCategoryOptions
 } from "./options";
 import { mapsClientIdPolicy } from "./credential/mapsClientIdPolicy";
 import { mapsAzureKeyCredentialPolicy } from "./credential/mapsAzureKeyCredentialPolicy";
 import { logger } from "./utils/logger";
-import { OperationOptions } from "@azure/core-client";
 import { createSpan } from "./utils/tracing";
 import { SpanStatusCode } from "@azure/core-tracing";
+import {
+  mapFuzzySearchOptions,
+  mapReverseSearchAddressBatchResult,
+  mapReverseSearchAddressResult,
+  mapReverseSearchCrossStreetAddressResult,
+  mapSearchAddressBatchResult,
+  mapSearchAddressOptions,
+  mapSearchAddressResult,
+  mapSearchNearbyPointOfInterestOptions,
+  mapSearchPointOfInterestOptions
+} from "./utils/mappers";
 
 const isSearchClientOptions = (clientIdOrOptions: any): clientIdOrOptions is SearchClientOptions =>
   clientIdOrOptions && typeof clientIdOrOptions !== "string";
 
 const isPOISearchOptions = <
-  POISearchOptions extends
+  TPOISearchOptions extends
     | FuzzySearchOptions
     | SearchPointOfInterestOptions
     | SearchPointOfInterestCategoryOptions
 >(
   countryFilterOrOptions: any
-): countryFilterOrOptions is POISearchOptions =>
+): countryFilterOrOptions is TPOISearchOptions =>
   countryFilterOrOptions && Array.isArray(countryFilterOrOptions) === false;
 
 const isStringArray = (array: any[]): array is string[] => typeof array[0] === "string";
@@ -586,7 +583,7 @@ export class SearchClient {
         [coordinates.latitude, coordinates.longitude],
         internalOptions
       );
-      return mapReverseSearchCrossStreetAddressCrResult(result);
+      return mapReverseSearchCrossStreetAddressResult(result);
     } catch (e) {
       span.setStatus({
         code: SpanStatusCode.ERROR,
@@ -708,23 +705,24 @@ export class SearchClient {
   /**
    * Sends batches of fuzzy search queries. The method return the result directly.
    *
-   * @param batchRequest - The list of search queries to process. The list can contain a
-   *                       max of 100 queries and must contain at least 1 query.
+   * @param requests - The list of search requests to process. The list can contain a max of 100 queries and must contain at least 1 query.
    * @param options - Optional parameters for the operation
    */
   public async fuzzySearchBatchSync(
-    requests: FuzzySearchRequestItem[],
+    requests: FuzzySearchRequest[],
     options: FuzzySearchBatchOptions = {}
-  ): Promise<SearchAddressBatchResult> {
+  ): Promise<BatchResult<SearchAddressResult>> {
+    // TODO: Check reqeusts number
     const { span, updatedOptions } = createSpan("SearchClient-fuzzySearchBatchSync", options);
-    const batchRequest = createFuzzySearchBatchRequest(requests, options);
+    const batchRequest = createFuzzySearchBatchRequest(requests);
     console.log(batchRequest);
     try {
-      return await this.client.search.fuzzySearchBatchSync(
+      const internalResult = await this.client.search.fuzzySearchBatchSync(
         this.defaultFormat,
         batchRequest,
         updatedOptions
       );
+      return mapSearchAddressBatchResult(internalResult);
     } catch (e) {
       span.setStatus({
         code: SpanStatusCode.ERROR,
@@ -739,22 +737,30 @@ export class SearchClient {
   /**
    * Sends batches of fuzzy search queries. The method returns a poller for retrieving the result later.
    *
-   * @param batchRequest - The list of search queries to process. The list can contain a
-   *                       max of 10,000 queries and must contain at least 1 query.
+   * @param requests - The list of search requests to process. The list can contain a max of 10,000 queries and must contain at least 1 query.
    * @param options - Optional parameters for the operation
    */
   public async beginFuzzySearchBatch(
-    requests: FuzzySearchRequestItem[],
+    requests: FuzzySearchRequest[],
     options: FuzzySearchBatchOptions = {}
-  ): Promise<PollerLike<PollOperationState<SearchAddressBatchResult>, SearchAddressBatchResult>> {
+  ): Promise<
+    PollerLike<
+      PollOperationState<BatchResult<SearchAddressResult>>,
+      BatchResult<SearchAddressResult>
+    >
+  > {
+    // TODO: Check reqeusts number
     const { span, updatedOptions } = createSpan("SearchClient-beginFuzzySearchBatch", options);
-    const batchRequest = createFuzzySearchBatchRequest(requests, options);
-    console.log(batchRequest);
+    const batchRequest = createFuzzySearchBatchRequest(requests);
     try {
-      return await this.client.search.beginFuzzySearchBatch(
+      const internalPoller = await this.client.search.beginFuzzySearchBatch(
         this.defaultFormat,
         batchRequest,
         updatedOptions
+      );
+      return new SearchBatchPoller<BatchResult<SearchAddressResult>, SearchAddressBatchResult>(
+        internalPoller,
+        mapSearchAddressBatchResult
       );
     } catch (e) {
       span.setStatus({
@@ -770,22 +776,24 @@ export class SearchClient {
   /**
    * Sends batches of geocoding queries. The method return the result directly.
    *
-   * @param batchRequest - The list of search queries to process. The list can contain a
-   *                       max of 100 queries and must contain at least 1 query.
+   * @param requests - The list of search requests to process. The list can contain a max of 100 queries and must contain at least 1 query.
    * @param options - Optional parameters for the operation
    */
   public async searchAddressBatchSync(
-    requests: SearchAddressRequestItem[],
+    requests: SearchAddressRequest[],
     options: SearchAddressBatchOptions = {}
-  ): Promise<SearchAddressBatchResult> {
+  ): Promise<BatchResult<SearchAddressResult>> {
+    // TODO: Check reqeusts number
     const { span, updatedOptions } = createSpan("SearchClient-searchAddressBatchSync", options);
-    const batchRequest = createSearchAddressBatchRequest(requests, options);
+    const batchRequest = createSearchAddressBatchRequest(requests);
+    console.log(batchRequest);
     try {
-      return await this.client.search.searchAddressBatchSync(
+      const internalResult = await this.client.search.searchAddressBatchSync(
         this.defaultFormat,
         batchRequest,
         updatedOptions
       );
+      return mapSearchAddressBatchResult(internalResult);
     } catch (e) {
       span.setStatus({
         code: SpanStatusCode.ERROR,
@@ -800,21 +808,30 @@ export class SearchClient {
   /**
    * Sends batches of geocoding queries. The method returns a poller for retrieving the result later.
    *
-   * @param batchRequest - The list of search queries to process. The list can contain a
-   *                       max of 10,000 queries and must contain at least 1 query.
+   * @param requests - The list of search requests to process. The list can contain a max of 10,000 queries and must contain at least 1 query.
    * @param options - Optional parameters for the operation
    */
   public async beginSearchAddressBatch(
-    requests: SearchAddressRequestItem[],
+    requests: SearchAddressRequest[],
     options: SearchAddressBatchOptions = {}
-  ): Promise<PollerLike<PollOperationState<SearchAddressBatchResult>, SearchAddressBatchResult>> {
+  ): Promise<
+    PollerLike<
+      PollOperationState<BatchResult<SearchAddressResult>>,
+      BatchResult<SearchAddressResult>
+    >
+  > {
+    // TODO: Check reqeusts number
     const { span, updatedOptions } = createSpan("SearchClient-beginSearchAddressBatch", options);
-    const batchRequest = createSearchAddressBatchRequest(requests, options);
+    const batchRequest = createSearchAddressBatchRequest(requests);
     try {
-      return await this.client.search.beginSearchAddressBatch(
+      const internalPoller = await this.client.search.beginSearchAddressBatch(
         this.defaultFormat,
         batchRequest,
         updatedOptions
+      );
+      return new SearchBatchPoller<BatchResult<SearchAddressResult>, SearchAddressBatchResult>(
+        internalPoller,
+        mapSearchAddressBatchResult
       );
     } catch (e) {
       span.setStatus({
@@ -830,25 +847,27 @@ export class SearchClient {
   /**
    * Sends batches of reverse geocoding queries. The method return the result directly.
    *
-   * @param batchRequest - The list of search queries to process. The list can contain a
-   *                       max of 100  queries and must contain at least 1 query.
+   * @param requests - The list of search requests to process. The list can contain a max of 100 queries and must contain at least 1 query.
    * @param options - Optional parameters for the operation
    */
   public async reverseSearchAddressBatchSync(
-    requests: ReverseSearchAddressRequestItem[],
+    requests: ReverseSearchAddressRequest[],
     options: ReverseSearchAddressBatchOptions = {}
-  ): Promise<ReverseSearchAddressBatchProcessResult> {
+  ): Promise<BatchResult<ReverseSearchAddressResult>> {
+    // TODO: Check reqeusts number
     const { span, updatedOptions } = createSpan(
       "SearchClient-reverseSearchAddressBatchSync",
       options
     );
-    const batchRequest = createReverseSearchAddressBatchRequest(requests, options);
+    const batchRequest = createReverseSearchAddressBatchRequest(requests);
+    console.log(batchRequest);
     try {
-      return await this.client.search.reverseSearchAddressBatchSync(
+      const internalResult = await this.client.search.reverseSearchAddressBatchSync(
         this.defaultFormat,
         batchRequest,
         updatedOptions
       );
+      return mapReverseSearchAddressBatchResult(internalResult);
     } catch (e) {
       span.setStatus({
         code: SpanStatusCode.ERROR,
@@ -863,30 +882,34 @@ export class SearchClient {
   /**
    * Sends batches of reverse geocoding queries. The method returns a poller for retrieving the result later.
    *
-   * @param batchRequest - The list of queries to process. The list can contain a
-   *                       max of 10,000 queries and must contain at least 1 query.
+   * @param requests - The list of search requests to process. The list can contain a max of 10,000 queries and must contain at least 1 query.
    * @param options - Optional parameters for the operation
    */
   public async beginReverseSearchAddressBatch(
-    requests: ReverseSearchAddressRequestItem[],
+    requests: ReverseSearchAddressRequest[],
     options: ReverseSearchAddressBatchOptions = {}
   ): Promise<
     PollerLike<
-      PollOperationState<ReverseSearchAddressBatchProcessResult>,
-      ReverseSearchAddressBatchProcessResult
+      PollOperationState<BatchResult<ReverseSearchAddressResult>>,
+      BatchResult<ReverseSearchAddressResult>
     >
   > {
+    // TODO: Check reqeusts number
     const { span, updatedOptions } = createSpan(
       "SearchClient-beginReverseSearchAddressBatch",
       options
     );
-    const batchRequest = createReverseSearchAddressBatchRequest(requests, options);
+    const batchRequest = createReverseSearchAddressBatchRequest(requests);
     try {
-      return await this.client.search.beginReverseSearchAddressBatch(
+      const internalPoller = await this.client.search.beginReverseSearchAddressBatch(
         this.defaultFormat,
         batchRequest,
         updatedOptions
       );
+      return new SearchBatchPoller<
+        BatchResult<ReverseSearchAddressResult>,
+        ReverseSearchAddressBatchProcessResult
+      >(internalPoller, mapSearchAddressBatchResult);
     } catch (e) {
       span.setStatus({
         code: SpanStatusCode.ERROR,
@@ -897,261 +920,4 @@ export class SearchClient {
       span.end();
     }
   }
-}
-
-/**
- * @internal
- */
-function toLatLongString(coordinates: LatLong): string {
-  return `${coordinates.latitude},${coordinates.longitude}`;
-}
-
-/**
- * @internal
- */
-function extractOperationOptions(options: OperationOptions): OperationOptions {
-  return {
-    abortSignal: options.abortSignal,
-    requestOptions: options.requestOptions,
-    tracingOptions: options.tracingOptions,
-    serializerOptions: options.serializerOptions,
-    onResponse: options.onResponse
-  };
-}
-
-/**
- * @internal
- */
-function mapSearchBaseOptions(options: SearchBaseOptions): SearchBaseOptions {
-  return {
-    top: options.top,
-    skip: options.skip,
-    language: options.language,
-    extendedPostalCodesFor: options.extendedPostalCodesFor,
-    localizedMapView: options.localizedMapView,
-    ...extractOperationOptions(options)
-  };
-}
-
-/**
- * @internal
- */
-function mapSearchExtraFilterOptions(options: SearchExtraFilterOptions): SearchExtraFilterOptions {
-  return {
-    categoryFilter: options.categoryFilter,
-    brandFilter: options.brandFilter,
-    electricVehicleConnectorFilter: options.electricVehicleConnectorFilter
-  };
-}
-
-/**
- * @internal
- */
-function mapSearchAddressOptions(options: SearchAddressOptions): SearchAddressOptionalParams {
-  return {
-    isTypeAhead: options.isTypeAhead,
-    countryFilter: options.countryFilter,
-    lat: options.coordinates?.latitude,
-    lon: options.coordinates?.longitude,
-    radiusInMeters: options.radiusInMeters,
-    topLeft: options.boundingBox ? toLatLongString(options.boundingBox.topLeft) : undefined,
-    btmRight: options.boundingBox ? toLatLongString(options.boundingBox.bottomRight) : undefined,
-    ...mapSearchBaseOptions(options)
-  };
-}
-
-/**
- * @internal
- */
-function mapSearchPointOfInterestOptions(
-  options: SearchPointOfInterestOptions
-): SearchPointOfInterestOptionalParams {
-  return {
-    operatingHours: options.operatingHours,
-    isTypeAhead: options.isTypeAhead,
-    radiusInMeters: options.radiusInMeters,
-    topLeft: options.boundingBox ? toLatLongString(options.boundingBox.topLeft) : undefined,
-    btmRight: options.boundingBox ? toLatLongString(options.boundingBox.bottomRight) : undefined,
-    ...mapSearchBaseOptions(options)
-  };
-}
-
-/**
- * @internal
- */
-function mapSearchNearbyPointOfInterestOptions(
-  options: SearchNearbyPointOfInterestOptions
-): SearchNearbyPointOfInterestOptionalParams {
-  return {
-    countryFilter: options.countryFilter,
-    radiusInMeters: options.radiusInMeters,
-    ...mapSearchBaseOptions(options),
-    ...mapSearchExtraFilterOptions(options),
-    ...extractOperationOptions(options)
-  };
-}
-
-/**
- * @internal
- */
-function mapFuzzySearchOptions(options: FuzzySearchOptions): FuzzySearchOptionalParams {
-  return {
-    entityType: options.entityType,
-    minFuzzyLevel: options.minFuzzyLevel,
-    maxFuzzyLevel: options.maxFuzzyLevel,
-    indexFilter: options.indexFilter,
-    ...mapSearchPointOfInterestOptions(options)
-  };
-}
-
-/**
- * @internal
- */
-function mapLatLongPairAbbreviatedToLatLong(
-  latLongAbbr?: LatLongPairAbbreviated
-): LatLong | undefined {
-  if (latLongAbbr && latLongAbbr.lat && latLongAbbr.lon) {
-    return new LatLong(latLongAbbr.lat, latLongAbbr.lon);
-  } else {
-    return undefined;
-  }
-}
-
-/**
- * @internal
- */
-function mapStringToLatLong(latLongStr?: string): LatLong | undefined {
-  if (latLongStr && typeof latLongStr === "string") {
-    const latLongArray = latLongStr.split(",");
-    if (latLongArray.length === 2) {
-      const lat = Number(latLongArray[0]);
-      const lon = Number(latLongArray[1]);
-      if (!isNaN(lat) && !isNaN(lon)) {
-        return new LatLong(lat, lon);
-      }
-    }
-  }
-  return undefined;
-}
-
-/**
- * @internal
- */
-function mapBoundingBox(bbox?: BoundingBoxInternal): BoundingBox | undefined {
-  if (bbox && bbox.topLeft && bbox.bottomRight) {
-    const topLeft = mapLatLongPairAbbreviatedToLatLong(bbox.topLeft);
-    const bottomRight = mapLatLongPairAbbreviatedToLatLong(bbox.bottomRight);
-    if (topLeft && bottomRight) {
-      return new BoundingBox(topLeft, bottomRight);
-    }
-  }
-  return undefined;
-}
-
-/**
- * @internal
- */
-function mapSearchAddressResult(internalResult: SearchAddressResultInternal): SearchAddressResult {
-  const resultWithUndefined = {
-    query: internalResult.summary?.query,
-    queryType: internalResult.summary?.queryType,
-    queryTime: internalResult.summary?.queryTime,
-    numResults: internalResult.summary?.numResults,
-    top: internalResult.summary?.top,
-    skip: internalResult.summary?.skip,
-    totalResults: internalResult.summary?.totalResults,
-    fuzzyLevel: internalResult.summary?.fuzzyLevel,
-    geoBias: mapLatLongPairAbbreviatedToLatLong(internalResult.summary?.geoBias),
-    results: internalResult.results?.map((ir) => {
-      const mappedResult: SearchAddressResultItem = {
-        type: ir.type,
-        id: ir.id,
-        score: ir.score,
-        distanceInMeters: ir.distanceInMeters,
-        info: ir.info,
-        entityType: ir.entityType,
-        pointOfInterest: ir.pointOfInterest,
-        address: ir.address,
-        position:
-          ir.position && ir.position.lat && ir.position.lon
-            ? new LatLong(ir.position.lat, ir.position.lon)
-            : undefined,
-        viewport: mapBoundingBox(ir.viewport),
-        entryPoints: ir.entryPoints?.map((p) => {
-          return { type: p.type, position: mapLatLongPairAbbreviatedToLatLong(p.position) };
-        }),
-        addressRanges: ir.addressRanges
-          ? {
-              rangeLeft: ir.addressRanges.rangeLeft,
-              rangeRight: ir.addressRanges.rangeRight,
-              from: mapLatLongPairAbbreviatedToLatLong(ir.addressRanges.from),
-              to: mapLatLongPairAbbreviatedToLatLong(ir.addressRanges.to)
-            }
-          : undefined,
-        dataSources: ir.dataSources,
-        matchType: ir.matchType,
-        detourTime: ir.detourTime
-      };
-      return removeUndefinedProperties(mappedResult);
-    })
-  };
-
-  const result: SearchAddressResult = removeUndefinedProperties(resultWithUndefined);
-  return result;
-}
-
-/**
- * @internal
- */
-function removeUndefinedProperties(obj: Record<string, any>): Record<string, any> {
-  return Object.entries(obj)
-    .filter(([, value]) => value !== undefined)
-    .reduce((result, [key, value]) => ({ ...result, [key]: value }), {});
-}
-
-/**
- * @internal
- */
-function mapReverseSearchAddressResult(
-  internalResult: ReverseSearchAddressResultInternal
-): ReverseSearchAddressResult {
-  const resultWithUndefined = {
-    queryTime: internalResult.summary?.queryTime,
-    numResults: internalResult.summary?.numResults,
-    results: internalResult.addresses?.map((ad) => {
-      const mappedResult: ReverseSearchAddressResultItem = {
-        address: ad.address,
-        position: mapStringToLatLong(ad.position),
-        roadUse: ad.roadUse,
-        matchType: ad.matchType
-      };
-      return removeUndefinedProperties(mappedResult);
-    })
-  };
-  const result: ReverseSearchAddressResult = removeUndefinedProperties(resultWithUndefined);
-  return result;
-}
-
-/**
- * @internal
- */
-function mapReverseSearchCrossStreetAddressCrResult(
-  internalResult: ReverseSearchCrossStreetAddressResultInternal
-): ReverseSearchCrossStreetAddressResult {
-  const resultWithUndefined = {
-    queryTime: internalResult.summary?.queryTime,
-    numResults: internalResult.summary?.numResults,
-    results: internalResult.addresses?.map((ad) => {
-      const mappedResult: ReverseSearchCrossStreetAddressResultItem = {
-        address: ad.address,
-        position: mapStringToLatLong(ad.position)
-      };
-      return removeUndefinedProperties(mappedResult);
-    })
-  };
-
-  const result: ReverseSearchCrossStreetAddressResult = removeUndefinedProperties(
-    resultWithUndefined
-  );
-  return result;
 }

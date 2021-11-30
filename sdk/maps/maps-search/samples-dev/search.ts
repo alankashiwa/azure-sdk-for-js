@@ -13,9 +13,9 @@ import {
   GeoJsonLineString,
   GeoJsonPolygon,
   StructuredAddress,
-  SearchAddressRequestItem,
-  ReverseSearchAddressRequestItem,
-  FuzzySearchRequestItem
+  SearchAddressRequest,
+  ReverseSearchAddressRequest,
+  FuzzySearchRequest
 } from "@azure/maps-search";
 import * as dotenv from "dotenv";
 dotenv.config();
@@ -215,17 +215,17 @@ async function main() {
   //     }
   //   ]
   // };
-  const searchAddressRequests: SearchAddressRequestItem[] = [
-    { query: "400 Broad St, Seattle, WA 98109" },
-    { query: "One, Microsoft Way, Redmond, WA 98052" },
-    { query: "350 5th Ave, New York, NY 10118" }
+  const searchAddressRequests: SearchAddressRequest[] = [
+    { query: "400 Broad St, Seattle, WA 98109", options: { top: 3 } },
+    { query: "One, Microsoft Way, Redmond, WA 98052", options: { top: 3 } },
+    { query: "350 5th Ave, New York, NY 10118", options: { top: 1 } }
   ];
   console.log(" --- Search address batch:");
-  console.log(await client.searchAddressBatchSync(searchAddressRequests, { top: 3 }));
+  console.log(await client.searchAddressBatchSync(searchAddressRequests));
 
   console.log(" --- Search address batch (long-running):");
-  let poller = await client.beginSearchAddressBatch(searchAddressRequests, { top: 3 });
-  console.log(await poller.pollUntilDone());
+  const searchPoller = await client.beginSearchAddressBatch(searchAddressRequests);
+  console.log(await searchPoller.pollUntilDone());
 
   // const searchAddressReverseBatchRequest = {
   //   batchItems: [
@@ -233,7 +233,7 @@ async function main() {
   //       query: "?query=48.858561,2.294911"
   //     },
   //     {
-  //       query: "?query=47.639765,-122.127896&radius=5000&limit=2"
+  //       query: "?query=47.639765,-122.127896&radius=5000"
   //     },
   //     {
   //       query: "?query=47.621028,-122.348170"
@@ -241,24 +241,20 @@ async function main() {
   //   ]
   // };
 
-  const reverseSearchAddressRequests: ReverseSearchAddressRequestItem[] = [
+  const reverseSearchAddressRequests: ReverseSearchAddressRequest[] = [
     { coordinates: new LatLong(48.858561, 2.294911) },
-    { coordinates: new LatLong(47.639765, -122.127896) },
+    { coordinates: new LatLong(47.639765, -122.127896), options: { radiusInMeters: 5000 } },
     { coordinates: new LatLong(47.621028, -122.34817) }
   ];
 
   console.log(" --- Search address reverse batch:");
-  console.log(
-    await client.reverseSearchAddressBatchSync(reverseSearchAddressRequests, {
-      radiusInMeters: 50000
-    })
-  );
+  console.log(await client.reverseSearchAddressBatchSync(reverseSearchAddressRequests));
 
   console.log(" --- Search address reverse batch (long-running):");
-  poller = await client.beginReverseSearchAddressBatch(reverseSearchAddressRequests, {
-    radiusInMeters: 50000
-  });
-  console.log(await poller.pollUntilDone());
+  const reverseSearchPoller = await client.beginReverseSearchAddressBatch(
+    reverseSearchAddressRequests
+  );
+  console.log(await reverseSearchPoller.pollUntilDone());
 
   // const searchFuzzyBatchRequest = {
   //   batchItems: [
@@ -274,18 +270,29 @@ async function main() {
   //   ]
   // };
 
-  const fuzzySearchRequests: FuzzySearchRequestItem[] = [
-    { query: "atm", coordinates: new LatLong(48.858561, 2.294911) },
-    { query: "Statue Of Liberty", coordinates: new LatLong(47.639765, -122.127896) },
-    { query: "Starbucks", coordinates: new LatLong(47.621028, -122.34817) }
+  const fuzzySearchRequests: FuzzySearchRequest[] = [
+    {
+      query: "atm",
+      coordinates: new LatLong(48.858561, 2.294911),
+      options: { radiusInMeters: 5000, top: 5 }
+    },
+    {
+      query: "Statue Of Liberty",
+      options: { top: 2 }
+    },
+    {
+      query: "Starbucks",
+      coordinates: new LatLong(47.621028, -122.34817),
+      options: { radiusInMeters: 5000 }
+    }
   ];
 
   console.log(" --- Search fuzzy batch:");
-  console.log(await client.fuzzySearchBatchSync(fuzzySearchRequests, { radiusInMeters: 5000 }));
+  console.log(await client.fuzzySearchBatchSync(fuzzySearchRequests));
 
   console.log(" --- Search fuzzy batch (long-running):");
-  poller = await client.beginFuzzySearchBatch(fuzzySearchRequests, { radiusInMeters: 5000 });
-  console.log(await poller.pollUntilDone());
+  const fuzzySearchPoller = await client.beginFuzzySearchBatch(fuzzySearchRequests);
+  console.log(await fuzzySearchPoller.pollUntilDone());
 }
 
 main();

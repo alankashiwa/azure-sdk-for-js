@@ -281,12 +281,13 @@ export interface SearchAlongRouteOptions extends SearchGeometryBaseOptions {
 /**
  * Options for begin fuzzy search batch
  */
-export type FuzzySearchBatchOptions = FuzzySearchOptions;
+export interface FuzzySearchBatchOptions extends OperationOptions {}
 /**
  * Options for begin search address batch
  */
-export type SearchAddressBatchOptions = SearchAddressOptions;
+export interface SearchAddressBatchOptions extends OperationOptions {}
+/**
 /**
  * Options for reverse begin search address batch
  */
-export type ReverseSearchAddressBatchOptions = ReverseSearchAddressOptions;
+export interface ReverseSearchAddressBatchOptions extends OperationOptions {}
