@@ -41,3 +41,11 @@ directive:
       };
     reason: Autorest TS codegen does not deserialize array of base class objects as an operation parameter properly -> https://github.com/Azure/autorest.typescript/issues/1040
 ```
+
+### Remove BoundingBox in Address
+
+```yaml
+directive:
+  - where-model: Address
+    remove-property: boundingBox
+```

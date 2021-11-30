@@ -813,14 +813,6 @@ export const Address: coreClient.CompositeMapper = {
         type: {
           name: "String"
         }
-      },
-      boundingBox: {
-        serializedName: "boundingBox",
-        readOnly: true,
-        type: {
-          name: "Dictionary",
-          value: { type: { name: "any" } }
-        }
       }
     }
   }

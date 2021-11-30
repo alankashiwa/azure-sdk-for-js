@@ -486,11 +486,6 @@ export interface Address {
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly localName?: string;
-  /**
-   * Bounding box coordinates.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly boundingBox?: Record<string, unknown>;
 }
 
 /** The viewport that covers the result represented by the top-left and bottom-right coordinates of the viewport. */
