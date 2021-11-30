@@ -71,15 +71,15 @@ async function main() {
 
   console.log(" --- Perform a fuzzy search with coordinates:");
   let fuzzyResult = await client.fuzzySearch("pizza", coordinates);
-  console.log(fuzzyResult.summary);
+  console.log(fuzzyResult);
 
   console.log(" --- Perform a fuzzy search with country filter:");
   fuzzyResult = await client.fuzzySearch("pizza", ["Fr"]);
-  console.log(fuzzyResult.summary);
+  console.log(fuzzyResult);
 
   console.log(" --- Perform a fuzzy search with coordinate and country filter:");
   fuzzyResult = await client.fuzzySearch("pizza", coordinates, ["Fr"]);
-  console.log(fuzzyResult.summary);
+  console.log(fuzzyResult);
 
   // let's save geometry IDs from the fuzzy search for the getSearchPolygon example
   let geometryIds: string[] = [];

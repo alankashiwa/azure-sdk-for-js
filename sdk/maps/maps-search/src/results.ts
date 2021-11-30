@@ -17,14 +17,6 @@ import { BoundingBox } from "./models";
 
 /** This object is returned from a successful Search calls. */
 export interface SearchAddressResult {
-  /** Summary object for a Search API response */
-  readonly summary?: SearchSummary;
-  /** A list of Search API results. */
-  readonly results?: SearchAddressResultItem[];
-}
-
-/** Summary object for a Search API response. */
-export interface SearchSummary {
   /** The query parameter that was used to produce these search results. */
   readonly query?: string;
   /** The type of query being returned: NEARBY or NON_NEAR. */
@@ -43,6 +35,8 @@ export interface SearchSummary {
   readonly fuzzyLevel?: number;
   /** Indication when the internal search engine has applied a geospatial bias to improve the ranking of results. */
   readonly geoBias?: LatLong;
+  /** A list of Search API results. */
+  readonly results?: SearchAddressResultItem[];
 }
 
 /** Result object for a Search API response. */
@@ -100,24 +94,21 @@ export interface AddressRanges {
 }
 
 export interface ReverseSearchAddressResult {
-  /** Summary object for a Reverse Search Address Reverse response */
-  readonly summary?: ReverseSearchSummary;
-  /** The Result list, sorted in descending order by score. */
-  readonly addresses?: ReverseSearchAddressResultItem[];
-}
-
-export interface ReverseSearchCrossStreetAddressResult {
-  /** Summary object for a Reverse Search Address Reverse response */
-  readonly summary?: ReverseSearchSummary;
-  /** The Result list, sorted in descending order by score. */
-  readonly addresses?: ReverseSearchAddressResultItem[];
-}
-
-export interface ReverseSearchSummary {
   /** Time spent resolving the query, in milliseconds. */
   readonly queryTime?: number;
   /** Number of results in the response. */
   readonly numResults?: number;
+  /** The Result list, sorted in descending order by score. */
+  readonly results?: ReverseSearchAddressResultItem[];
+}
+
+export interface ReverseSearchCrossStreetAddressResult {
+  /** Time spent resolving the query, in milliseconds. */
+  readonly queryTime?: number;
+  /** Number of results in the response. */
+  readonly numResults?: number;
+  /** The Result list, sorted in descending order by score. */
+  readonly results?: ReverseSearchCrossStreetAddressResultItem[];
 }
 
 export interface ReverseSearchAddressResultItem {

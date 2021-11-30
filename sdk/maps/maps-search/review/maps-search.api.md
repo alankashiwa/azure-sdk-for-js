@@ -336,8 +336,9 @@ export interface ReverseSearchAddressRequestItem {
 
 // @public (undocumented)
 export interface ReverseSearchAddressResult {
-    readonly addresses?: ReverseSearchAddressResultItem[];
-    readonly summary?: ReverseSearchSummary;
+    readonly numResults?: number;
+    readonly queryTime?: number;
+    readonly results?: ReverseSearchAddressResultItem[];
 }
 
 // @public (undocumented)
@@ -363,8 +364,9 @@ export interface ReverseSearchCrossStreetAddressOptions extends ReverseSearchBas
 
 // @public (undocumented)
 export interface ReverseSearchCrossStreetAddressResult {
-    readonly addresses?: ReverseSearchAddressResultItem[];
-    readonly summary?: ReverseSearchSummary;
+    readonly numResults?: number;
+    readonly queryTime?: number;
+    readonly results?: ReverseSearchCrossStreetAddressResultItem[];
 }
 
 // @public (undocumented)
@@ -373,12 +375,6 @@ export interface ReverseSearchCrossStreetAddressResultItem {
     readonly matchType?: MatchType;
     readonly position?: LatLong;
     readonly roadUse?: RoadUseType[];
-}
-
-// @public (undocumented)
-export interface ReverseSearchSummary {
-    readonly numResults?: number;
-    readonly queryTime?: number;
 }
 
 // @public
@@ -414,8 +410,16 @@ export interface SearchAddressRequestItem {
 
 // @public
 export interface SearchAddressResult {
+    readonly fuzzyLevel?: number;
+    readonly geoBias?: LatLong;
+    readonly numResults?: number;
+    readonly query?: string;
+    readonly queryTime?: number;
+    readonly queryType?: QueryType;
     readonly results?: SearchAddressResultItem[];
-    readonly summary?: SearchSummary;
+    readonly skip?: number;
+    readonly top?: number;
+    readonly totalResults?: number;
 }
 
 // @public
@@ -533,19 +537,6 @@ export interface SearchPointOfInterestOptions extends SearchAddressBaseOptions, 
 // @public
 export interface SearchStructuredAddressOptions extends SearchBaseOptions {
     entityType?: GeographicEntityType;
-}
-
-// @public
-export interface SearchSummary {
-    readonly fuzzyLevel?: number;
-    readonly geoBias?: LatLong;
-    readonly numResults?: number;
-    readonly query?: string;
-    readonly queryTime?: number;
-    readonly queryType?: QueryType;
-    readonly skip?: number;
-    readonly top?: number;
-    readonly totalResults?: number;
 }
 
 // @public

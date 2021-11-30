@@ -1052,57 +1052,61 @@ function mapBoundingBox(bbox?: BoundingBoxInternal): BoundingBox | undefined {
  * @internal
  */
 function mapSearchAddressResult(internalResult: SearchAddressResultInternal): SearchAddressResult {
-  return {
-    summary: internalResult.summary
-      ? {
-          query: internalResult.summary.query,
-          queryType: internalResult.summary.queryType,
-          queryTime: internalResult.summary.queryTime,
-          numResults: internalResult.summary.numResults,
-          top: internalResult.summary.top,
-          skip: internalResult.summary.skip,
-          totalResults: internalResult.summary.totalResults,
-          fuzzyLevel: internalResult.summary.fuzzyLevel,
-          geoBias: mapLatLongPairAbbreviatedToLatLong(internalResult.summary.geoBias)
-        }
-      : undefined,
-    results: internalResult.results
-      ? internalResult.results.map((ir) => {
-          const mappedResult: SearchAddressResultItem = {
-            type: ir.type,
-            id: ir.id,
-            score: ir.score,
-            distanceInMeters: ir.distanceInMeters,
-            info: ir.info,
-            entityType: ir.entityType,
-            pointOfInterest: ir.pointOfInterest,
-            address: ir.address,
-            position:
-              ir.position && ir.position.lat && ir.position.lon
-                ? new LatLong(ir.position.lat, ir.position.lon)
-                : undefined,
-            viewport: mapBoundingBox(ir.viewport),
-            entryPoints: ir.entryPoints
-              ? ir.entryPoints.map((p) => {
-                  return { type: p.type, position: mapLatLongPairAbbreviatedToLatLong(p.position) };
-                })
-              : undefined,
-            addressRanges: ir.addressRanges
-              ? {
-                  rangeLeft: ir.addressRanges.rangeLeft,
-                  rangeRight: ir.addressRanges.rangeRight,
-                  from: mapLatLongPairAbbreviatedToLatLong(ir.addressRanges.from),
-                  to: mapLatLongPairAbbreviatedToLatLong(ir.addressRanges.to)
-                }
-              : undefined,
-            dataSources: ir.dataSources,
-            matchType: ir.matchType,
-            detourTime: ir.detourTime
-          };
-          return mappedResult;
-        })
-      : undefined
+  const resultWithUndefined = {
+    query: internalResult.summary?.query,
+    queryType: internalResult.summary?.queryType,
+    queryTime: internalResult.summary?.queryTime,
+    numResults: internalResult.summary?.numResults,
+    top: internalResult.summary?.top,
+    skip: internalResult.summary?.skip,
+    totalResults: internalResult.summary?.totalResults,
+    fuzzyLevel: internalResult.summary?.fuzzyLevel,
+    geoBias: mapLatLongPairAbbreviatedToLatLong(internalResult.summary?.geoBias),
+    results: internalResult.results?.map((ir) => {
+      const mappedResult: SearchAddressResultItem = {
+        type: ir.type,
+        id: ir.id,
+        score: ir.score,
+        distanceInMeters: ir.distanceInMeters,
+        info: ir.info,
+        entityType: ir.entityType,
+        pointOfInterest: ir.pointOfInterest,
+        address: ir.address,
+        position:
+          ir.position && ir.position.lat && ir.position.lon
+            ? new LatLong(ir.position.lat, ir.position.lon)
+            : undefined,
+        viewport: mapBoundingBox(ir.viewport),
+        entryPoints: ir.entryPoints?.map((p) => {
+          return { type: p.type, position: mapLatLongPairAbbreviatedToLatLong(p.position) };
+        }),
+        addressRanges: ir.addressRanges
+          ? {
+              rangeLeft: ir.addressRanges.rangeLeft,
+              rangeRight: ir.addressRanges.rangeRight,
+              from: mapLatLongPairAbbreviatedToLatLong(ir.addressRanges.from),
+              to: mapLatLongPairAbbreviatedToLatLong(ir.addressRanges.to)
+            }
+          : undefined,
+        dataSources: ir.dataSources,
+        matchType: ir.matchType,
+        detourTime: ir.detourTime
+      };
+      return removeUndefinedProperties(mappedResult);
+    })
   };
+
+  const result: SearchAddressResult = removeUndefinedProperties(resultWithUndefined);
+  return result;
+}
+
+/**
+ * @internal
+ */
+function removeUndefinedProperties(obj: Record<string, any>): Record<string, any> {
+  return Object.entries(obj)
+    .filter(([, value]) => value !== undefined)
+    .reduce((result, [key, value]) => ({ ...result, [key]: value }), {});
 }
 
 /**
@@ -1111,25 +1115,21 @@ function mapSearchAddressResult(internalResult: SearchAddressResultInternal): Se
 function mapReverseSearchAddressResult(
   internalResult: ReverseSearchAddressResultInternal
 ): ReverseSearchAddressResult {
-  return {
-    summary: internalResult.summary
-      ? {
-          queryTime: internalResult.summary.queryTime,
-          numResults: internalResult.summary.numResults
-        }
-      : undefined,
-    addresses: internalResult.addresses
-      ? internalResult.addresses.map((ad) => {
-          const mappedResult: ReverseSearchAddressResultItem = {
-            address: ad.address,
-            position: mapStringToLatLong(ad.position),
-            roadUse: ad.roadUse,
-            matchType: ad.matchType
-          };
-          return mappedResult;
-        })
-      : undefined
+  const resultWithUndefined = {
+    queryTime: internalResult.summary?.queryTime,
+    numResults: internalResult.summary?.numResults,
+    results: internalResult.addresses?.map((ad) => {
+      const mappedResult: ReverseSearchAddressResultItem = {
+        address: ad.address,
+        position: mapStringToLatLong(ad.position),
+        roadUse: ad.roadUse,
+        matchType: ad.matchType
+      };
+      return removeUndefinedProperties(mappedResult);
+    })
   };
+  const result: ReverseSearchAddressResult = removeUndefinedProperties(resultWithUndefined);
+  return result;
 }
 
 /**
@@ -1138,21 +1138,20 @@ function mapReverseSearchAddressResult(
 function mapReverseSearchCrossStreetAddressCrResult(
   internalResult: ReverseSearchCrossStreetAddressResultInternal
 ): ReverseSearchCrossStreetAddressResult {
-  return {
-    summary: internalResult.summary
-      ? {
-          queryTime: internalResult.summary.queryTime,
-          numResults: internalResult.summary.numResults
-        }
-      : undefined,
-    addresses: internalResult.addresses
-      ? internalResult.addresses.map((ad) => {
-          const mappedResult: ReverseSearchCrossStreetAddressResultItem = {
-            address: ad.address,
-            position: mapStringToLatLong(ad.position)
-          };
-          return mappedResult;
-        })
-      : undefined
+  const resultWithUndefined = {
+    queryTime: internalResult.summary?.queryTime,
+    numResults: internalResult.summary?.numResults,
+    results: internalResult.addresses?.map((ad) => {
+      const mappedResult: ReverseSearchCrossStreetAddressResultItem = {
+        address: ad.address,
+        position: mapStringToLatLong(ad.position)
+      };
+      return removeUndefinedProperties(mappedResult);
+    })
   };
+
+  const result: ReverseSearchCrossStreetAddressResult = removeUndefinedProperties(
+    resultWithUndefined
+  );
+  return result;
 }
