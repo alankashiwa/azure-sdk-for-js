@@ -1,7 +1,6 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-import { LatLong } from ".";
 import {
   DataSource,
   EntryPointType,
@@ -13,8 +12,8 @@ import {
   Address,
   RoadUseType,
   ErrorResponse
-} from "./generated/models";
-import { BoundingBox } from "./models";
+} from "../generated/models";
+import { LatLong, BoundingBox } from "./models";
 
 /** This object is returned from a successful Search calls. */
 export interface SearchAddressResult {

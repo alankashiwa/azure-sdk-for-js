@@ -6,6 +6,7 @@ import {
   bearerTokenAuthenticationPolicy,
   InternalPipelineOptions
 } from "@azure/core-rest-pipeline";
+import { PollerLike, PollOperationState } from "@azure/core-lro";
 import { GeneratedClient } from "./generated";
 import {
   SearchListPolygonsOptionalParams as ListPolygonsOptionalParams,
@@ -20,28 +21,30 @@ import {
   Polygon,
   PointOfInterestCategory
 } from "./generated/models";
-import { PollerLike, PollOperationState } from "@azure/core-lro";
 import {
   LatLong,
   StructuredAddress,
   GeoJsonLineString,
   GeoJsonFeatureCollection,
   GeoJsonPolygon,
-  GeoJsonGeometryCollection,
-  createFuzzySearchBatchRequest,
+  GeoJsonGeometryCollection
+} from "./models/models";
+import {
   FuzzySearchRequest,
   SearchAddressRequest,
+  ReverseSearchAddressRequest
+} from "./models/requests";
+import {
+  createFuzzySearchBatchRequest,
   createSearchAddressBatchRequest,
-  ReverseSearchAddressRequest,
-  createReverseSearchAddressBatchRequest,
-  SearchBatchPoller
-} from "./models";
+  createReverseSearchAddressBatchRequest
+} from "./models/mappers";
 import {
   SearchAddressResult,
   ReverseSearchAddressResult,
   ReverseSearchCrossStreetAddressResult,
   BatchResult
-} from "./results";
+} from "./models/results";
 import {
   SearchClientOptions,
   ListPolygonsOptions,
@@ -59,7 +62,8 @@ import {
   SearchAddressBatchOptions,
   ReverseSearchAddressBatchOptions,
   SearchPointOfInterestCategoryOptions
-} from "./options";
+} from "./models/options";
+import { SearchBatchPoller } from "./models/pollers";
 import { mapsClientIdPolicy } from "./credential/mapsClientIdPolicy";
 import { mapsAzureKeyCredentialPolicy } from "./credential/mapsAzureKeyCredentialPolicy";
 import { logger } from "./utils/logger";
@@ -75,7 +79,7 @@ import {
   mapSearchAddressResult,
   mapSearchNearbyPointOfInterestOptions,
   mapSearchPointOfInterestOptions
-} from "./utils/mappers";
+} from "./models/mappers";
 
 const isSearchClientOptions = (clientIdOrOptions: any): clientIdOrOptions is SearchClientOptions =>
   clientIdOrOptions && typeof clientIdOrOptions !== "string";

@@ -13,9 +13,10 @@ import {
   SearchAddressBatchResult,
   ReverseSearchAddressBatchProcessResult,
   LatLongPairAbbreviated,
-  ErrorResponse
+  ErrorResponse,
+  BatchRequest
 } from "../generated/models";
-import { LatLong, BoundingBox } from "../models";
+import { LatLong, BoundingBox } from "./models";
 import {
   SearchAddressResult,
   SearchAddressResultItem,
@@ -24,7 +25,7 @@ import {
   ReverseSearchCrossStreetAddressResult,
   ReverseSearchCrossStreetAddressResultItem,
   BatchResult
-} from "../results";
+} from "./results";
 import {
   FuzzySearchOptions,
   SearchPointOfInterestOptions,
@@ -32,8 +33,9 @@ import {
   SearchAddressOptions,
   SearchBaseOptions,
   SearchExtraFilterOptions
-} from "../options";
+} from "./options";
 import { OperationOptions } from "@azure/core-client";
+import { FuzzySearchRequest, ReverseSearchAddressRequest, SearchAddressRequest } from "./requests";
 
 /**
  * @internal
@@ -344,4 +346,205 @@ export function mapReverseSearchAddressBatchResult(
     })
   };
   return result;
+}
+
+/**
+ * @internal
+ */
+export function createFuzzySearchBatchRequest(requests: FuzzySearchRequest[]): BatchRequest {
+  return {
+    batchItems: requests.map((r) => {
+      let query = `?query=${r.query}`;
+      if (r.coordinates) {
+        query += `&lat=${r.coordinates.latitude}&lon=${r.coordinates.longitude}`;
+      }
+      if (r.countryFilter && r.countryFilter.length > 0) {
+        query += `&countrySet=${r.countryFilter.join(",")}`;
+      }
+      if (r.options) {
+        for (const [k, v] of Object.entries(r.options)) {
+          switch (k) {
+            case "indexFilter":
+              if (v && v.length > 0) {
+                query += `&idxSet=${v.join(",")}`;
+              }
+              break;
+            case "operatingHours":
+              if (v) {
+                query += `&openingHours=${v}`;
+              }
+              break;
+            case "categoryFilter":
+              if (v && v.length > 0) {
+                query += `&categorySet=${v.join(",")}`;
+              }
+              break;
+            case "brandFilter":
+              if (v && v.length > 0) {
+                query += `&brandSet=${v.join(",")}`;
+              }
+              break;
+            case "electricVehicleConnectorFilter":
+              if (v && v.length > 0) {
+                query += `&connectorSet=${v.join(",")}`;
+              }
+              break;
+            case "isTypeAhead":
+              if (v) {
+                query += `&typeahead=${v}`;
+              }
+              break;
+            case "radiusInMeters":
+              if (v) {
+                query += `&radius=${v}`;
+              }
+              break;
+            case "boundingBox":
+              if (v) {
+                query += `&topLeft=${v.topLeft}&btmRight=${v.bottomRight}`;
+              }
+              break;
+            case "localizedMapView":
+              if (v) {
+                query += `&view=${v}`;
+              }
+              break;
+            case "top":
+              if (v) {
+                query += `&limit=${v}`;
+              }
+              break;
+            case "skip":
+              if (v) {
+                query += `&offset=${v}`;
+              }
+              break;
+            default:
+              query += `&${k}=${v}`;
+              break;
+          }
+        }
+      }
+      return { query };
+    })
+  };
+}
+
+/**
+ * @internal
+ */
+export function createSearchAddressBatchRequest(requests: SearchAddressRequest[]): BatchRequest {
+  return {
+    batchItems: requests.map((r) => {
+      let query = `?query=${r.query}`;
+      if (r.options) {
+        for (const [k, v] of Object.entries(r.options)) {
+          switch (k) {
+            case "coordinates":
+              if (v) {
+                query += `&lat=${v.latitude}&lon=${v.longitude}`;
+              }
+              break;
+            case "countryFilter":
+              if (v && v.length > 0) {
+                query += `&countrySet=${v.join(",")}`;
+              }
+              break;
+            case "isTypeAhead":
+              if (v) {
+                query += `&typeahead=${v}`;
+              }
+              break;
+            case "radiusInMeters":
+              if (v) {
+                query += `&radius=${v}`;
+              }
+              break;
+            case "boundingBox":
+              if (v) {
+                query += `&topLeft=${v.topLeft}&btmRight=${v.bottomRight}`;
+              }
+              break;
+            case "localizedMapView":
+              if (v) {
+                query += `&view=${v}`;
+              }
+              break;
+            case "top":
+              if (v) {
+                query += `&limit=${v}`;
+              }
+              break;
+            case "skip":
+              if (v) {
+                query += `&offset=${v}`;
+              }
+              break;
+            default:
+              query += `&${k}=${v}`;
+              break;
+          }
+        }
+      }
+      return { query };
+    })
+  };
+}
+
+/**
+ * @internal
+ */
+export function createReverseSearchAddressBatchRequest(
+  requests: ReverseSearchAddressRequest[]
+): BatchRequest {
+  return {
+    batchItems: requests.map((r) => {
+      let query = `?query=${r.coordinates.latitude},${r.coordinates.longitude}`;
+      if (r.options) {
+        for (const [k, v] of Object.entries(r.options)) {
+          switch (k) {
+            case "includeSpeedLimit":
+              if (v) {
+                query += `&returnSpeedLimit=${v}`;
+              }
+              break;
+            case "numberParam":
+              if (v) {
+                query += `&number=${v}`;
+              }
+              break;
+            case "includeRoadUse":
+              if (v) {
+                query += `&returnRoadUse=${v}`;
+              }
+              break;
+            case "roadUse":
+              if (v && v.length > 0) {
+                query += `&roadUse=${v.join(",")}`;
+              }
+              break;
+            case "includeMatchType":
+              if (v) {
+                query += `&returnMatchType=${v}`;
+              }
+              break;
+            case "radiusInMeters":
+              if (v) {
+                query += `&radius=${v}`;
+              }
+              break;
+            case "localizedMapView":
+              if (v) {
+                query += `&view=${v}`;
+              }
+              break;
+            default:
+              query += `&${k}=${v}`;
+              break;
+          }
+        }
+      }
+      return { query };
+    })
+  };
 }

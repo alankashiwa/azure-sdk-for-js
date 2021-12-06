@@ -4,9 +4,7 @@
 
 ```ts
 
-import { AbortSignalLike } from '@azure/abort-controller';
 import { AzureKeyCredential } from '@azure/core-auth';
-import { CancelOnProgress } from '@azure/core-lro';
 import { CommonClientOptions } from '@azure/core-client';
 import { OperationOptions } from '@azure/core-client';
 import { PollerLike } from '@azure/core-lro';
@@ -89,17 +87,6 @@ export interface ClassificationName {
     readonly nameLocale?: string;
 }
 
-// Warning: (ae-forgotten-export) The symbol "BatchRequest" needs to be exported by the entry point index.d.ts
-//
-// @public (undocumented)
-export function createFuzzySearchBatchRequest(requests: FuzzySearchRequest[]): BatchRequest;
-
-// @public (undocumented)
-export function createReverseSearchAddressBatchRequest(requests: ReverseSearchAddressRequest[]): BatchRequest;
-
-// @public (undocumented)
-export function createSearchAddressBatchRequest(requests: SearchAddressRequest[]): BatchRequest;
-
 // @public
 export interface DataSource {
     geometry?: GeometryIdentifier;
@@ -129,7 +116,7 @@ export interface FuzzySearchOptions extends SearchPointOfInterestOptions {
     minFuzzyLevel?: number;
 }
 
-// @public (undocumented)
+// @public
 export interface FuzzySearchRequest {
     // (undocumented)
     coordinates?: LatLong;
@@ -323,7 +310,7 @@ export interface ReverseSearchAddressOptions extends ReverseSearchBaseOptions {
     roadUse?: RoadUseType[];
 }
 
-// @public (undocumented)
+// @public
 export interface ReverseSearchAddressRequest {
     // (undocumented)
     coordinates: LatLong;
@@ -395,7 +382,7 @@ export interface SearchAddressOptions extends SearchAddressBaseOptions {
     entityType?: GeographicEntityType;
 }
 
-// @public (undocumented)
+// @public
 export interface SearchAddressRequest {
     // (undocumented)
     options?: SearchAddressOptions;
@@ -452,35 +439,6 @@ export interface SearchBaseOptions extends OperationOptions {
     localizedMapView?: LocalizedMapView;
     skip?: number;
     top?: number;
-}
-
-// @public (undocumented)
-export class SearchBatchPoller<TSearchBatchResult, TInternalBatchResult> implements PollerLike<PollOperationState<TSearchBatchResult>, TSearchBatchResult> {
-    constructor(internalPoller: PollerLike<PollOperationState<TInternalBatchResult>, TInternalBatchResult>, mapper: (res: TInternalBatchResult) => TSearchBatchResult);
-    // (undocumented)
-    cancelOperation(options?: {
-        abortSignal?: AbortSignalLike;
-    }): Promise<void>;
-    // (undocumented)
-    getOperationState(): PollOperationState<TSearchBatchResult>;
-    // (undocumented)
-    getResult(): TSearchBatchResult | undefined;
-    // (undocumented)
-    isDone(): boolean;
-    // (undocumented)
-    isStopped(): boolean;
-    // (undocumented)
-    onProgress(callback: (state: PollOperationState<TSearchBatchResult>) => void): CancelOnProgress;
-    // (undocumented)
-    poll(options?: {
-        abortSignal?: AbortSignalLike;
-    }): Promise<void>;
-    // (undocumented)
-    pollUntilDone(): Promise<TSearchBatchResult>;
-    // (undocumented)
-    stopPolling(): void;
-    // (undocumented)
-    toString(): string;
 }
 
 // @public

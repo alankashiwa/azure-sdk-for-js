@@ -5,7 +5,7 @@ import { env, record, Recorder, RecorderEnvironmentSetup } from "@azure-tools/te
 import { Context } from "mocha";
 import { AzureKeyCredential } from "@azure/core-auth";
 import { ClientSecretCredential, TokenCredential } from "@azure/identity";
-import { SearchClientOptions } from "src/options";
+import { SearchClientOptions } from "src/models/options";
 import { SearchClient } from "src/searchClient";
 
 const replaceableVariables: { [k: string]: string } = {

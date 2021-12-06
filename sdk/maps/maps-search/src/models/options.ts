@@ -9,7 +9,7 @@ import {
   OperatingHoursRange,
   RoadUseType,
   SearchIndexes
-} from "./generated/models";
+} from "../generated/models";
 import { BoundingBox, LatLong } from "./models";
 
 /**
