@@ -83,7 +83,12 @@ async function main() {
 
   // let's save geometry IDs from the fuzzy search for the getSearchPolygon example
   let geometryIds: string[] = [];
-  fuzzyResult.results?.forEach((res) => geometryIds.push(res.dataSources?.geometry?.id!));
+  fuzzyResult = await client.fuzzySearch("Netherlands", null);
+  fuzzyResult.results?.forEach((res) => {
+    if (res.dataSources?.geometry?.id) {
+      geometryIds.push(res.dataSources.geometry.id);
+    }
+  });
   console.log(" --- Search nearby POI:");
   const searchNearbyCoordinate = new LatLong(40.70627, -74.011454);
   const searchNearbyOptions = { radiusInMeters: 8046 };
