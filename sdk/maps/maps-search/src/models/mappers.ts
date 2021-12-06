@@ -351,9 +351,63 @@ export function mapReverseSearchAddressBatchResult(
 /**
  * @internal
  */
+const clientToServiceNames: Readonly<Record<string, string>> = {
+  operatingHours: "openingHours",
+  isTypeAhead: "typeahead",
+  radiusInMeters: "radius",
+  localizedMapView: "view",
+  top: "limit",
+  skip: "offset",
+  includeSpeedLimit: "returnSpeedLimit",
+  numberParam: "number",
+  includeRoadUse: "returnRoadUse",
+  includeMatchType: "returnMatchType"
+};
+
+/**
+ * @internal
+ */
+const clientToServiceNamesArray: Readonly<Record<string, string>> = {
+  indexFilter: "idxSet",
+  categoryFilter: "categorySet",
+  brandFilter: "brandSet",
+  countryFilter: "countrySet",
+  electricVehicleConnectorFilter: "connectorSet",
+  roadUse: "roadUse"
+};
+
+/**
+ * @internal
+ */
+function createPartialQueryStringFromOptions(
+  options: FuzzySearchOptions | SearchAddressOptions
+): string {
+  let partialQuery = "";
+  for (const [k, v] of Object.entries(options)) {
+    // Skip if no value
+    if (!v) continue;
+    // Check name mappings: primitive values
+    if (k in clientToServiceNames) {
+      partialQuery += `&${clientToServiceNames[k]}=${v}`;
+      // Check name mappings: Array values
+    } else if (k in clientToServiceNamesArray) {
+      if (Array.isArray(v) && v.length > 0) {
+        partialQuery += `&${clientToServiceNames[k]}=${v.join(",")}`;
+      }
+    } else {
+      partialQuery += `&${k}=${v}`;
+    }
+  }
+  return partialQuery;
+}
+
+/**
+ * @internal
+ */
 export function createFuzzySearchBatchRequest(requests: FuzzySearchRequest[]): BatchRequest {
   return {
     batchItems: requests.map((r) => {
+      // Add top level query parameters
       let query = `?query=${r.query}`;
       if (r.coordinates) {
         query += `&lat=${r.coordinates.latitude}&lon=${r.coordinates.longitude}`;
@@ -361,70 +415,12 @@ export function createFuzzySearchBatchRequest(requests: FuzzySearchRequest[]): B
       if (r.countryFilter && r.countryFilter.length > 0) {
         query += `&countrySet=${r.countryFilter.join(",")}`;
       }
+
+      // Add optional query parameters
       if (r.options) {
-        for (const [k, v] of Object.entries(r.options)) {
-          switch (k) {
-            case "indexFilter":
-              if (v && v.length > 0) {
-                query += `&idxSet=${v.join(",")}`;
-              }
-              break;
-            case "operatingHours":
-              if (v) {
-                query += `&openingHours=${v}`;
-              }
-              break;
-            case "categoryFilter":
-              if (v && v.length > 0) {
-                query += `&categorySet=${v.join(",")}`;
-              }
-              break;
-            case "brandFilter":
-              if (v && v.length > 0) {
-                query += `&brandSet=${v.join(",")}`;
-              }
-              break;
-            case "electricVehicleConnectorFilter":
-              if (v && v.length > 0) {
-                query += `&connectorSet=${v.join(",")}`;
-              }
-              break;
-            case "isTypeAhead":
-              if (v) {
-                query += `&typeahead=${v}`;
-              }
-              break;
-            case "radiusInMeters":
-              if (v) {
-                query += `&radius=${v}`;
-              }
-              break;
-            case "boundingBox":
-              if (v) {
-                query += `&topLeft=${v.topLeft}&btmRight=${v.bottomRight}`;
-              }
-              break;
-            case "localizedMapView":
-              if (v) {
-                query += `&view=${v}`;
-              }
-              break;
-            case "top":
-              if (v) {
-                query += `&limit=${v}`;
-              }
-              break;
-            case "skip":
-              if (v) {
-                query += `&offset=${v}`;
-              }
-              break;
-            default:
-              query += `&${k}=${v}`;
-              break;
-          }
-        }
+        query += createPartialQueryStringFromOptions(r.options);
       }
+
       return { query };
     })
   };
@@ -436,55 +432,12 @@ export function createFuzzySearchBatchRequest(requests: FuzzySearchRequest[]): B
 export function createSearchAddressBatchRequest(requests: SearchAddressRequest[]): BatchRequest {
   return {
     batchItems: requests.map((r) => {
+      // Add top level query parameters
       let query = `?query=${r.query}`;
+
+      // Add optional query parameters
       if (r.options) {
-        for (const [k, v] of Object.entries(r.options)) {
-          switch (k) {
-            case "coordinates":
-              if (v) {
-                query += `&lat=${v.latitude}&lon=${v.longitude}`;
-              }
-              break;
-            case "countryFilter":
-              if (v && v.length > 0) {
-                query += `&countrySet=${v.join(",")}`;
-              }
-              break;
-            case "isTypeAhead":
-              if (v) {
-                query += `&typeahead=${v}`;
-              }
-              break;
-            case "radiusInMeters":
-              if (v) {
-                query += `&radius=${v}`;
-              }
-              break;
-            case "boundingBox":
-              if (v) {
-                query += `&topLeft=${v.topLeft}&btmRight=${v.bottomRight}`;
-              }
-              break;
-            case "localizedMapView":
-              if (v) {
-                query += `&view=${v}`;
-              }
-              break;
-            case "top":
-              if (v) {
-                query += `&limit=${v}`;
-              }
-              break;
-            case "skip":
-              if (v) {
-                query += `&offset=${v}`;
-              }
-              break;
-            default:
-              query += `&${k}=${v}`;
-              break;
-          }
-        }
+        query += createPartialQueryStringFromOptions(r.options);
       }
       return { query };
     })
@@ -499,50 +452,12 @@ export function createReverseSearchAddressBatchRequest(
 ): BatchRequest {
   return {
     batchItems: requests.map((r) => {
+      // Add top level query parameters
       let query = `?query=${r.coordinates.latitude},${r.coordinates.longitude}`;
+
+      // Add optional query parameters
       if (r.options) {
-        for (const [k, v] of Object.entries(r.options)) {
-          switch (k) {
-            case "includeSpeedLimit":
-              if (v) {
-                query += `&returnSpeedLimit=${v}`;
-              }
-              break;
-            case "numberParam":
-              if (v) {
-                query += `&number=${v}`;
-              }
-              break;
-            case "includeRoadUse":
-              if (v) {
-                query += `&returnRoadUse=${v}`;
-              }
-              break;
-            case "roadUse":
-              if (v && v.length > 0) {
-                query += `&roadUse=${v.join(",")}`;
-              }
-              break;
-            case "includeMatchType":
-              if (v) {
-                query += `&returnMatchType=${v}`;
-              }
-              break;
-            case "radiusInMeters":
-              if (v) {
-                query += `&radius=${v}`;
-              }
-              break;
-            case "localizedMapView":
-              if (v) {
-                query += `&view=${v}`;
-              }
-              break;
-            default:
-              query += `&${k}=${v}`;
-              break;
-          }
-        }
+        query += createPartialQueryStringFromOptions(r.options);
       }
       return { query };
     })
