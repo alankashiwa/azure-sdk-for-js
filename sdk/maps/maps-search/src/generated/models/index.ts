@@ -486,6 +486,30 @@ export interface Address {
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly localName?: string;
+  /**
+   * The bounding box of the location.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly boundingBox?: BoundingBoxCompassNotation;
+}
+
+/** The bounding box of the location. */
+export interface BoundingBoxCompassNotation {
+  /**
+   * North-east (top-left) latitude,longitude coordinate of the bounding box as comma-separated floats
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly northEast?: string;
+  /**
+   * South-west (bottom-right) latitude,longitude coordinate of the bounding box as comma-separated floats
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly southWest?: string;
+  /**
+   * Entity type source of the bounding box. For reverse-geocoding this is always equal to position.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly entity?: Entity;
 }
 
 /** The viewport that covers the result represented by the top-left and bottom-right coordinates of the viewport. */
@@ -1148,6 +1172,21 @@ export enum KnownSearchAddressResultType {
  * **Cross Street**
  */
 export type SearchAddressResultType = string;
+
+/** Known values of {@link Entity} that the service accepts. */
+export enum KnownEntity {
+  /** Position entity */
+  Position = "position"
+}
+
+/**
+ * Defines values for Entity. \
+ * {@link KnownEntity} can be used interchangeably with Entity,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **position**: Position entity
+ */
+export type Entity = string;
 
 /** Known values of {@link EntryPointType} that the service accepts. */
 export enum KnownEntryPointType {

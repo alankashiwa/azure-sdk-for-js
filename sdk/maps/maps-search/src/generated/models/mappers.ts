@@ -813,6 +813,43 @@ export const Address: coreClient.CompositeMapper = {
         type: {
           name: "String"
         }
+      },
+      boundingBox: {
+        serializedName: "boundingBox",
+        type: {
+          name: "Composite",
+          className: "BoundingBoxCompassNotation"
+        }
+      }
+    }
+  }
+};
+
+export const BoundingBoxCompassNotation: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "BoundingBoxCompassNotation",
+    modelProperties: {
+      northEast: {
+        serializedName: "northEast",
+        readOnly: true,
+        type: {
+          name: "String"
+        }
+      },
+      southWest: {
+        serializedName: "southWest",
+        readOnly: true,
+        type: {
+          name: "String"
+        }
+      },
+      entity: {
+        serializedName: "entity",
+        readOnly: true,
+        type: {
+          name: "String"
+        }
       }
     }
   }

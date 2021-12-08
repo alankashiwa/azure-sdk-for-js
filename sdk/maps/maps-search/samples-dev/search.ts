@@ -83,7 +83,7 @@ async function main() {
 
   // let's save geometry IDs from the fuzzy search for the getSearchPolygon example
   let geometryIds: string[] = [];
-  fuzzyResult = await client.fuzzySearch("Netherlands", null);
+  // fuzzyResult = await client.fuzzySearch("Netherlands");
   fuzzyResult.results?.forEach((res) => {
     if (res.dataSources?.geometry?.id) {
       geometryIds.push(res.dataSources.geometry.id);

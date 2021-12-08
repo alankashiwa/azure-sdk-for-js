@@ -13,6 +13,7 @@ import { TokenCredential } from '@azure/core-auth';
 
 // @public
 export interface Address {
+    readonly boundingBox?: BoundingBox;
     readonly buildingNumber?: string;
     readonly country?: string;
     readonly countryCode?: string;

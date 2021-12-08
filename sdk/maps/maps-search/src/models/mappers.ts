@@ -14,7 +14,9 @@ import {
   ReverseSearchAddressBatchProcessResult,
   LatLongPairAbbreviated,
   ErrorResponse,
-  BatchRequest
+  BatchRequest,
+  Address as AddressInternal,
+  BoundingBoxCompassNotation
 } from "../generated/models";
 import { LatLong, BoundingBox } from "./models";
 import {
@@ -24,7 +26,8 @@ import {
   ReverseSearchAddressResultItem,
   ReverseSearchCrossStreetAddressResult,
   ReverseSearchCrossStreetAddressResultItem,
-  BatchResult
+  BatchResult,
+  Address
 } from "./results";
 import {
   FuzzySearchOptions,
@@ -193,6 +196,58 @@ export function mapBoundingBox(bbox?: BoundingBoxInternal): BoundingBox | undefi
 /**
  * @internal
  */
+export function mapBoundingBoxFromCompassNotation(
+  bbox?: BoundingBoxCompassNotation
+): BoundingBox | undefined {
+  if (bbox && bbox.northEast && bbox.southWest) {
+    const topLeftCoords = bbox.northEast.split(",").map((s) => Number(s));
+    const bottomRightCoords = bbox.southWest.split(",").map((s) => Number(s));
+    if (topLeftCoords.length !== 2 || bottomRightCoords.length !== 2) {
+      return new BoundingBox(
+        new LatLong(topLeftCoords[0], topLeftCoords[1]),
+        new LatLong(bottomRightCoords[0], bottomRightCoords[1])
+      );
+    }
+  }
+  return undefined;
+}
+
+/**
+ * @internal
+ */
+export function mapAddress(address?: AddressInternal): Address | undefined {
+  if (address) {
+    const mappedAddress = {
+      buildingNumber: address.buildingNumber,
+      street: address.street,
+      crossStreet: address.crossStreet,
+      streetNumber: address.streetNumber,
+      routeNumbers: address.routeNumbers,
+      streetName: address.streetName,
+      streetNameAndNumber: address.streetNameAndNumber,
+      municipality: address.municipality,
+      municipalitySubdivision: address.municipalitySubdivision,
+      countryTertiarySubdivision: address.countryTertiarySubdivision,
+      countrySecondarySubdivision: address.countrySecondarySubdivision,
+      countrySubdivision: address.countrySubdivision,
+      postalCode: address.postalCode,
+      extendedPostalCode: address.extendedPostalCode,
+      countryCode: address.countryCode,
+      country: address.country,
+      countryCodeISO3: address.countryCodeISO3,
+      freeformAddress: address.freeformAddress,
+      countrySubdivisionName: address.countrySecondarySubdivision,
+      localName: address.localName,
+      boundingBox: mapBoundingBoxFromCompassNotation(address.boundingBox)
+    };
+    return removeUndefinedProperties(mappedAddress);
+  }
+  return undefined;
+}
+
+/**
+ * @internal
+ */
 export function mapSearchAddressResult(
   internalResult: SearchAddressResultInternal
 ): SearchAddressResult {
@@ -215,7 +270,7 @@ export function mapSearchAddressResult(
         info: ir.info,
         entityType: ir.entityType,
         pointOfInterest: ir.pointOfInterest,
-        address: ir.address,
+        address: mapAddress(ir.address),
         position:
           ir.position && ir.position.lat && ir.position.lon
             ? new LatLong(ir.position.lat, ir.position.lon)
@@ -264,7 +319,7 @@ export function mapReverseSearchAddressResult(
     numResults: internalResult.summary?.numResults,
     results: internalResult.addresses?.map((ad) => {
       const mappedResult: ReverseSearchAddressResultItem = {
-        address: ad.address,
+        address: mapAddress(ad.address),
         position: mapStringToLatLong(ad.position),
         roadUse: ad.roadUse,
         matchType: ad.matchType
@@ -287,7 +342,7 @@ export function mapReverseSearchCrossStreetAddressResult(
     numResults: internalResult.summary?.numResults,
     results: internalResult.addresses?.map((ad) => {
       const mappedResult: ReverseSearchCrossStreetAddressResultItem = {
-        address: ad.address,
+        address: mapAddress(ad.address),
         position: mapStringToLatLong(ad.position)
       };
       return removeUndefinedProperties(mappedResult);

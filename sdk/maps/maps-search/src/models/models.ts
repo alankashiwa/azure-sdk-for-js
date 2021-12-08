@@ -14,7 +14,6 @@ export {
   GeometryIdentifier,
   EntryPointType,
   DataSource,
-  Address,
   BrandName,
   Classification,
   ClassificationName,

@@ -9,7 +9,6 @@ import {
   PointOfInterest,
   QueryType,
   SearchAddressResultType,
-  Address,
   RoadUseType,
   ErrorResponse
 } from "../generated/models";
@@ -111,6 +110,62 @@ export interface ReverseSearchCrossStreetAddressResult {
   readonly results?: ReverseSearchCrossStreetAddressResultItem[];
 }
 
+/** The address of the result */
+export interface Address {
+  /** The building number on the street. DEPRECATED, use streetNumber instead. */
+  readonly buildingNumber?: string;
+  /** The street name. DEPRECATED, use streetName instead. */
+  readonly street?: string;
+  /** The name of the street being crossed. */
+  readonly crossStreet?: string;
+  /** The building number on the street. */
+  readonly streetNumber?: string;
+  /** The codes used to unambiguously identify the street */
+  readonly routeNumbers?: number[];
+  /** The street name. */
+  readonly streetName?: string;
+  /** The street name and number. */
+  readonly streetNameAndNumber?: string;
+  /** City / Town */
+  readonly municipality?: string;
+  /** Sub / Super City */
+  readonly municipalitySubdivision?: string;
+  /** Named Area */
+  readonly countryTertiarySubdivision?: string;
+  /** County */
+  readonly countrySecondarySubdivision?: string;
+  /** State or Province */
+  readonly countrySubdivision?: string;
+  /**  Postal Code / Zip Code */
+  readonly postalCode?: string;
+  /** Extended postal code (availability is dependent on the region). */
+  readonly extendedPostalCode?: string;
+  /** Country (Note: This is a two-letter code, not a country name.) */
+  readonly countryCode?: string;
+  /** Country name */
+  readonly country?: string;
+  /** ISO alpha-3 country code */
+  readonly countryCodeISO3?: string;
+  /**
+   * An address line formatted according to the formatting rules of a Result's country of origin,
+   * or in the case of a country, its full country name.
+   */
+  readonly freeformAddress?: string;
+  /**
+   * The full name of a first level of country administrative hierarchy.
+   * This field appears only in case countrySubdivision is presented in an abbreviated form.
+   * Only supported for USA, Canada, and Great Britain.
+   */
+  readonly countrySubdivisionName?: string;
+  /**
+   * An address component which represents the name of a geographic area or locality that groups a number of addressable objects for addressing purposes, without being an administrative unit.
+   * This field is used to build the `freeformAddress` property.
+   */
+  readonly localName?: string;
+  /** The bounding box of the location. */
+  readonly boundingBox?: BoundingBox;
+}
+
 export interface ReverseSearchAddressResultItem {
   /** The address of the result */
   readonly address?: Address;
@@ -132,42 +187,6 @@ export interface ReverseSearchCrossStreetAddressResultItem {
   /** Information on the type of match. */
   readonly matchType?: MatchType;
 }
-
-// /** This object is returned from a successful Search Address Batch service call. */
-// export type SearchAddressBatchResult = {
-//   /** Number of successful requests in the batch */
-//   readonly successfulRequests?: number;
-//   /** Total number of requests in the batch */
-//   readonly totalRequests?: number;
-//   /** Array containing the batch results. */
-//   readonly batchItems?: SearchAddressBatchItem[];
-// };
-
-// /** An item returned from Search Address Batch service call. */
-// export type SearchAddressBatchItem = {
-//   /** HTTP request status code. */
-//   readonly statusCode?: number;
-//   /** The result of the query. SearchAddressResponse if the query completed successfully, ErrorResponse otherwise. */
-//   readonly response?: SearchAddressResult & ErrorResponse;
-// };
-
-// /** This object is returned from a successful Search Address Reverse Batch service call. */
-// export type ReverseSearchAddressBatchResult = {
-//   /** Number of successful requests in the batch */
-//   readonly successfulRequests?: number;
-//   /** Total number of requests in the batch */
-//   readonly totalRequests?: number;
-//   /** Array containing the batch results.*/
-//   readonly batchItems?: ReverseSearchAddressBatchItem[];
-// };
-
-// /** An item returned from Search Address Reverse Batch service call. */
-// export type ReverseSearchAddressBatchItem = {
-//   /** HTTP request status code. */
-//   readonly statusCode?: number;
-//   /** The result of the query. SearchAddressReverseResponse if the query completed successfully, ErrorResponse otherwise. */
-//   readonly response?: ReverseSearchAddressResult & ErrorResponse;
-// };
 
 /** This object is returned from a successful Search Address Batch service call. */
 export interface BatchResult<TResult extends SearchAddressResult | ReverseSearchAddressResult> {
