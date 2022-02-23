@@ -197,6 +197,7 @@ specifiers:
   '@rush-temp/keyvault-keys': file:./projects/keyvault-keys.tgz
   '@rush-temp/keyvault-secrets': file:./projects/keyvault-secrets.tgz
   '@rush-temp/logger': file:./projects/logger.tgz
+  '@rush-temp/maps-route': file:./projects/maps-route.tgz
   '@rush-temp/maps-search': file:./projects/maps-search.tgz
   '@rush-temp/mixed-reality-authentication': file:./projects/mixed-reality-authentication.tgz
   '@rush-temp/mixed-reality-remote-rendering': file:./projects/mixed-reality-remote-rendering.tgz
@@ -451,6 +452,7 @@ dependencies:
   '@rush-temp/keyvault-keys': file:projects/keyvault-keys.tgz
   '@rush-temp/keyvault-secrets': file:projects/keyvault-secrets.tgz
   '@rush-temp/logger': file:projects/logger.tgz
+  '@rush-temp/maps-route': file:projects/maps-route.tgz
   '@rush-temp/maps-search': file:projects/maps-search.tgz
   '@rush-temp/mixed-reality-authentication': file:projects/mixed-reality-authentication.tgz
   '@rush-temp/mixed-reality-remote-rendering': file:projects/mixed-reality-remote-rendering.tgz
@@ -14613,8 +14615,57 @@ packages:
       - utf-8-validate
     dev: false
 
+  file:projects/maps-route.tgz:
+    resolution: {integrity: sha512-+H8hK1FIszAuWEAwdFRt9EOWxUPXGLw4JoyKydrCYlxepxFeTCoSA+4Ws5ojDLnpbsdAf8eLz+AMVrpcR3CESA==, tarball: file:projects/maps-route.tgz}
+    name: '@rush-temp/maps-route'
+    version: 0.0.0
+    dependencies:
+      '@azure/core-tracing': 1.0.0-preview.13
+      '@azure/identity': 2.0.0-beta.6
+      '@microsoft/api-extractor': 7.7.11
+      '@types/chai': 4.3.0
+      '@types/chai-as-promised': 7.1.4
+      '@types/mocha': 7.0.2
+      '@types/node': 12.20.43
+      chai: 4.3.6
+      chai-as-promised: 7.1.1_chai@4.3.6
+      cross-env: 7.0.3
+      dotenv: 8.6.0
+      downlevel-dts: 0.4.0
+      eslint: 7.32.0
+      esm: 3.2.25
+      inherits: 2.0.4
+      karma: 6.3.15
+      karma-chrome-launcher: 3.1.0
+      karma-coverage: 2.1.1
+      karma-edge-launcher: 0.4.2_karma@6.3.15
+      karma-env-preprocessor: 0.1.1
+      karma-firefox-launcher: 1.3.0
+      karma-ie-launcher: 1.0.0_karma@6.3.15
+      karma-json-preprocessor: 0.3.3_karma@6.3.15
+      karma-json-to-file-reporter: 1.0.1
+      karma-junit-reporter: 2.0.1_karma@6.3.15
+      karma-mocha: 2.0.1
+      karma-mocha-reporter: 2.2.5_karma@6.3.15
+      mocha: 7.2.0
+      mocha-junit-reporter: 1.23.3_mocha@7.2.0
+      nyc: 14.1.1
+      prettier: 1.19.1
+      rimraf: 3.0.2
+      source-map-support: 0.5.21
+      tslib: 2.3.1
+      typedoc: 0.15.2
+      typescript: 4.2.4
+      util: 0.12.4
+    transitivePeerDependencies:
+      - bufferutil
+      - debug
+      - supports-color
+      - utf-8-validate
+    dev: false
+
   file:projects/maps-search.tgz:
-    resolution: {integrity: sha512-8pwCI69DcyPx2G9DUl07N6a+WbNo1w/n/ZlNCmqqZ7gI+s1GCdEY30pn4nkE/jIQSxQZ2P0lLq9ZkporKzQddA==, tarball: file:projects/maps-search.tgz}
+    resolution: {integrity: sha512-Sfdy4udBXbe2qVZe6Lb1aZ7oaryNZXTCqZX1E3WtNEbso69MRckVeqtvsBNIfZ04mFAMK4JtX6PiStciIl5bDg==, tarball: file:projects/maps-search.tgz}
     name: '@rush-temp/maps-search'
     version: 0.0.0
     dependencies:
