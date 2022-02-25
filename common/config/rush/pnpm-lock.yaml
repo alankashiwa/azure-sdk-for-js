@@ -14616,10 +14616,11 @@ packages:
     dev: false
 
   file:projects/maps-route.tgz:
-    resolution: {integrity: sha512-+H8hK1FIszAuWEAwdFRt9EOWxUPXGLw4JoyKydrCYlxepxFeTCoSA+4Ws5ojDLnpbsdAf8eLz+AMVrpcR3CESA==, tarball: file:projects/maps-route.tgz}
+    resolution: {integrity: sha512-soXKOaF3T1uriYM+QPAJFDIXXFouRhAcuC7MmYgKxvbDzzpRl2ST8JXmpLXIcLgtK7meTr3hlFirtKgYtzo7Gg==, tarball: file:projects/maps-route.tgz}
     name: '@rush-temp/maps-route'
     version: 0.0.0
     dependencies:
+      '@azure-tools/test-recorder': 1.0.2
       '@azure/core-tracing': 1.0.0-preview.13
       '@azure/identity': 2.0.0-beta.6
       '@microsoft/api-extractor': 7.7.11
@@ -14660,6 +14661,7 @@ packages:
     transitivePeerDependencies:
       - bufferutil
       - debug
+      - encoding
       - supports-color
       - utf-8-validate
     dev: false
