@@ -75,20 +75,14 @@ export type BBox = BBox2D | BBox3D;
 
 // @public
 export type BBox2D = [
-southWestLongitude: number,
-southWestLatitude: number,
-northEastLongitude: number,
-northEastLatitude: number
+...southWest: Position2D,
+...northEast: Position2D
 ];
 
 // @public
 export type BBox3D = [
-southWestLongitude: number,
-southWestLatitude: number,
-southWestElevation: number,
-northEastLongitude: number,
-northEastLatitude: number,
-northEastElevation: number
+...southWest: Position3D,
+...northEast: Position3D
 ];
 
 // @public

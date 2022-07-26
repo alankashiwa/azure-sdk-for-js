@@ -16,22 +16,18 @@ export type GeometryType =
 /** GeoJSON types */
 export type GeoJsonType = GeometryType | "Feature" | "FeatureCollection";
 
-/** 2D bounding box */
-export type BBox2D = [
-  southWestLongitude: number,
-  southWestLatitude: number,
-  northEastLongitude: number,
-  northEastLatitude: number
-];
-/** 3D bounding box */
-export type BBox3D = [
-  southWestLongitude: number,
-  southWestLatitude: number,
-  southWestElevation: number,
-  northEastLongitude: number,
-  northEastLatitude: number,
-  northEastElevation: number
-];
+/** 2D bounding box
+ *
+ * List the coordinates of the most southwesterly point followed by the coordinates of the more northeasterly point,
+ * where the coordinates are in the form of {@link Position2D}
+ */
+export type BBox2D = [...southWest: Position2D, ...northEast: Position2D];
+/** 3D bounding box
+ *
+ * List the coordinates of the most southwesterly point followed by the coordinates of the more northeasterly point,
+ * where the coordinates are in the form of {@link Position3D}
+ */
+export type BBox3D = [...southWest: Position3D, ...northEast: Position3D];
 /** Bounding box including information on the coordinate range for its geometries */
 export type BBox = BBox2D | BBox3D;
 
